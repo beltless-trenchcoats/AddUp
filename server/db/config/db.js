@@ -1,13 +1,14 @@
-var mongoose = require('mongoose');
+var pg = require('pg');
 
-mongoose.connect('mongodb://admin:admin@ds135577.mlab.com:35577/heroku_p2gjxxlq');
+pg.defaults.ssl = true;
+pg.connect(process.env.DATABASE_URL, function(err, client) {
+  console.log('database url ', process.env.DATABASE_URL);
+  if (err) throw err;
+  console.log('Connected to postgres! Getting schemas...');
 
-var db = mongoose.connection;
-
-db.on('error', console.error.bind(console, 'connection error: '));
-db.once('open', function() {
-  console.log('db is open!');
+  client
+    .query('SELECT table_schema,table_name FROM information_schema.tables;')
+    .on('row', function(row) {
+      console.log(JSON.stringify(row));
+    });
 });
-
-
-module.exports = db;

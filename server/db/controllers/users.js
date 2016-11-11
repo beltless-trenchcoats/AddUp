@@ -27,7 +27,6 @@ exports.createUser = function(username, password, callback) {
           if (err) {
             console.log('ERROR IN THE INSERT', err);
           } else {
-            console.log('SUCCESS');
             callback('success');
           }
         });
@@ -55,7 +54,6 @@ exports.loginUser = function(username, password, callback) {
         }); 
       }
     } else {
-      console.log('found nothing');
       callback(false);
     }
   });
@@ -71,7 +69,7 @@ exports.updateUser = function(username, updateFields, callback) {
     }
   }
   updateString = updateString.slice(0, updateString.length - 2);
-  console.log('update string', updateString);
+  // console.log('update string', updateString);
   console.log('UPDATE users SET ' + updateString + ' \
       WHERE username = \'' + username + '\';');
   db.query({
@@ -80,21 +78,46 @@ exports.updateUser = function(username, updateFields, callback) {
   }, 
   function(err, rows) {
     if (err) {
-      console.log(err);
       callback(err);
     } else {
-      console.log('success');
       callback('success');
+    }
+  });
+};
+
+exports.getUserFields = function(username, callback) {
+  db.query({
+    text: 'SELECT * FROM users \
+      WHERE username = \'' + username + '\';'
+  }, 
+  function(err, rows) {
+    if (err) {
+      callback(err, null);
+    } else if (rows.rowCount > 0) {
+      callback(null, rows.rows[0]);
+    } else {
+      callback('no rows for user ' + username, null);
     }
   });
 }
 
+//EXAMPLE USAGE:
 // exports.createUser('herbert', 'test', function(response) {
 //   console.log(response);
 // });
+
 // exports.checkUser('herbert', 'test', function(response) {
 //   console.log(response);
 // });
+
 // exports.updateUser('helga', {plaid_access_token: 'n358sy98ty239582379',password: 'hi', pending_balance: 8}, function(result) {
 //   console.log(result);
+// });
+
+// exports.getUserFields('helga', function(err, data) {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log(data);
+//   }
 // });

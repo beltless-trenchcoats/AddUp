@@ -4,9 +4,9 @@
 
 ## Team
 
-  - __Product Owner__: teamMember
-  - __Scrum Master__: teamMember
-  - __Development Team Members__: teamMember, teamMember
+  - __Product Owner__: Charlotte Willens
+  - __Scrum Master__: Karina Kinaman
+  - __Development Team Members__: Miles Smith, Tim Garibaldi
 
 ## Table of Contents
 

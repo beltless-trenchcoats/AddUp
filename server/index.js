@@ -5,21 +5,41 @@ var plaid = require('plaid');
 var app = express();
 var port = process.env.PORT || 8080;
 
-app.use(parser.json());
+app.use(parser.json(), function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 var plaidClient = new plaid.Client('58224c96a753b9766d52bbd1', '04137ebffb7d68729f7182dd0a9e71', plaid.environments.tartan);
 
-app.get('/accounts', function(req, res, next) {
-  var public_token = req.query.public_token;
-  console.log('public token', public_token);
-
-  plaidClient.exchangeToken(public_token, function(err, tokenResponse) {
+app.post('/authenticate', function(req, res) {
+  var public_token = req.body.public_token;
+  console.log('public_token in express ', public_token);
+  // Exchange a public_token for a Plaid access_token
+  plaidClient.exchangeToken(public_token, function(err, exchangeTokenRes) {
     if (err != null) {
-      res.json({error: 'Unable to exchange public_token'});
+      // Handle error!
+      res.json('error!');
     } else {
-      var access_token = tokenResponse.access_token;
-      console.log('access_token', access_token);
-      //save access_token with user account in the db
+      // This is your Plaid access token - store somewhere persistent
+      // The access_token can be used to make Plaid API calls to
+      // retrieve accounts and transactions
+      var access_token = exchangeTokenRes.access_token;
+
+      plaidClient.getAuthUser(access_token, function(err, authRes) {
+        if (err != null) {
+          // Handle error!
+          res.json('error!');
+        } else {
+          // An array of accounts for this user, containing account
+          // names, balances, and account and routing numbers.
+          var accounts = authRes.accounts;
+
+          // Return account data
+          res.json({accounts: accounts});
+        }
+      });
     }
   });
 });

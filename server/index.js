@@ -47,12 +47,13 @@ app.post('/authenticate', function(req, res) {
   });
 });
 
+
 //this is skeleton code until we get a front-end accessible for Plaid Link
 //this post needs to go to https://tartan.plaid.com/ and returns transaction data
 app.post('/connect/get', function(req, res) {
   var data = {
-    client_id: '',
-    secret: '',
+    client_id: '58224c96a753b9766d52bbd1',
+    secret: '04137ebffb7d68729f7182dd0a9e71',
     access_token: ''
   }
   res.send(data);

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PlaidLinkComponent from './PlaidLink';
 
 class UserProfile extends Component {
   render() {
@@ -8,6 +9,7 @@ class UserProfile extends Component {
         <p className="App-intro">
          CHECK ON THE USER INFO
         </p>
+        <PlaidLinkComponent />
       </div>
     );
   }

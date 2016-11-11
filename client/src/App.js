@@ -4,16 +4,14 @@ import { Button, Jumbotron, Col, Panel } from 'react-bootstrap';
 
 import homeImage from '../public/background.jpg'
 import './App.css';
-import Layout from './Layout';
 
-import PlaidLinkComponent from './PlaidLink';
+import Header from './Header';
 
 class App extends Component {
   render() {
     return (
-      <Layout>
+      <Header>
         <div className="App">
-        <PlaidLinkComponent />
 
           <div className="imageDiv">
             <img src={homeImage} className="homeImage" alt="home" />
@@ -26,13 +24,13 @@ class App extends Component {
           </div>
 
           <div className="infoSections">
-            
-              <Col xs={6} md={4} className="infoColumn">
-                <Panel header="Find Charities and Causes" bsStyle="primary">
-                  <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec hendrerit tempor tellus. Donec pretium posuere tellus. Proin quam nisl, tincidunt et, mattis eget, convallis nec, purus. Cum sociis natoque penatibu</p>
-                  <Link to="/user"><Button bsStyle="primary">Check for User</Button></Link>
-                </Panel>
-              </Col>
+          
+            <Col xs={6} md={4} className="infoColumn">
+              <Panel header="Find Charities and Causes" bsStyle="primary">
+                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec hendrerit tempor tellus. Donec pretium posuere tellus. Proin quam nisl, tincidunt et, mattis eget, convallis nec, purus. Cum sociis natoque penatibu</p>
+                <Link to="/user"><Button bsStyle="primary">Check for User</Button></Link>
+              </Panel>
+            </Col>
 
             <Col xs={6} md={4} className="infoColumn">
               <Panel header="Securely Link your Accounts" bsStyle="primary">
@@ -47,9 +45,11 @@ class App extends Component {
                 <Link to="/user"><Button bsStyle="primary">Check for User</Button></Link>
               </Panel>
             </Col>
+
           </div>
+
         </div>
-      </Layout>
+      </Header>
     );
   }
 }

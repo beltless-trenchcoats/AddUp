@@ -61,9 +61,40 @@ exports.loginUser = function(username, password, callback) {
   });
 };
 
+exports.updateUser = function(username, updateFields, callback) {
+  var updateString = '';
+  for (var key in updateFields) {
+    if (typeof updateFields[key] === 'string') {
+      updateString +=  key + " = '" + updateFields[key] + "', "
+    } else {
+      updateString +=  key + ' = ' + updateFields[key] + ', '
+    }
+  }
+  updateString = updateString.slice(0, updateString.length - 2);
+  console.log('update string', updateString);
+  console.log('UPDATE users SET ' + updateString + ' \
+      WHERE username = \'' + username + '\';');
+  db.query({
+    text: 'UPDATE users SET ' + updateString + ' \
+      WHERE username = \'' + username + '\';'
+  }, 
+  function(err, rows) {
+    if (err) {
+      console.log(err);
+      callback(err);
+    } else {
+      console.log('success');
+      callback('success');
+    }
+  });
+}
+
 // exports.createUser('herbert', 'test', function(response) {
 //   console.log(response);
 // });
 // exports.checkUser('herbert', 'test', function(response) {
 //   console.log(response);
+// });
+// exports.updateUser('helga', {plaid_access_token: 'n358sy98ty239582379',password: 'hi', pending_balance: 8}, function(result) {
+//   console.log(result);
 // });

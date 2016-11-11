@@ -1,6 +1,7 @@
 var express = require('express');
 var parser = require('body-parser');
 var plaid = require('plaid');
+var db = require('./db/controllers/users');
 
 var app = express();
 var port = process.env.PORT || 8080;
@@ -31,18 +32,6 @@ app.post('/authenticate', function(req, res) {
       console.log('stripe token', stripe_token);
 
       //TODO: Save these tokens to the database
-
-      plaidClient.getAuthUser(access_token, function(err, authRes) {
-        if (err != null) {
-          res.json('error!');
-        } else {
-          // An array of accounts for this user, containing account
-          // names, balances, and account and routing numbers.
-          var accounts = authRes.accounts;
-
-          res.json({accounts: accounts});
-        }
-      });
     }
   });
 });
@@ -57,6 +46,23 @@ app.post('/connect/get', function(req, res) {
     access_token: ''
   }
   res.send(data);
+});
+
+
+app.post('/signup', function(req, res) {
+  var username;
+  var password;
+  //then call the function that saves username/password in the db
+});
+
+app.post('/login', function(req, res) {
+  var username;
+  var password;
+  //call the function that verifies these credentials in the db
+});
+
+app.get('/logout', function(req, res) {
+  //call the function that destroys the user's token
 });
 
 

@@ -6,10 +6,14 @@ import logo from './logo.svg';
 import homeImage from '../public/background.jpg'
 import './App.css';
 
+import PlaidLinkComponent from './PlaidLink';
+
 class App extends Component {
   render() {
     return (
       <div className="App">
+      <PlaidLinkComponent />
+
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <div className="name">AddUp+</div>

@@ -14,10 +14,11 @@ class PlaidLinkComponent extends Component {
 
   handleOnSuccess(token, metadata) {
     this.setState({plaidData: metadata, account_id: metadata.account_id, public_token: token});
-    console.log('account id', this.state.account_id);
-    console.log('token', this.state.public_token);
 
-    axios.post('http://localhost:8080/authenticate', {"public_token": this.state.public_token});
+    axios.post('http://localhost:8080/authenticate', 
+      {'account_id': this.state.account_id,
+        'public_token': this.state.public_token
+      });
   }
 
   render() {

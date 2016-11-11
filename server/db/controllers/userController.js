@@ -1,1 +1,0 @@
-var User = require('../models/userModel');

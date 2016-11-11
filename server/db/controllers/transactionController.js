@@ -1,1 +1,0 @@
-var Transaction = require('../models/transactionModel');

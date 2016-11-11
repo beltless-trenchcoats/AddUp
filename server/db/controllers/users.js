@@ -86,15 +86,20 @@ exports.updateUser = function(username, updateFields, callback) {
 };
 
 exports.getUserFields = function(username, callback) {
+  var queryString = '';
+  if (username === '') {
+    queryString += 'SELECT * FROM users;';
+  } else {
+    queryString += 'SELECT * FROM users WHERE username = \'' + username + '\';'
+  }
   db.query({
-    text: 'SELECT * FROM users \
-      WHERE username = \'' + username + '\';'
+    text: queryString
   }, 
   function(err, rows) {
     if (err) {
       callback(err, null);
     } else if (rows.rowCount > 0) {
-      callback(null, rows.rows[0]);
+      callback(null, rows.rows);
     } else {
       callback('no rows for user ' + username, null);
     }

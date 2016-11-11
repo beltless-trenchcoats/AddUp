@@ -3,6 +3,9 @@ var parser = require('body-parser');
 var plaid = require('plaid');
 
 var app = express();
+var port = process.env.PORT || 3000;
+
+app.use(bodyParser.json());
 
 app.get('/accounts', function(req, res, next) {
   var public_token = req.query.public_token;
@@ -27,3 +30,10 @@ app.post('/connect/get', function(req, res) {
   }
   res.send(data);
 });
+
+
+app.listen(port, function() {
+  console.log('listening on ', port);
+});
+
+module.exports = app;

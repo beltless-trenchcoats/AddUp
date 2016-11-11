@@ -17,7 +17,8 @@ var userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Transaction'
   }],
-  accessToken: String,
+  plaidAccessToken: String,
+  stripeBankAccountToken: String,
   pendingBalance: Number,
   monthlyTotal: Number,
   limit: Number

@@ -7,6 +7,8 @@ var port = process.env.PORT || 8080;
 
 app.use(parser.json());
 
+var plaidClient = new plaid.Client('58224c96a753b9766d52bbd1', '04137ebffb7d68729f7182dd0a9e71', plaid.environments.tartan);
+
 app.get('/accounts', function(req, res, next) {
   var public_token = req.query.public_token;
   console.log('public token', public_token);
@@ -21,6 +23,7 @@ app.get('/accounts', function(req, res, next) {
     }
   });
 });
+
 
 //this is skeleton code until we get a front-end accessible for Plaid Link
 //this post needs to go to https://tartan.plaid.com/ and returns transaction data

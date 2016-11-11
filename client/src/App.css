@@ -19,6 +19,20 @@
   position: absolute;
 }
 
+.loginButton, .signupButton {
+  float: right;
+}
+
+.App-footer {
+  z-index: 1000;
+  width: 100%;
+  background-color: #0066ff;
+  height: 40px;
+  padding: 5px;
+  color: white;
+  position: absolute;
+}
+
 .imageDiv {
   height: 400px;
 }

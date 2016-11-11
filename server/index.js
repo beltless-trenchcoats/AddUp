@@ -26,4 +26,4 @@ app.post('/connect/get', function(req, res) {
     access_token: ''
   }
   res.send(data);
-})
+});

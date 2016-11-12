@@ -1,7 +1,6 @@
 var db = require('../config/db');
 
-exports.insert = function(username, charity, percentage, callback) {
-  console.log('first query about to run');
+var getIDs = function(username, charity, callback) {
   db.query({
     text: 'SELECT id FROM charities \
       WHERE name = \'' + charity + '\';'
@@ -21,64 +20,125 @@ exports.insert = function(username, charity, percentage, callback) {
           callback(err);
         } else {
           var id_users = rows.rows[0].id;
-          console.log('third query about to run');
-          console.log('SELECT * FROM usersCharities \
-              WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';');
-          db.query({
-            text: 'SELECT * FROM usersCharities \
-              WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';'
-          }, 
-          function(err, rows) {
-            if (err) {
-              callback(err);
-            } else if (rows.rowCount > 0) {
-              console.log(rows.rows);
-              callback('username and charity are already in database');
-            } else {
-              console.log('fourth query about to run');
-              db.query({
-                text: 'INSERT INTO usersCharities(percentage, id_users, id_charities) \
-                  VALUES($1, $2, $3)',
-                values: [percentage, id_users, id_charities]
-              },
-              function(err, result) {
-                if (err) {
-                  console.log('ERROR IN THE INSERT', err);
-                  callback(err);
-                } else {
-                  callback('success');
-                }
-              });
-            }
-          });
+          callback({id_users: id_users, id_charities: id_charities});
         }
       });
-      // if (rows.rowCount > 0) {
-      //   callback('charity already in database ' + values.name);
-      // } else {
-      //   db.query({
-      //     text: 'INSERT INTO charities(name, category, ein, donation_url, city, state, zip, balance_owed, mission_statement) \
-      //       VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)',
-      //     values: [values.name, values.category, values.ein, values.donation_url, values.city, 
-      //         values.state, values.zip, 0, values.mission_statement]
-      //   },
-
-      //   function(err, result) {
-      //     if (err) {
-      //       console.log('ERROR IN THE INSERT', err);
-      //       callback(err);
-      //     } else {
-      //       callback('success');
-      //     }
-      //   });
-      // }
     }
   });
 };
 
-exports.insert('helga', 'Save the Helgas', .5, function(result) {
-  console.log(result);
-});
+exports.insert = function(username, charity, percentage, callback) {
+  getIDs(username, charity, function(idObj) {
+    var id_users = idObj.id_users;
+    var id_charities = idObj.id_charities;
+    console.log('SELECT * FROM usersCharities \
+        WHERE id_users = ' + idObj.id_users + ' AND id_charities = ' + idObj.id_charities + ';');
+    db.query({
+      text: 'SELECT * FROM usersCharities \
+        WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';'
+    }, 
+    function(err, rows) {
+      if (err) {
+        callback(err);
+      } else if (rows.rowCount > 0) {
+        console.log(rows.rows);
+        callback('username and charity are already in database');
+      } else {
+        console.log('fourth query about to run');
+        db.query({
+          text: 'INSERT INTO usersCharities(percentage, id_users, id_charities) \
+            VALUES($1, $2, $3)',
+          values: [percentage, id_users, id_charities]
+        },
+        function(err, result) {
+          if (err) {
+            console.log('ERROR IN THE INSERT', err);
+            callback(err);
+          } else {
+            callback('success');
+          }
+        });
+      }
+    });
+  });
+};
+
+exports.updatePercentage = function(username, charity, percentage, callback) {
+  getIDs(username, charity, function(idObj) {
+    var id_users = idObj.id_users;
+    var id_charities = idObj.id_charities;
+    console.log('SELECT * FROM usersCharities \
+        WHERE id_users = ' + idObj.id_users + ' AND id_charities = ' + idObj.id_charities + ';');
+    db.query({
+      text: 'SELECT * FROM usersCharities \
+        WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';'
+    }, 
+    function(err, rows) {
+      if (err) {
+        callback(err);
+      } else if (rows.rowCount > 0) {
+        console.log(rows.rows);
+        db.query({
+          text: 'UPDATE usersCharities SET percentage = ' + percentage + ' \
+            WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';'
+        }, 
+        function(err, rows) {
+          if (err) {
+            callback(err);
+          } else {
+            db.query({
+              text: 'SELECT * FROM usersCharities \
+                WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';'
+            }, 
+            function(err, rows) {
+              if (err) {
+                callback(err);
+              } else {
+                console.log(rows.rows);
+              }
+            });
+            callback('success');
+          }
+        });
+      } else {
+        callback('charity and user not in database');
+      }
+    });
+  });
+};
+
+// exports.getUserCharityFields = function(username, charity, callback) {
+//   getIDs(username, charity, function(idObj) {
+//     var id_users = idObj.id_users;
+//     var id_charities = idObj.id_charities;
+//     var queryString = '';
+//     if (charity === '') {
+//       queryString += 'SELECT * FROM charities;';
+//     } else {
+//       queryString += 'SELECT * FROM charities WHERE name = \'' + charity + '\';'
+//     }
+//     db.query({
+//       text: queryString
+//     }, 
+//     function(err, rows) {
+//       if (err) {
+//         callback(err, null);
+//       } else if (rows.rowCount > 0) {
+//         callback(null, rows.rows);
+//       } else {
+//         callback('no rows for charity ' + charity, null);
+//       }
+//     });
+//   });
+// }
+// EXAMPLE USAGE:
+// exports.insert('helga', 'Save the Helgas', .5, function(result) {
+//   console.log(result);
+// });
+
+// exports.updatePercentage('helga', 'Save the Helgas', .3, function(result) {
+//   console.log(result);
+// });
 
 // -- CREATE TABLE usersCharities (
 // --   id BIGSERIAL   PRIMARY KEY,

@@ -17,7 +17,7 @@ exports.roundDailyTransactions = function() {
         })
         .then(function (transactions) {
 
-          transactions.forEach(transaction => {
+          findRecentTransactions().forEach(transaction => {
 
             var amtToCharge = roundUpTransaction(user, transaction);
 
@@ -35,10 +35,34 @@ exports.roundDailyTransactions = function() {
   });
 };
 
-// Calculate rounded amount to charge
+// Return new transactions since last transaction checked
+var findRecentTransactions = function(user, transactions) {
+  var mostRecentTransaction = user.last_transaction_id;
+  var newTransactions = [];
+  var index = 0;
+  var trans = transactions[index];
+  while (trans._id !== mostRecentTransaction) {
+    newTransactions.push(trans);
+    index++;
+    trans = transactions[index];
+  }
+  return newTransactions;
+};
 
+// Calculate rounded amount to charge
 var roundUpTransaction = exports.roundUpTransaction = function(user, transaction) {
+  // If the user is already over their limit, exit
+  if (user.monthly_total >= user.monthly_limit) {
+    return 0;
+  }
+
   var transAmt = transaction.amount;
+  // If the transaction amount was 0 or a refund, exit
+  if (transAmt <= 0) {
+    return 0;
+  }
+
+  // Calculate round-up amount
   var roundUpAmt = 1 - (transAmt % 1).toFixed(2);
   
   //if user's monthly limit would be exceeded by this roundUpAmt, only charge amt up to monthly_limit
@@ -50,7 +74,6 @@ var roundUpTransaction = exports.roundUpTransaction = function(user, transaction
   // If the amount < 0.50, we can't charge it yet...
   if (roundUpAmt < 0.50) { 
     // Check what pending balance the user has and add roundUpAmt to this
-
     var updatedPendingBalance = roundUpAmt + user.pending_balance;
 
     // If the amount is still too small to charge, save to db and exit function
@@ -80,7 +103,3 @@ var charge = exports.charge = function(user, amount) {
     }
   });
 };
-
-
-
-

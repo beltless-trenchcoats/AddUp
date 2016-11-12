@@ -37,11 +37,12 @@ var roundDailyTransactions = function() {
 
 // Return new transactions since last transaction checked
 var findRecentTransactions = function(user, transactions) {
-  var mostRecentTransaction = user.last_transaction_id;
+  var mostRecentTransactionId = user.last_transaction_id;
   var newTransactions = [];
   var index = 0;
   var trans = transactions[index];
-  while (trans._id !== mostRecentTransaction) {
+  console.log('checking if', mostRecentTransactionId, 'matches', trans._id);
+  while (trans && trans._id !== mostRecentTransactionId) {
     newTransactions.push(trans);
     index++;
     trans = transactions[index];

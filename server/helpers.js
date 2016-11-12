@@ -34,9 +34,9 @@ exports.roundDailyTransactions = function() {
 };
 
 // Calculate rounded amount to charge
-var roundTransaction = function(user, transaction) {
+var roundTransaction = exports.roundTransaction = function(user, transaction) {
   var transAmt = transaction.amount;
-  var roundUpAmt = transAmt % 1;
+  var roundUpAmt = 1 - transAmt % 1;
   
   //if user's monthly limit would be exceeded by this roundUpAmt, only charge amt up to monthly_limit
   var hypotheticalSum = user.monthly_total + roundUpAmt;
@@ -62,7 +62,7 @@ var roundTransaction = function(user, transaction) {
   return roundUpAmt;
 };
 
-var charge = function(user, amount) {
+var charge = exports.charge = function(user, amount) {
   var stripe_token = user.stripe_bank_account_token;
   // Note: The stripe charge takes an integer representing the number of cents (100 = $1.00)
   var chargeAmount = amount * 100;

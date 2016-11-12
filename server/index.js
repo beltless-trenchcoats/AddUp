@@ -85,7 +85,7 @@ app.post('/login', function(req, res) {
         if(err) {
           throw err;
         } else {
-          res.send({"first_name": data[0].first_name, "last_name": data[0].last_name});
+          res.send({"first_name": data[0].first_name, "last_name": data[0].last_name, "email": data[0].email});
         }
       })
     };

@@ -4,6 +4,10 @@
   color: #333;
 }
 
+
+/*
+*  HEADER AND MODALS
+*/ 
 .App-logo, .name {
   height: 30px;
   float: left;
@@ -19,21 +23,19 @@
   position: absolute;
 }
 
-.loginButton, .signupButton, .loginButton{
+.loginButton, .signupButton, .logoutButton{
   float: right;
   margin: 5px;
 }
 
-.App-footer {
-  z-index: 1000;
-  width: 100%;
-  background-color: #0066ff;
-  height: 40px;
-  padding: 5px;
-  color: white;
-  position: absolute;
-}
+.modalButton {
+  /*float: right;*/
+  margin: 0 5px;
+} 
 
+/*
+* HOMEPAGE BODY
+*/
 .imageDiv {
   height: 400px;
 }

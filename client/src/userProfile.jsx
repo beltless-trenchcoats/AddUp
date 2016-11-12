@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PlaidLinkComponent from './PlaidLink';
-import { Col, Table } from 'react-bootstrap';
+import { Col, Row, Table } from 'react-bootstrap';
 
 import Header from './Header';
 
@@ -10,35 +10,35 @@ class UserProfile extends Component {
     return (
       <Header>
         <div className="profilePage">
-          <div className="userProfile">
-            <Col md={6} mdPush={6} >
+          
+          <Row> 
+          <Col className="userProfile"md={6} mdPush={6} >
             <h1>Profile</h1>
             <h3> Username: </h3>
+          </Col>
 
-            </Col>
-          </div>
+          <Col className="userBankInfo" md={6} mdPull={6}>
+            <form id="some-id" method="POST" action="/authenticate"></form>
+            CHECK ON THE USER INFO
+            <PlaidLinkComponent />
+          </Col>
+          </Row>
 
-          <div className="userBankInfo">
-            <Col md={6} mdPull={6}>
-              <form id="some-id" method="POST" action="/authenticate"></form>
-              <PlaidLinkComponent />
-              CHECK ON THE USER INFO
-            </Col>
-          </div>
-
-          <div className="transactionHistory">
+          <Row className="transactionHistory">
             <h2>TransactionHistory</h2>
+
             <Table responsive striped hover>
               <thead>
-                <th>Date</th>
-                <th>Type</th>
-                <th>AddUp Amount</th>
-                <th>Cause</th>
+                <tr>
+                  <th>Date</th>
+                  <th>Type</th>
+                  <th>AddUp Amount</th>
+                  <th>Cause</th>
+                </tr>
               </thead>
 
             </Table>
-
-          </div>
+          </Row>
 
         </div>
       </Header>

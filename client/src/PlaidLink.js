@@ -10,6 +10,7 @@ class PlaidLinkComponent extends Component {
       account_id: '',
       public_token: ''
     }
+    this.handleOnSuccess = this.handleOnSuccess.bind(this)
   }
 
   handleOnSuccess(token, metadata) {
@@ -30,7 +31,7 @@ class PlaidLinkComponent extends Component {
           env="tartan"
           clientName="AddUp"
           selectAccount={true}
-          onSuccess={this.handleOnSuccess.bind(this)}
+          onSuccess={this.handleOnSuccess}
           />
       </div>
     );

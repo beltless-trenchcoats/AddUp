@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Button, Modal, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 
 import logo from './logo.svg';
+import FaUser from 'react-icons/lib/fa/user';
 
 const FieldGroup = ({ id, label, ...props }) => {
   return (
@@ -127,6 +128,7 @@ class Header extends Component {
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <div className="name">AddUp+</div>
+          <div className="userProfileLink"><FaUser className="userIcon"/> Hello {this.props.firstname}</div>
           <Button className="loginButton" bsSize="small" onClick={this.openLogin}>Login</Button>
           <Button className="signupButton" bsSize="small" onClick={this.openSignup}>Sign Up</Button>
           <Button className="logoutButton" bsSize="small" onClick={this.openLogout}>Logout</Button>

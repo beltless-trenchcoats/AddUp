@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Button, Modal, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import { Link } from 'react-router';
 
 import logo from './logo.svg';
+import FaUser from 'react-icons/lib/fa/user';
 
 const FieldGroup = ({ id, label, ...props }) => {
   return (
@@ -20,6 +22,7 @@ class Header extends Component {
       showLoginModal: false,
       showSignupModal: false,
       showLogoutModal: false,
+      loggedIn: false,
       email: '',
       password: '',
       firstname: '',
@@ -74,14 +77,14 @@ class Header extends Component {
       email: this.state.email,
       password: this.state.password,
       firstname: this.state.firstname,
-      lastname: this.state.lastname
+      lastname: this.state.lastname,
+      loggedIn: true
     })
-    .then(function (response) {
-      console.log(response);
+    .then((res) => {
       this.closeSignup();
     })
-    .catch(function (error) {
-      console.log(error);
+    .catch((err) => {
+      console.log(err);
     });
   }
 
@@ -91,18 +94,29 @@ class Header extends Component {
       email: this.state.email,
       password: this.state.password
     })
-    .then(function (response) {
-      console.log(response.session);
+    .then((res) => {
+      this.setState({
+        email: res.data.email,
+        firstname: res.data.first_name,
+        lastname: res.data.last_name,
+        loggedIn: true
+      })
       this.closeLogin();
     })
-    .catch(function (error) {
-      console.log(error);
+    .catch((err) => {
+      console.log(err);
     });
   }
 
   logoutUser () {
-    this.close();
-    //remove session
+    this.setState({
+      loggedIn: false,
+      email: '',
+      password: '',
+      firstname: '',
+      lastname: ''
+    })
+    this.closeLogout();
   }
 
   onPasswordChange (e) {
@@ -121,15 +135,26 @@ class Header extends Component {
     this.setState({lastname: e.target.value})
   }
 
+  componentDidMount () {
+    
+  }
+
   render() {
     return (
       <header>
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <div className="name">AddUp+</div>
-          <Button className="loginButton" bsSize="small" onClick={this.openLogin}>Login</Button>
-          <Button className="signupButton" bsSize="small" onClick={this.openSignup}>Sign Up</Button>
-          <Button className="logoutButton" bsSize="small" onClick={this.openLogout}>Logout</Button>
+          <Link to="/">
+            <img src={logo} className="App-logo" alt="logo" />
+            <div className="name">AddUp+</div>
+          </Link>
+
+          <div className="userButtons">
+            {this.state.loggedIn ? <Link to="/user"><div className="userProfileLink"><FaUser className="userIcon"/> Hello, {this.state.firstname}!</div></Link> : null}
+            {this.state.loggedIn ? <Button className="logoutButton" bsSize="small" onClick={this.openLogout}>Logout</Button> : null}
+            {this.state.loggedIn ? null : <Button className="loginButton" bsSize="small" onClick={this.openLogin}>Login</Button>}
+            {this.state.loggedIn ? null : <Button className="signupButton" bsSize="small" onClick={this.openSignup}>Sign Up</Button>} 
+          </div>
+
         </div>
 
         {/*Signup Modal*/}

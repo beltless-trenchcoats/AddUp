@@ -23,8 +23,10 @@
   position: absolute;
 }
 
-.loginButton, .signupButton, .logoutButton{
+.userButtons {
   float: right;
+}
+.loginButton, .signupButton, .logoutButton, .userIcon{
   margin: 5px;
 }
 
@@ -68,10 +70,10 @@
   top: 55px;
   position: relative;
 }
-.userBankInfo {
-  /*top: 55px;*/
+.userBankInfo, .userProfile, .transactionHistory {
+  height: 40%;
+
 }
 
 .transactionHistory {
-  position: relative;
 }

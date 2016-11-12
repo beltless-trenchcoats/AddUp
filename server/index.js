@@ -63,29 +63,28 @@ app.post('/connect/get', function(req, res) {
 app.post('/signup', function(req, res) {
   var email = req.body.email;
   var password = req.body.password;
-  var firstName = req.body.firstName;
-  var lastName = req.body.lastName;
-  console.log(req.body);
-  // db.createUser(username, password, function(response) {
-  //   console.log('Create User Response ', response);
-  // })
+  var firstName = req.body.firstname;
+  var lastName = req.body.lastname;
+  db.createUser(email, password, firstName, lastName, function(response) {
+    console.log('Create User Response ', response);
+  })
 });
 
 app.post('/login', function(req, res) {
   console.log('req', req.body);
-  req.session.username = req.body.username
-  var username = req.body.username;
+  req.session.email = req.body.email
+  var email = req.body.email;
   var password = req.body.password;
   console.log('session in login', req.session);
-  console.log('username from session in login ', req.session.username);
-  db.loginUser(username, password, function(response) {
+  console.log('email from session in login ', req.session.email);
+  db.loginUser(email, password, function(response) {
     console.log('Login User Response ', response);
   })
   //call the function that verifies these credentials in the db
 });
 
 app.get('/logout', function(req, res) {
-  req.session.username = undefined;
+  req.session.email = undefined;
   //call the function that destroys the user's token
 });
 

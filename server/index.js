@@ -31,8 +31,9 @@ app.post('/authenticate', function(req, res) {
       console.log('access token', access_token);
       console.log('stripe token', stripe_token);
 
-      //TODO: Save these tokens to the database
-      db.updateUser('Mythlin', {plaid_access_token: access_token, stripe_bank_account_token: stripe_token, password: 1, pending_balance: 0.40},
+      //save access tokens to the db
+      db.updateUser('helga', { plaid_access_token: access_token,
+      stripe_bank_account_token: stripe_token, password: 'hi', pending_balance: 8 },
       function(result) {
         console.log('result ',result);
       })

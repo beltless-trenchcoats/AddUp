@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import { Link } from 'react-router';
+import axios from 'axios';
 import { Button, Modal, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 
 import logo from './logo.svg';
@@ -19,7 +19,9 @@ class Header extends Component {
     this.state = {
       showLoginModal: false,
       showSignupModal: false,
-      showLogoutModal: false
+      showLogoutModal: false,
+      username: '',
+      password: ''
     }
     this.closeLogin = this.closeLogin.bind(this)
     this.openLogin = this.openLogin.bind(this)
@@ -29,6 +31,11 @@ class Header extends Component {
     this.openLogout = this.openLogout.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
     this.logoutUser = this.logoutUser.bind(this)
+    this.signupUser = this.signupUser.bind(this)
+    this.loginUser = this.loginUser.bind(this)
+    this.logoutUser = this.logoutUser.bind(this)
+    this.onPasswordChange = this.onPasswordChange.bind(this)
+    this.onUsernameChange = this.onUsernameChange.bind(this)
   } 
 
   closeLogin() {
@@ -57,17 +64,47 @@ class Header extends Component {
     })
   }
 
-  signupUser () {
-
+  signupUser (e) {
+    e.preventDefault();
+    axios.post('/signup', {
+      username: this.state.username,
+      lastName: this.state.password
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 
-  loginUser () {
-
+  loginUser (e) {
+    e.preventDefault();
+    axios.post('/login', {
+      username: this.state.username,
+      lastName: this.state.password
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 
   logoutUser () {
     this.close();
     //remove session
+  }
+
+  onPasswordChange (e) {
+    this.setState({password: e.target.value})
+    console.log('password', this.state.password)
+  }
+
+  onUsernameChange (e) {
+    this.setState({username: e.target.value})
+    console.log('username', this.state.username)
   }
 
   render() {
@@ -81,6 +118,7 @@ class Header extends Component {
           <Button className="logoutButton" bsSize="small" onClick={this.openLogout}>Logout</Button>
         </div>
 
+
         {/*Signup Modal*/}
         <Modal className="modal" show={this.state.showSignupModal} onHide={this.closeSignup}>
           <Modal.Header closeButton>
@@ -89,24 +127,25 @@ class Header extends Component {
           <Modal.Body>
             <p>Please provide a Username and Password to create your AddUp+ Account</p>
             
-            <form>
+            <form onSubmit={this.signupUser}>
               <FieldGroup
                 id="formControlsEmail"
-                type="email"
-                label="Email address"
-                placeholder="Enter email"
+                type="text"
+                label="Username"
+                placeholder="Enter username"
+                onChange={this.onUsernameChange}
               />
               <FieldGroup
                 id="formControlsPassword"
                 label="Password"
                 type="password"
                 placeholder="Password"
+                onChange={this.onPasswordChange}
               />
               <Button 
                 className="modalButton"
                 type="submit" 
                 bsStyle="primary" 
-                onClick={this.signupUser}
                 >Signup
               </Button>
               <Button className="modalButton" onClick={this.closeSignup}>Cancel</Button>
@@ -118,30 +157,32 @@ class Header extends Component {
           </Modal.Footer>
         </Modal>
 
+
         {/*Login Modal*/}
         <Modal className="modal" show={this.state.showLoginModal} onHide={this.closeLogin}>
           <Modal.Header closeButton>
             <Modal.Title>Login to your account</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <form>
+            <form onSubmit={this.loginUser}>
               <FieldGroup
                 id="formControlsEmail"
-                type="email"
-                label="Email address"
-                placeholder="Enter email"
+                type="text"
+                label="Username"
+                placeholder="Enter username"
+                onChange={this.onUsernameChange}
               />
               <FieldGroup
                 id="formControlsPassword"
                 label="Password"
                 type="password"
                 placeholder="Password"
+                onChange={this.onPasswordChange}
               />
               <Button 
                 className="modalButton"
                 type="submit" 
                 bsStyle="primary" 
-                onClick={this.loginUser}
                 >Login
               </Button>
               <Button className="modalButton" onClick={this.closeLogin}>Cancel</Button>
@@ -151,6 +192,7 @@ class Header extends Component {
             <p>Don't yet have an account? <a onClick={this.toggleModal}>Click here</a> to signup</p>
           </Modal.Footer>
         </Modal>
+
 
         {/*Logout Modal*/}
         <Modal className="modal" show={this.state.showLogoutModal} onHide={this.closeLogout}>

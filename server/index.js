@@ -61,11 +61,14 @@ app.post('/connect/get', function(req, res) {
 
 
 app.post('/signup', function(req, res) {
-  var username = req.body.username;
-  var password = req.body.password
-  db.createUser(username, password, function(response) {
-    console.log('Create User Response ', response);
-  })
+  var email = req.body.email;
+  var password = req.body.password;
+  var firstName = req.body.firstName;
+  var lastName = req.body.lastName;
+  console.log(req.body);
+  // db.createUser(username, password, function(response) {
+  //   console.log('Create User Response ', response);
+  // })
 });
 
 app.post('/login', function(req, res) {

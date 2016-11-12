@@ -77,11 +77,12 @@ class Header extends Component {
       firstname: this.state.firstname,
       lastname: this.state.lastname
     })
-    .then(function (response) {
-      console.log(response);
+    .then((response) => {
       this.closeSignup();
+      console.log('SIGNUP!!!!')
+      console.log(response);
     })
-    .catch(function (error) {
+    .catch((error) => {
       console.log(error);
     });
   }
@@ -92,11 +93,12 @@ class Header extends Component {
       email: this.state.email,
       password: this.state.password
     })
-    .then(function (response) {
-      console.log(response.session);
+    .then((response) => {
+      console.log("HELLO!")
       this.closeLogin();
+      console.log('response', response);
     })
-    .catch(function (error) {
+    .catch((error) => {
       console.log(error);
     });
   }
@@ -128,10 +130,14 @@ class Header extends Component {
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <div className="name">AddUp+</div>
-          <div className="userProfileLink"><FaUser className="userIcon"/> Hello {this.props.firstname}</div>
-          <Button className="loginButton" bsSize="small" onClick={this.openLogin}>Login</Button>
-          <Button className="signupButton" bsSize="small" onClick={this.openSignup}>Sign Up</Button>
-          <Button className="logoutButton" bsSize="small" onClick={this.openLogout}>Logout</Button>
+
+          <div className="userButtons">
+            <div className="userProfileLink"><FaUser className="userIcon"/> Hello {this.props.firstname}</div>
+            <Button className="loginButton" bsSize="small" onClick={this.openLogin}>Login</Button>
+            <Button className="signupButton" bsSize="small" onClick={this.openSignup}>Sign Up</Button>
+            <Button className="logoutButton" bsSize="small" onClick={this.openLogout}>Logout</Button>
+          </div>
+
         </div>
 
         {/*Signup Modal*/}

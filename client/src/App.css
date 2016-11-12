@@ -23,8 +23,10 @@
   position: absolute;
 }
 
-.loginButton, .signupButton, .logoutButton{
+.userButtons {
   float: right;
+}
+.loginButton, .signupButton, .logoutButton, .userIcon{
   margin: 5px;
 }
 

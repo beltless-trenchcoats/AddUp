@@ -5,9 +5,6 @@ import { Col, Table } from 'react-bootstrap';
 import Header from './Header';
 
 class UserProfile extends Component {
-  constructor (props) {
-    super(props)
-  }
 
   render() {
     return (

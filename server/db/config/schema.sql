@@ -55,8 +55,7 @@ CREATE TABLE usersCharities (
   id BIGSERIAL   PRIMARY KEY,
   percentage REAL NULL DEFAULT NULL,
   id_users BIGSERIAL     references users(id),
-  id_charities BIGSERIAL     references charities(id),
-  date_time date      NOT NULL
+  id_charities BIGSERIAL     references charities(id)
 );
 
 -- ---
@@ -70,7 +69,8 @@ CREATE TABLE transactions (
   id BIGSERIAL   PRIMARY KEY,
   amount REAL NULL DEFAULT NULL,
   id_users BIGSERIAL     references users(id),
-  id_charities BIGSERIAL     references charities(id)
+  id_charities BIGSERIAL     references charities(id),
+  date_time date      NOT NULL
 );
 
 

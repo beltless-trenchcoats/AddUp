@@ -13,10 +13,10 @@ exports.createCharity = function(values, callback) {
         callback('charity already in database ' + values.name);
       } else {
         db.query({
-          text: 'INSERT INTO charities(name, category, ein, donation_url, city, state, zip, balance_owed, mission_statement) \
-            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+          text: 'INSERT INTO charities(name, category, ein, donation_url, city, state, zip, balance_owed, total_donated, mission_statement) \
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
           values: [values.name, values.category, values.ein, values.donation_url, values.city, 
-              values.state, values.zip, 0, values.mission_statement]
+              values.state, values.zip, 0, 0, values.mission_statement]
         },
 
         function(err, result) {
@@ -32,9 +32,9 @@ exports.createCharity = function(values, callback) {
   });
 };
 
-exports.updateBalance = function(charity, amount, callback) {
+exports.updateBalance = function(charity, amountObj, callback) {
   db.query({
-    text: 'SELECT balance_owed FROM charities \
+    text: 'SELECT balance_owed, total_donated FROM charities \
       WHERE name = \'' + charity + '\';'
   }, 
   function(err, rows) {
@@ -42,11 +42,14 @@ exports.updateBalance = function(charity, amount, callback) {
       callback(err);
     } else {
       if (rows.rowCount > 0) {
-        console.log(rows.rows[0].balance_owed);
-        var newAmount = rows.rows[0].balance_owed + amount;
-        console.log(newAmount);
+        var total_donated_add = amountObj.total_donated;
+        var balance_owed_add = amountObj.balance_owed;
+        var newBalance = rows.rows[0].balance_owed + balance_owed_add;
+        var newTotal = rows.rows[0].total_donated + total_donated_add;
+        console.log('UPDATE charities SET balance_owed = ' + newBalance + ', total_donated= ' + newTotal + ' \
+            WHERE name = \'' + charity + '\';');
         db.query({
-          text: 'UPDATE charities SET balance_owed = ' + newAmount + ' \
+          text: 'UPDATE charities SET balance_owed = ' + newBalance + ', total_donated= ' + newTotal + ' \
             WHERE name = \'' + charity + '\';'
         }, 
         function(err, rows) {
@@ -91,7 +94,7 @@ exports.getCharityFields = function(charity, callback) {
 //   console.log(response);
 // });
 
-// exports.updateBalance('Save the Helgas', 5.02, function(response) {
+// exports.updateBalance('Save the Helgas', {total_donated: 5.02, balance_owed: 3.04}, function(response) {
 //   console.log(response);
 // });
 

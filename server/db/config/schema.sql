@@ -11,8 +11,11 @@ DROP TABLE IF EXISTS users;
     
 CREATE TABLE users (
   id BIGSERIAL   PRIMARY KEY,
-  username VARCHAR(64) NOT NULL,
+  email VARCHAR(64) NOT NULL,
   password VARCHAR(64) NOT NULL,
+  first_name VARCHAR(64) NOT NULL,
+  last_name VARCHAR(64) NOT NULL,
+  phone_number VARCHAR(64) NULL DEFAULT NULL,
   plaid_access_token VARCHAR(256) NULL DEFAULT NULL,
   stripe_bank_account_token VARCHAR(256) NULL DEFAULT NULL,
   pending_balance REAL NULL DEFAULT NULL,
@@ -38,6 +41,7 @@ CREATE TABLE charities (
   state VARCHAR(64) NULL DEFAULT NULL,
   zip VARCHAR(64) NULL DEFAULT NULL,
   balance_owed REAL NULL DEFAULT NULL,
+  total_donated REAL NULL DEFAULT NULL,
   mission_statement VARCHAR(600) NULL DEFAULT NULL
 );
 
@@ -51,7 +55,8 @@ CREATE TABLE usersCharities (
   id BIGSERIAL   PRIMARY KEY,
   percentage REAL NULL DEFAULT NULL,
   id_users BIGSERIAL     references users(id),
-  id_charities BIGSERIAL     references charities(id)
+  id_charities BIGSERIAL     references charities(id),
+  date_time date      NOT NULL
 );
 
 -- ---

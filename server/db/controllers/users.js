@@ -1,10 +1,10 @@
 var db = require('../config/db');
 var bcrypt = require('bcrypt');
 
-exports.createUser = function(username, password, callback) {
+exports.createUser = function(email, password, first_name, last_name, callback) {
   db.query({
-    text: 'SELECT username, password FROM users \
-      WHERE username = \'' + username + '\';'
+    text: 'SELECT email, password, first_name, last_name FROM users \
+      WHERE email = \'' + email + '\';'
   }, 
   function(err, rows) {
     if (err) {
@@ -18,9 +18,9 @@ exports.createUser = function(username, password, callback) {
         // Store hash in your password DB. 
         console.log('hash', hash);
         db.query({
-          text: 'INSERT INTO users(username, password) \
-            VALUES($1, $2)',
-          values: [username, hash]
+          text: 'INSERT INTO users(email, password, first_name, last_name) \
+            VALUES($1, $2, $3, $4)',
+          values: [email, hash, first_name, last_name]
         },
 
         function(err, result) {
@@ -35,31 +35,34 @@ exports.createUser = function(username, password, callback) {
   });
 };
 
-exports.loginUser = function(username, password, callback) {
+exports.loginUser = function(email, password, callback) {
   db.query({
-    text: 'SELECT username, password FROM users \
-      WHERE username = \'' + username + '\';'
+    text: 'SELECT email, password FROM users \
+      WHERE email = \'' + email + '\';'
   }, 
   function(err, rows) {
     if (err) {
       console.log(err);
     } else if (rows.rowCount > 0) {
-      if (username === rows.rows[0].username) {
-        bcrypt.compare(password, rows.rows[0].password, function(err, res) {
-            // res == true 
-            if (err) {console.log(err);}
-            if (res) {
-              callback(true);
-            }
-        }); 
-      }
+      bcrypt.compare(password, rows.rows[0].password, function(err, res) {
+          // res == true 
+          if (err) {console.log(err);}
+          if (res) {
+            callback(true);
+          } else {
+            callback(false);
+          }
+      }); 
     } else {
       callback(false);
     }
   });
 };
 
-exports.updateUser = function(username, updateFields, callback) {
+exports.updateUser = function(email, updateFields, callback) {
+  // if (updateFields.password) {
+    
+  // }
   var updateString = '';
   for (var key in updateFields) {
     if (typeof updateFields[key] === 'string') {
@@ -71,10 +74,10 @@ exports.updateUser = function(username, updateFields, callback) {
   updateString = updateString.slice(0, updateString.length - 2);
   // console.log('update string', updateString);
   console.log('UPDATE users SET ' + updateString + ' \
-      WHERE username = \'' + username + '\';');
+      WHERE email = \'' + email + '\';');
   db.query({
     text: 'UPDATE users SET ' + updateString + ' \
-      WHERE username = \'' + username + '\';'
+      WHERE email = \'' + email + '\';'
   }, 
   function(err, rows) {
     if (err) {
@@ -85,12 +88,12 @@ exports.updateUser = function(username, updateFields, callback) {
   });
 };
 
-exports.getUserFields = function(username, callback) {
+exports.getUserFields = function(email, callback) {
   var queryString = '';
-  if (username === '') {
+  if (email === '') {
     queryString += 'SELECT * FROM users;';
   } else {
-    queryString += 'SELECT * FROM users WHERE username = \'' + username + '\';'
+    queryString += 'SELECT * FROM users WHERE email = \'' + email + '\';'
   }
   db.query({
     text: queryString
@@ -101,25 +104,25 @@ exports.getUserFields = function(username, callback) {
     } else if (rows.rowCount > 0) {
       callback(null, rows.rows);
     } else {
-      callback('no rows for user ' + username, null);
+      callback('no rows for user ' + email, null);
     }
   });
 }
 
 //EXAMPLE USAGE:
-// exports.createUser('herbert', 'test', function(response) {
+// exports.createUser('herbert@gmail.com', 'test', 'Herbert', 'Williams', function(response) {
 //   console.log(response);
 // });
 
-// exports.checkUser('herbert', 'test', function(response) {
+// exports.loginUser('herbert@gmail.com', 'test', function(response) {
 //   console.log(response);
 // });
 
-// exports.updateUser('helga', {plaid_access_token: 'n358sy98ty239582379',password: 'hi', pending_balance: 8}, function(result) {
+// exports.updateUser('herbert@gmail.com', {plaid_access_token: 'n358sy98ty239582379',password: 'hi', pending_balance: 8}, function(result) {
 //   console.log(result);
 // });
 
-// exports.getUserFields('helga', function(err, data) {
+// exports.getUserFields('herbert@gmail.com', function(err, data) {
 //   if (err) {
 //     console.log(err);
 //   } else {

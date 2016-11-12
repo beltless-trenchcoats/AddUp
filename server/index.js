@@ -55,14 +55,20 @@ app.post('/connect/get', function(req, res) {
 
 
 app.post('/signup', function(req, res) {
-  var username;
-  var password;
-  //then call the function that saves username/password in the db
+  var username = req.body.username;
+  var password = req.body.password
+  db.createUser(username, password, function(response) {
+    console.log('Create User Response ', response);
+  })
 });
 
 app.post('/login', function(req, res) {
-  var username;
-  var password;
+  console.log('req', req.body);
+  var username = req.body.username;
+  var password = req.body.password;
+  db.loginUser(username, password, function(response) {
+    console.log('Login User Response ', response);
+  })
   //call the function that verifies these credentials in the db
 });
 

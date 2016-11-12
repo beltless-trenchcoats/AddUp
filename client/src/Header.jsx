@@ -36,7 +36,7 @@ class Header extends Component {
     this.logoutUser = this.logoutUser.bind(this)
     this.onPasswordChange = this.onPasswordChange.bind(this)
     this.onUsernameChange = this.onUsernameChange.bind(this)
-  } 
+  }
 
   closeLogin() {
     this.setState({ showLoginModal: false });
@@ -66,9 +66,9 @@ class Header extends Component {
 
   signupUser (e) {
     e.preventDefault();
-    axios.post('/signup', {
+    axios.post('http://localhost:8080/signup', {
       username: this.state.username,
-      lastName: this.state.password
+      password: this.state.password
     })
     .then(function (response) {
       console.log(response);
@@ -80,9 +80,9 @@ class Header extends Component {
 
   loginUser (e) {
     e.preventDefault();
-    axios.post('/login', {
+    axios.post('http://localhost:8080/login', {
       username: this.state.username,
-      lastName: this.state.password
+      password: this.state.password
     })
     .then(function (response) {
       console.log(response);
@@ -126,7 +126,7 @@ class Header extends Component {
           </Modal.Header>
           <Modal.Body>
             <p>Please provide a Username and Password to create your AddUp+ Account</p>
-            
+
             <form onSubmit={this.signupUser}>
               <FieldGroup
                 id="formControlsEmail"
@@ -142,15 +142,15 @@ class Header extends Component {
                 placeholder="Password"
                 onChange={this.onPasswordChange}
               />
-              <Button 
+              <Button
                 className="modalButton"
-                type="submit" 
-                bsStyle="primary" 
+                type="submit"
+                bsStyle="primary"
                 >Signup
               </Button>
               <Button className="modalButton" onClick={this.closeSignup}>Cancel</Button>
             </form>
-            
+
           </Modal.Body>
           <Modal.Footer>
             <p>Already have an account? <a onClick={this.toggleModal}>Click here</a> to log in</p>
@@ -179,10 +179,10 @@ class Header extends Component {
                 placeholder="Password"
                 onChange={this.onPasswordChange}
               />
-              <Button 
+              <Button
                 className="modalButton"
-                type="submit" 
-                bsStyle="primary" 
+                type="submit"
+                bsStyle="primary"
                 >Login
               </Button>
               <Button className="modalButton" onClick={this.closeLogin}>Cancel</Button>
@@ -200,7 +200,7 @@ class Header extends Component {
             <Modal.Title>Logout of current account</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p> Would you like to logout?</p> 
+            <p> Would you like to logout?</p>
             <Button className="modalButton" bsStyle="primary" onClick={this.logoutUser}>Logout</Button>
             <Button className="modalButton" onClick={this.closeLogout}>Cancel</Button>
           </Modal.Body>

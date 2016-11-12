@@ -1,34 +1,8 @@
 var db = require('../config/db');
+var helpers = require('./helpers');
 
-var getIDs = function(username, charity, callback) {
-  db.query({
-    text: 'SELECT id FROM charities \
-      WHERE name = \'' + charity + '\';'
-  }, 
-  function(err, rows) {
-    if (err) {
-      callback(err);
-    } else {
-      var id_charities = rows.rows[0].id;
-      console.log('second query about to run');
-      db.query({
-        text: 'SELECT id FROM users \
-          WHERE username = \'' + username + '\';'
-      }, 
-      function(err, rows) {
-        if (err) {
-          callback(err);
-        } else {
-          var id_users = rows.rows[0].id;
-          callback({id_users: id_users, id_charities: id_charities});
-        }
-      });
-    }
-  });
-};
-
-exports.insert = function(username, charity, percentage, callback) {
-  getIDs(username, charity, function(idObj) {
+exports.insert = function(email, charity, percentage, callback) {
+  helpers.getIDs(email, charity, function(idObj) {
     var id_users = idObj.id_users;
     var id_charities = idObj.id_charities;
     console.log('SELECT * FROM usersCharities \
@@ -42,7 +16,7 @@ exports.insert = function(username, charity, percentage, callback) {
         callback(err);
       } else if (rows.rowCount > 0) {
         console.log(rows.rows);
-        callback('username and charity are already in database');
+        callback('email and charity are already in database');
       } else {
         console.log('fourth query about to run');
         db.query({
@@ -63,8 +37,9 @@ exports.insert = function(username, charity, percentage, callback) {
   });
 };
 
-exports.updatePercentage = function(username, charity, percentage, callback) {
-  getIDs(username, charity, function(idObj) {
+exports.updatePercentage = function(email, charity, percentage, callback) {
+  helpers.getIDs(email, charity, function(idObj) {
+    console.log(idObj);
     var id_users = idObj.id_users;
     var id_charities = idObj.id_charities;
     console.log('SELECT * FROM usersCharities \
@@ -107,37 +82,47 @@ exports.updatePercentage = function(username, charity, percentage, callback) {
   });
 };
 
-// exports.getUserCharityFields = function(username, charity, callback) {
-//   getIDs(username, charity, function(idObj) {
-//     var id_users = idObj.id_users;
-//     var id_charities = idObj.id_charities;
-//     var queryString = '';
-//     if (charity === '') {
-//       queryString += 'SELECT * FROM charities;';
-//     } else {
-//       queryString += 'SELECT * FROM charities WHERE name = \'' + charity + '\';'
-//     }
-//     db.query({
-//       text: queryString
-//     }, 
-//     function(err, rows) {
-//       if (err) {
-//         callback(err, null);
-//       } else if (rows.rowCount > 0) {
-//         callback(null, rows.rows);
-//       } else {
-//         callback('no rows for charity ' + charity, null);
-//       }
-//     });
-//   });
-// }
+exports.getUserCharityFields = function(email, charity, callback) {
+  helpers.getIDs(email, charity, function(idObj) {
+    var id_users = idObj.id_users;
+    var id_charities = idObj.id_charities;
+    var queryString = '';
+    if (charity === '' && email === '') {
+      queryString += 'SELECT * FROM usersCharities;';
+    } else if (charity !== '' && email === '') {
+      queryString += 'SELECT * FROM usersCharities WHERE id_charities = \'' + id_charities + '\';'
+    } else if (email !== '' && charity === '') {
+      queryString += 'SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\';'
+    } else {
+      queryString += 'SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\' AND id_charities = \'' + id_charities + '\';'
+    }
+    console.log(queryString);
+    db.query({
+      text: queryString
+    }, 
+    function(err, rows) {
+      if (err) {
+        callback(err, null);
+      } else if (rows.rowCount > 0) {
+        callback(null, rows.rows);
+      } else {
+        callback('no records', null);
+      }
+    });
+  });
+}
+
 // EXAMPLE USAGE:
-// exports.insert('helga', 'Save the Helgas', .5, function(result) {
+// exports.insert('herbert@gmail.com', 'Save the Helgas', .5, function(result) {
 //   console.log(result);
 // });
 
-// exports.updatePercentage('helga', 'Save the Helgas', .3, function(result) {
+// exports.updatePercentage('herbert@gmail.com', 'Save the Helgas', .8, function(result) {
 //   console.log(result);
+// });
+
+// exports.getUserCharityFields('herbert@gmail.com', 'Save the Helgas', function(err, result) {
+//   console.log(err, result);
 // });
 
 // -- CREATE TABLE usersCharities (

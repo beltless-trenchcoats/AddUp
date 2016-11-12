@@ -1,4 +1,7 @@
 var Users = require('./db/controllers/users');
+// var Transactions = require('./db/controllers/transactions');
+var UsersCharities = require('./db/controllers/usersCharities');
+var Charities = require('./db/controllers/charities');
 var axios = require('axios');
 
 // Note: This should be the testing key unless we actually want to charge real money!
@@ -9,25 +12,18 @@ var roundDailyTransactions = function() {
   Users.getUserFields('', function(err, results) {
     var users = results.rows;
     users.forEach(user => {
-
-      var access_token = user.plaid_access_token;
-
       //TODO: THIS NEEDS TO BE IMPLEMENTED
       axios.post('http://localhost:8080/connect/get', {
-          access_token: access_token
+          access_token: user.plaid_access_token
         })
         .then(function (transactions) {
 
           findRecentTransactions().forEach(transaction => {
-
             var amtToCharge = roundUpTransaction(user, transaction);
-
             if (amtToCharge) {
-            //TODO: Save amount, charity id , user id to database (transactions)
-              // charge(user, amount, createTransaction);
+              charge(user, amount);
             }
           });
-
         })
         .catch(function (error) {
           console.log(error);
@@ -52,25 +48,16 @@ var findRecentTransactions = function(user, transactions) {
 
 // Calculate rounded amount to charge
 var roundUpTransaction = function(user, transaction) {
-  // If the user is already over their limit, exit
-  if (user.monthly_total >= user.monthly_limit) {
-    return 0;
-  }
-
   var transAmt = transaction.amount;
-  // If the transaction amount was 0 or a refund, exit
-  if (transAmt <= 0) {
+  // If the user is already over their limit or the transaction is 0 or a refund, exit
+  if (user.monthly_total >= user.monthly_limit || transAmt <= 0) {
     return 0;
   }
-
   // Calculate round-up amount
   var roundUpAmt = 1 - (transAmt % 1).toFixed(2);
   
   //if user's monthly limit would be exceeded by this roundUpAmt, only charge amt up to monthly_limit
-  var hypotheticalSum = user.monthly_total + roundUpAmt;
-  if (hypotheticalSum > user.monthly_limit) {
-    roundUpAmt = user.monthly_limit - user.monthly_total;
-  }
+  roundUpAmt = (user.monthly_total + roundUpAmt) > user.monthly_limit ? user.monthly_limit - user.monthly_total : roundUpAmt;
 
   // If the amount < 0.50, we can't charge it yet...
   if (roundUpAmt < 0.50) { 
@@ -86,11 +73,10 @@ var roundUpTransaction = function(user, transaction) {
       return updatedPendingBalance;
     }
   }
-
   return roundUpAmt;
 };
 
-var charge = function(user, amount, callback) {
+var charge = function(user, amount) {
   var stripe_token = user.stripe_bank_account_token;
   // Note: The stripe charge takes an integer representing the number of cents (100 = $1.00)
   var chargeAmount = amount * 100;
@@ -103,13 +89,27 @@ var charge = function(user, amount, callback) {
       console.log('Card Declined');
     }
     console.log('CHARGE', charge);
-    callback(user, amount);
+    var chargeAmount = charge.amount / 100;
+    //TODO: Determine how much to send to each charity the user has chosen
+    distributeDonation(user, chargeAmount);
   });
 };
+
+var distributeDonation = function(user, amount) {
+  // TODO: Get all from users_charities for user, and split up donation based on percentages
+  // var charities = UsersCharities...
+  charities.forEach(charity => {
+    //TODO: Save amount, charity id , user id to database (transactions)
+    Transactions.createTransaction(user._id, amount, charity._id, result => console.log(result));
+    //TODO: Save that amount to a charity in the db
+    // Charities.updateBalance();
+  });
+}
 
 module.exports = {
   roundDailyTransactions: roundDailyTransactions,
   findRecentTransactions: findRecentTransactions,
   roundUpTransaction: roundUpTransaction,
-  charge: charge
+  charge: charge,
+  distributeDonation: distributeDonation
 };

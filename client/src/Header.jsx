@@ -72,6 +72,7 @@ class Header extends Component {
     })
     .then(function (response) {
       console.log(response);
+      this.closeSignup();
     })
     .catch(function (error) {
       console.log(error);
@@ -86,6 +87,7 @@ class Header extends Component {
     })
     .then(function (response) {
       console.log(response);
+      this.closeLogin();
     })
     .catch(function (error) {
       console.log(error);
@@ -117,7 +119,6 @@ class Header extends Component {
           <Button className="signupButton" bsSize="small" onClick={this.openSignup}>Sign Up</Button>
           <Button className="logoutButton" bsSize="small" onClick={this.openLogout}>Logout</Button>
         </div>
-
 
         {/*Signup Modal*/}
         <Modal className="modal" show={this.state.showSignupModal} onHide={this.closeSignup}>

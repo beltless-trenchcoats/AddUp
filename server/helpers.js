@@ -41,8 +41,7 @@ var findRecentTransactions = function(user, transactions) {
   var newTransactions = [];
   var index = 0;
   var trans = transactions[index];
-  console.log('checking if', mostRecentTransactionId, 'matches', trans._id);
-  while (trans && trans._id !== mostRecentTransactionId) {
+  while (trans._id && trans._id !== mostRecentTransactionId) {
     newTransactions.push(trans);
     index++;
     trans = transactions[index];

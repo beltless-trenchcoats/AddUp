@@ -7,7 +7,7 @@ describe('Helper functions', function() {
   // An example user based on db schema
   var users = [
     {
-      email: 'helga@gmail.com',
+      email: 'miles71397@gmail.com',
       plaid_access_token: 'test_wells',
       stripe_bank_account_token: 'btok_9YDoZt3NHiIjun',
       pending_balance: 0.3,
@@ -16,7 +16,7 @@ describe('Helper functions', function() {
       last_transaction_id: '1vAj1Eja5BIn4R7V6Mp1hBPQgkryZRHryZ0rDY'
     },
     {
-      email: 'helga@gmail.com',
+      email: 'miles71397@gmail.com',
       plaid_access_token: 'test_wells',
       stripe_bank_account_token: 'btok_9YDoZt3NHiIjun',
       pending_balance: 0,
@@ -35,18 +35,26 @@ describe('Helper functions', function() {
       name: "Gregorys Coffee"
     },
     {
-      id: 'DAE3Yo3wXgskjXV1JqBDIrDBVvjMLDCQ4rMQdR',
+      _id: 'DAE3Yo3wXgskjXV1JqBDIrDBVvjMLDCQ4rMQdR',
       amount: 3.19,
       date: "2014-06-21",
       name: "Gregorys Coffee"
     },
     {
-      id: '1vAj1Eja5BIn4R7V6Mp1hBPQgkryZRHryZ0rDY',
+      _id: '1vAj1Eja5BIn4R7V6Mp1hBPQgkryZRHryZ0rDY',
       amount: 3.99,
       date: "2014-06-21",
       name: "Gregorys Coffee"
     }
   ];
+
+  describe('finding recent transactions', function() {
+    it('should only return transactions since the last transaction id', function(done) {
+      expect(helpers.findRecentTransactions(users[0], transactions).length).to.equal(2);
+      expect(helpers.findRecentTransactions(users[1], transactions).length).to.equal(1);
+      done();
+    });
+  });
 
   describe('rounding up transactions', function() {
     it('should return rounded-up amount for an amount > 0.50', function(done) {
@@ -74,16 +82,11 @@ describe('Helper functions', function() {
 
   describe('charging with stripe', function() {
     it('should return success when charging a user a given amount', function(done) {
-      helpers.charge(users[0], 0.51);
-      expect(true).to.be.true;
-      done();
+      var testCharge = function() {
+        helpers.charge(users[0], 0.51);
+      }
+      expect(testCharge).to.not.throw(Error);
+      setTimeout(() => done(), 1000);
     });
   });
-
-  describe('finding recent transactions', function() {
-    it('should only return transactions since the last transaction id', function(done) {
-      expect(helpers.findRecentTransactions(users[1], transactions).length).to.equal(1);
-    });
-  })
-
 });

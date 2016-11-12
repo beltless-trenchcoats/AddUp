@@ -7,6 +7,8 @@ var db = require('./db/controllers/users');
 var app = express();
 var port = process.env.PORT || 8080;
 
+var currentUser = undefined;
+
 app.use(parser.json(), function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -38,8 +40,8 @@ app.post('/authenticate', function(req, res) {
       console.log('stripe token', stripe_token);
       // console.log('session username ',req.session.username );
       //save access tokens to the db
-      db.updateUser('helga', { plaid_access_token: access_token,
-      stripe_bank_account_token: stripe_token, password: 'hi', pending_balance: 8 },
+      db.updateUser(currentUser, { plaid_access_token: access_token,
+      stripe_bank_account_token: stripe_token },
       function(result) {
         console.log('result ',result);
       })
@@ -75,10 +77,19 @@ app.post('/login', function(req, res) {
   req.session.email = req.body.email
   var email = req.body.email;
   var password = req.body.password;
-  console.log('session in login', req.session);
-  console.log('email from session in login ', req.session.email);
   db.loginUser(email, password, function(response) {
     console.log('Login User Response ', response);
+    if(response) {
+      currentUser = email;
+      db.getUserFields(currentUser, function(err, data) {
+        if(err) {
+          throw err;
+        } else {
+          res.send({"first_name": data[0].first_name, "last_name": data[0].last_name});
+        }
+      })
+    };
+    console.log('currentUser ', currentUser);
   })
   //call the function that verifies these credentials in the db
 });

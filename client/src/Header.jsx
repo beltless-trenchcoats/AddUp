@@ -20,8 +20,10 @@ class Header extends Component {
       showLoginModal: false,
       showSignupModal: false,
       showLogoutModal: false,
-      username: '',
-      password: ''
+      email: '',
+      password: '',
+      firstname: '',
+      lastname: ''
     }
     this.closeLogin = this.closeLogin.bind(this)
     this.openLogin = this.openLogin.bind(this)
@@ -35,7 +37,9 @@ class Header extends Component {
     this.loginUser = this.loginUser.bind(this)
     this.logoutUser = this.logoutUser.bind(this)
     this.onPasswordChange = this.onPasswordChange.bind(this)
-    this.onUsernameChange = this.onUsernameChange.bind(this)
+    this.onEmailChange = this.onEmailChange.bind(this)
+    this.onFirstnameChange = this.onFirstnameChange.bind(this)
+    this.onLastnameChange = this.onLastnameChange.bind(this)
   }
 
   closeLogin() {
@@ -67,8 +71,10 @@ class Header extends Component {
   signupUser (e) {
     e.preventDefault();
     axios.post('http://localhost:8080/signup', {
-      username: this.state.username,
-      password: this.state.password
+      email: this.state.email,
+      password: this.state.password,
+      firstname: this.state.firstname,
+      lastname: this.state.lastname
     })
     .then(function (response) {
       console.log(response);
@@ -82,11 +88,11 @@ class Header extends Component {
   loginUser (e) {
     e.preventDefault();
     axios.post('http://localhost:8080/login', {
-      username: this.state.username,
+      email: this.state.email,
       password: this.state.password
     })
     .then(function (response) {
-      console.log(response);
+      console.log(response.session);
       this.closeLogin();
     })
     .catch(function (error) {
@@ -101,12 +107,18 @@ class Header extends Component {
 
   onPasswordChange (e) {
     this.setState({password: e.target.value})
-    console.log('password', this.state.password)
   }
 
-  onUsernameChange (e) {
-    this.setState({username: e.target.value})
-    console.log('username', this.state.username)
+  onEmailChange (e) {
+    this.setState({email: e.target.value})
+  }
+
+  onFirstnameChange (e) {
+    this.setState({firstname: e.target.value})
+  }
+
+  onLastnameChange (e) {
+    this.setState({lastname: e.target.value})
   }
 
   render() {
@@ -126,21 +138,39 @@ class Header extends Component {
             <Modal.Title>Create Account</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>Please provide a Username and Password to create your AddUp+ Account</p>
+            <p>Please provide your user information to create your AddUp+ Account</p>
 
             <form onSubmit={this.signupUser}>
               <FieldGroup
-                id="formControlsEmail"
+                id="formControlsFirstname"
                 type="text"
-                label="Username"
-                placeholder="Enter username"
-                onChange={this.onUsernameChange}
+                required={true}
+                label="First Name*"
+                placeholder="First Name*"
+                onChange={this.onFirstnameChange}
+              />
+              <FieldGroup
+                id="formControlsLastname"
+                type="text"
+                required={true}
+                label="Last Name*"
+                placeholder="Last Name*"
+                onChange={this.onLastnameChange}
+              />
+              <FieldGroup
+                id="formControlsEmail"
+                type="email"
+                required={true}
+                label="Email*"
+                placeholder="Enter Email*"
+                onChange={this.onEmailChange}
               />
               <FieldGroup
                 id="formControlsPassword"
-                label="Password"
                 type="password"
-                placeholder="Password"
+                required={true}
+                label="Password*"
+                placeholder="Password*"
                 onChange={this.onPasswordChange}
               />
               <Button
@@ -168,10 +198,10 @@ class Header extends Component {
             <form onSubmit={this.loginUser}>
               <FieldGroup
                 id="formControlsEmail"
-                type="text"
-                label="Username"
-                placeholder="Enter username"
-                onChange={this.onUsernameChange}
+                type="email"
+                label="Email"
+                placeholder="Enter email"
+                onChange={this.onEmailChange}
               />
               <FieldGroup
                 id="formControlsPassword"

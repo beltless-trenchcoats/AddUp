@@ -1,26 +1,37 @@
 var db = require('./db/controllers/users');
+var axios = require('axios');
+
+// Note: This should be the testing key unless we actually want to charge real money!
+var test_key = 'sk_test_eKJNtjs3Il6V1QZvyKs1dS6y';
+var stripe = require('stripe')(test_key);
 
 exports.roundDailyTransactions = function() {
-  // Get all users
   db.getUserFields('', function(err, results) {
     var users = results.rows;
     users.forEach(user => {
 
-      //TODO: GET USER'S RECENT TRANSACTIONS
-      var transactions = [];
+      var access_token = user.plaid_access_token;
 
-      transactions.forEach(transaction => {
-        var amtToCharge = roundTransaction(user, transaction);
-        if (amtToCharge) {
-          charge(user, amount);
-        }
-        //TODO: Save amount, charity, username to database (transactions)
-      });
+      axios.post('http://localhost:8080/connect/get', {
+          access_token: access_token
+        })
+        .then(function (transactions) {
 
+          transactions.forEach(transaction => {
+            var amtToCharge = roundTransaction(user, transaction);
+            if (amtToCharge) {
+              charge(user, amount);
+            }
+            //TODO: Save amount, charity, username to database (transactions)
+          });
+
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     });
   });
-}
-
+};
 
 // Calculate rounded amount to charge
 var roundTransaction = function(user, transaction) {
@@ -53,8 +64,6 @@ var roundTransaction = function(user, transaction) {
 
 var charge = function(user, amount) {
   var stripe_token = user.stripe_bank_account_token;
-  // Note: This should be the testing key unless we actually want to charge real money!
-  var stripe = require('stripe')('sk_test_eKJNtjs3Il6V1QZvyKs1dS6y');
   // Note: The stripe charge takes an integer representing the number of cents (100 = $1.00)
   var chargeAmount = amount * 100;
   var charge = stripe.charges.create({
@@ -63,7 +72,6 @@ var charge = function(user, amount) {
     source: stripe_token
   }, function(err, charge) {
     if (err && err.type === 'StripeCardError') {
-      // The card has been declined
       console.log('Card Declined')
     });
 };

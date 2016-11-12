@@ -9,12 +9,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.15.2",
     "bcrypt": "^0.8.7",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "mongoose": "^4.6.6",
     "nodemon": "^1.11.0",
-    "plaid": "^1.1.0",
-    "pg": "6.1.0"
+    "pg": "6.1.0",
+    "plaid": "^1.1.0"
   }
 }

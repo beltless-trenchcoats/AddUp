@@ -60,9 +60,11 @@ exports.loginUser = function(email, password, callback) {
 };
 
 exports.updateUser = function(email, updateFields, callback) {
-  // if (updateFields.password) {
-    
-  // }
+  //encrypt new password
+  if (updateFields.password) {
+    var hash = bcrypt.hashSync(updateFields.password, 10);
+    updateFields.password = hash;
+  }
   var updateString = '';
   for (var key in updateFields) {
     if (typeof updateFields[key] === 'string') {
@@ -118,7 +120,7 @@ exports.getUserFields = function(email, callback) {
 //   console.log(response);
 // });
 
-// exports.updateUser('herbert@gmail.com', {plaid_access_token: 'n358sy98ty239582379',password: 'hi', pending_balance: 8}, function(result) {
+// exports.updateUser('herbert@gmail.com', {plaid_access_token: 'n358sy98ty239582379', password: 'hi', pending_balance: 8}, function(result) {
 //   console.log(result);
 // });
 

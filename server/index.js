@@ -55,6 +55,7 @@ app.post('/connect/get', function(req, res) {
 
 
 app.post('/signup', function(req, res) {
+  console.log('req', req.body);
   var username;
   var password;
   //then call the function that saves username/password in the db

@@ -39,7 +39,7 @@ exports.roundDailyTransactions = function() {
 
 var roundUpTransaction = exports.roundUpTransaction = function(user, transaction) {
   var transAmt = transaction.amount;
-  var roundUpAmt = 1 - (transAmt % 1);
+  var roundUpAmt = 1 - (transAmt % 1).toFixed(2);
   
   //if user's monthly limit would be exceeded by this roundUpAmt, only charge amt up to monthly_limit
   var hypotheticalSum = user.monthly_total + roundUpAmt;

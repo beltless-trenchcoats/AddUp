@@ -5,7 +5,7 @@ var axios = require('axios');
 var test_key = 'sk_test_eKJNtjs3Il6V1QZvyKs1dS6y';
 var stripe = require('stripe')(test_key);
 
-exports.roundDailyTransactions = function() {
+var roundDailyTransactions = function() {
   db.getUserFields('', function(err, results) {
     var users = results.rows;
     users.forEach(user => {
@@ -24,7 +24,7 @@ exports.roundDailyTransactions = function() {
             if (amtToCharge) {
               charge(user, amount);
             }
-            //TODO: Save amount, charity, username to database (transactions)
+            //TODO: Save amount, charity id , user id to database (transactions)
           });
 
         })
@@ -50,7 +50,7 @@ var findRecentTransactions = function(user, transactions) {
 };
 
 // Calculate rounded amount to charge
-var roundUpTransaction = exports.roundUpTransaction = function(user, transaction) {
+var roundUpTransaction = function(user, transaction) {
   // If the user is already over their limit, exit
   if (user.monthly_total >= user.monthly_limit) {
     return 0;
@@ -78,10 +78,10 @@ var roundUpTransaction = exports.roundUpTransaction = function(user, transaction
 
     // If the amount is still too small to charge, save to db and exit function
     if (updatedPendingBalance < 0.50) { 
-      db.updateUser(user.username, {pending_balance: updatedPendingBalance}, result => console.log(result));
+      db.updateUser(user.email, {pending_balance: updatedPendingBalance}, result => console.log(result));
       return 0;
     } else { // Else, zero out the user's pending balance and return new amount to charge
-      db.updateUser(user.username, {pending_balance: 0}, result => console.log(result));
+      db.updateUser(user.email, {pending_balance: 0}, result => console.log(result));
       return updatedPendingBalance;
     }
   }
@@ -89,7 +89,7 @@ var roundUpTransaction = exports.roundUpTransaction = function(user, transaction
   return roundUpAmt;
 };
 
-var charge = exports.charge = function(user, amount) {
+var charge = function(user, amount) {
   var stripe_token = user.stripe_bank_account_token;
   // Note: The stripe charge takes an integer representing the number of cents (100 = $1.00)
   var chargeAmount = amount * 100;
@@ -101,5 +101,13 @@ var charge = exports.charge = function(user, amount) {
     if (err && err.type === 'StripeCardError') {
       console.log('Card Declined');
     }
+    console.log('CHARGE', charge);
   });
+};
+
+module.exports = {
+  roundDailyTransactions: roundDailyTransactions,
+  findRecentTransactions: findRecentTransactions,
+  roundUpTransaction: roundUpTransaction,
+  charge: charge
 };

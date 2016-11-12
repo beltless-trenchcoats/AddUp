@@ -71,6 +71,11 @@ app.post('/signup', function(req, res) {
   db.createUser(email, password, firstName, lastName, function(response) {
     //response is true or false
     console.log('Create User Response ', response);
+    if(response) {
+      res.send('Successful Signup');
+    } else {
+      res.send('Failed Signup');
+    }
   })
 });
 

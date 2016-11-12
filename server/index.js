@@ -56,7 +56,7 @@ app.post('/connect/get', function(req, res) {
   var data = {
     client_id: '58224c96a753b9766d52bbd1',
     secret: '04137ebffb7d68729f7182dd0a9e71',
-    access_token: ''
+    access_token: req.body.access_token
   }
   res.send(data);
 });

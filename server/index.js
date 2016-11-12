@@ -27,8 +27,6 @@ var plaidClient = new plaid.Client(client_id, secret, plaid.environments.tartan)
 app.post('/authenticate', function(req, res) {
   var public_token = req.body.public_token;
   var account_id = req.body.account_id;
-  console.log('session information ', req.session);
-  // console.log('public_token in express ', public_token);
   // Exchange a public_token for a Plaid access_token
   plaidClient.exchangeToken(public_token, account_id, function(err, exchangeTokenRes) {
     if (err != null) {
@@ -38,7 +36,6 @@ app.post('/authenticate', function(req, res) {
       var stripe_token = exchangeTokenRes.stripe_bank_account_token;
       console.log('access token', access_token);
       console.log('stripe token', stripe_token);
-      // console.log('session username ',req.session.username );
       //save access tokens to the db
       db.updateUser(currentUser, { plaid_access_token: access_token,
       stripe_bank_account_token: stripe_token },
@@ -49,8 +46,6 @@ app.post('/authenticate', function(req, res) {
   });
 });
 
-
-//this is skeleton code until we get a front-end accessible for Plaid Link
 //this post needs to go to https://tartan.plaid.com/ and returns transaction data
 app.post('/connect/get', function(req, res) {
   var data = {
@@ -72,6 +67,7 @@ app.post('/signup', function(req, res) {
   })
 });
 
+
 app.post('/login', function(req, res) {
   console.log('req', req.body);
   req.session.email = req.body.email
@@ -91,8 +87,8 @@ app.post('/login', function(req, res) {
     };
     console.log('currentUser ', currentUser);
   })
-  //call the function that verifies these credentials in the db
 });
+
 
 app.get('/logout', function(req, res) {
   req.session.email = undefined;

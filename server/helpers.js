@@ -18,7 +18,9 @@ exports.roundDailyTransactions = function() {
         .then(function (transactions) {
 
           transactions.forEach(transaction => {
-            var amtToCharge = roundTransaction(user, transaction);
+
+            var amtToCharge = roundUpTransaction(user, transaction);
+
             if (amtToCharge) {
               charge(user, amount);
             }
@@ -34,9 +36,10 @@ exports.roundDailyTransactions = function() {
 };
 
 // Calculate rounded amount to charge
-var roundTransaction = exports.roundTransaction = function(user, transaction) {
+
+var roundUpTransaction = exports.roundUpTransaction = function(user, transaction) {
   var transAmt = transaction.amount;
-  var roundUpAmt = 1 - transAmt % 1;
+  var roundUpAmt = 1 - (transAmt % 1);
   
   //if user's monthly limit would be exceeded by this roundUpAmt, only charge amt up to monthly_limit
   var hypotheticalSum = user.monthly_total + roundUpAmt;
@@ -47,14 +50,15 @@ var roundTransaction = exports.roundTransaction = function(user, transaction) {
   // If the amount < 0.50, we can't charge it yet...
   if (roundUpAmt < 0.50) { 
     // Check what pending balance the user has and add roundUpAmt to this
-    var updatedPendingBalance = roundUpAmt + users.pending_balance;
+
+    var updatedPendingBalance = roundUpAmt + user.pending_balance;
 
     // If the amount is still too small to charge, save to db and exit function
     if (updatedPendingBalance < 0.50) { 
-      db.updateUser(user.username, {pending_balance: updatedPendingBalance}, result => console.log(result););
+      db.updateUser(user.username, {pending_balance: updatedPendingBalance}, result => console.log(result));
       return 0;
     } else { // Else, zero out the user's pending balance and return new amount to charge
-      db.updateUser(user.username, {pending_balance: 0}, result => console.log(result););
+      db.updateUser(user.username, {pending_balance: 0}, result => console.log(result));
       return updatedPendingBalance;
     }
   }
@@ -72,8 +76,9 @@ var charge = exports.charge = function(user, amount) {
     source: stripe_token
   }, function(err, charge) {
     if (err && err.type === 'StripeCardError') {
-      console.log('Card Declined')
-    });
+      console.log('Card Declined');
+    }
+  });
 };
 
 

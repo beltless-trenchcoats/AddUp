@@ -1,6 +1,7 @@
 var express = require('express');
 var parser = require('body-parser');
 var plaid = require('plaid');
+var db = require('./db/controllers/users');
 
 var app = express();
 var port = process.env.PORT || 8080;
@@ -30,32 +31,43 @@ app.post('/authenticate', function(req, res) {
       console.log('access token', access_token);
       console.log('stripe token', stripe_token);
 
-      //TODO: Save these tokens to the database
-
-      plaidClient.getAuthUser(access_token, function(err, authRes) {
-        if (err != null) {
-          res.json('error!');
-        } else {
-          // An array of accounts for this user, containing account
-          // names, balances, and account and routing numbers.
-          var accounts = authRes.accounts;
-
-          res.json({accounts: accounts});
-        }
-      });
+      //save access tokens to the db
+      db.updateUser('helga', { plaid_access_token: access_token,
+      stripe_bank_account_token: stripe_token, password: 'hi', pending_balance: 8 },
+      function(result) {
+        console.log('result ',result);
+      })
     }
   });
 });
+
 
 //this is skeleton code until we get a front-end accessible for Plaid Link
 //this post needs to go to https://tartan.plaid.com/ and returns transaction data
 app.post('/connect/get', function(req, res) {
   var data = {
-    client_id: '',
-    secret: '',
+    client_id: '58224c96a753b9766d52bbd1',
+    secret: '04137ebffb7d68729f7182dd0a9e71',
     access_token: ''
   }
   res.send(data);
+});
+
+
+app.post('/signup', function(req, res) {
+  var username;
+  var password;
+  //then call the function that saves username/password in the db
+});
+
+app.post('/login', function(req, res) {
+  var username;
+  var password;
+  //call the function that verifies these credentials in the db
+});
+
+app.get('/logout', function(req, res) {
+  //call the function that destroys the user's token
 });
 
 

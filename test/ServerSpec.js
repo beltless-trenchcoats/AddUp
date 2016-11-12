@@ -2,7 +2,9 @@ var expect = require('chai').expect;
 
 var worker = require('../server/worker');
 
-describe('Helper functions', function() {
+// var Transactions = require('../server/db/controllers/transactions');
+
+describe('Worker functions', function() {
 
   // An example user based on db schema
   var users = [
@@ -75,18 +77,30 @@ describe('Helper functions', function() {
     it('should update a users pending balance if their aggregate balance is still < 0.50', function(done) {
       expect(worker.roundUpTransaction(users[0], transactions[2])).to.equal(0);
       //giving time for the inner database call to go through 
-      setTimeout(() => done(), 1000);
-      // done();
+      setTimeout(() => done(), 100);
     });
   });
 
   describe('charging with stripe', function() {
-    it('should return success when charging a user a given amount', function(done) {
+    it('should return without error when charging a user a given amount', function(done) {
       var testCharge = function() {
-        worker.charge(users[0], 0.51, () => console.log());
+        worker.charge(users[0], 0.51);
       }
       expect(testCharge).to.not.throw(Error);
-      setTimeout(() => done(), 1000);
+      setTimeout(() => done(), 100);
+    });
+  });
+
+  xdescribe('distributing donations amongst charities', function() {
+    it('should split donation amount based on percentages', function(done) {
+      worker.distributeDonation();
+      done();
+    });
+
+    it('should save transaction to database upon successful charge', function(done) {
+      worker.charge(users[0], 0.75);
+      //TODO:query db to check if exists
+      setTimeout(() => done(), 100);
     });
   });
 });

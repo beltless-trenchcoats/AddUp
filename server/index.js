@@ -4,7 +4,10 @@ var plaid = require('plaid');
 var request = require('request');
 var session = require('express-session');
 var db = require('./db/controllers/users');
+<<<<<<< a6e65eeabbf39cc07166450e6a9b18793dd2558c
 var apiKeys = require('./config/API_Keys');
+=======
+>>>>>>> (feat) POST to transactions will return transactions from plaid
 var axios = require('axios');
 
 var app = express();
@@ -64,13 +67,13 @@ app.post('/authenticate', function(req, res) {
 });
 
 //sends POST to Plaid and returns transaction data
-app.post('/connect/get', function(req, res) {
-  var data = {
-    client_id: '58224c96a753b9766d52bbd1',
-    secret: '04137ebffb7d68729f7182dd0a9e71',
-    access_token: req.body.access_token
-  }
-  res.send(data);
+app.post('/transactions', function(req, res) {
+  axios.post('https://tartan.plaid.com/connect/get', {
+    'client_id': '58224c96a753b9766d52bbd1',
+    'secret': '04137ebffb7d68729f7182dd0a9e71',
+    'access_token': req.body.access_token
+  }).then(resp => res.send(resp.data))
+    .catch(err => console.log('error pinging plaid', err));
 });
 
 //signup new users to our local db

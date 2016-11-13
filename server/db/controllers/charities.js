@@ -32,10 +32,10 @@ exports.createCharity = function(values, callback) {
   });
 };
 
-exports.updateBalance = function(charity, amountObj, callback) {
+exports.updateBalance = function(charityId, amountObj, callback) {
   db.query({
     text: 'SELECT balance_owed, total_donated FROM charities \
-      WHERE name = \'' + charity + '\';'
+      WHERE id = \'' + charityId + '\';'
   }, 
   function(err, rows) {
     if (err) {
@@ -47,10 +47,10 @@ exports.updateBalance = function(charity, amountObj, callback) {
         var newBalance = rows.rows[0].balance_owed + balance_owed_add;
         var newTotal = rows.rows[0].total_donated + total_donated_add;
         console.log('UPDATE charities SET balance_owed = ' + newBalance + ', total_donated= ' + newTotal + ' \
-            WHERE name = \'' + charity + '\';');
+            WHERE id = \'' + charityId + '\';');
         db.query({
           text: 'UPDATE charities SET balance_owed = ' + newBalance + ', total_donated= ' + newTotal + ' \
-            WHERE name = \'' + charity + '\';'
+            WHERE id = \'' + charityId + '\';'
         }, 
         function(err, rows) {
           if (err) {
@@ -60,18 +60,18 @@ exports.updateBalance = function(charity, amountObj, callback) {
           }
         });
       } else {
-        callback('charity is not in database ' + charity);
+        callback('charityId is not in database ' + charityId);
       }
     }
   });
 };
 
-exports.getCharityFields = function(charity, callback) {
+exports.getCharityFields = function(charityId, callback) {
   var queryString = '';
-  if (charity === '') {
+  if (charityId === '') {
     queryString += 'SELECT * FROM charities;';
   } else {
-    queryString += 'SELECT * FROM charities WHERE name = \'' + charity + '\';'
+    queryString += 'SELECT * FROM charities WHERE id = \'' + charityId + '\';'
   }
   db.query({
     text: queryString
@@ -82,7 +82,7 @@ exports.getCharityFields = function(charity, callback) {
     } else if (rows.rowCount > 0) {
       callback(null, rows.rows);
     } else {
-      callback('no rows for charity ' + charity, null);
+      callback('no rows for charityId ' + charityId, null);
     }
   });
 }
@@ -94,10 +94,10 @@ exports.getCharityFields = function(charity, callback) {
 //   console.log(response);
 // });
 
-// exports.updateBalance('Save the Helgas', {total_donated: 5.02, balance_owed: 3.04}, function(response) {
+// exports.updateBalance(1, {total_donated: 5.02, balance_owed: 3.04}, function(response) {
 //   console.log(response);
 // });
 
-// exports.getCharityFields('Save the Helgas', function(error, response) {
+// exports.getCharityFields(1, function(error, response) {
 //   console.log(response);
 // });

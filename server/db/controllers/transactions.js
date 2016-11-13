@@ -1,27 +1,23 @@
 var db = require('../config/db');
 var helpers = require('./helpers');
 
-exports.insert = function(email, charity, amount, callback) {
-  helpers.getIDs(email, charity, function(idObj) {
-    var id_users = idObj.id_users;
-    var id_charities = idObj.id_charities;
-    var today = new Date();
-    var month = (today.getMonth() + 1) < 10 ? '' + 0 + (today.getMonth() + 1) : '' + (today.getMonth() + 1);
-    var day = today.getDate() < 10 ? '' + 0 + today.getDate() : '' + today.getDate();
-    var date = '' + today.getFullYear() + '-' + month + '-' + day;
-    db.query({
-      text: 'INSERT INTO transactions(id_users, id_charities, amount, date_time) \
-        VALUES($1, $2, $3, $4)',
-      values: [id_users, id_charities, amount, date]
-    },
-    function(err, result) {
-      if (err) {
-        console.log('ERROR IN THE INSERT', err);
-        callback(err);
-      } else {
-        callback('success');
-      }
-    });
+exports.insert = function(id_users, id_charities, amount, callback) {
+  var today = new Date();
+  var month = (today.getMonth() + 1) < 10 ? '' + 0 + (today.getMonth() + 1) : '' + (today.getMonth() + 1);
+  var day = today.getDate() < 10 ? '' + 0 + today.getDate() : '' + today.getDate();
+  var date = '' + today.getFullYear() + '-' + month + '-' + day;
+  db.query({
+    text: 'INSERT INTO transactions(id_users, id_charities, amount, date_time) \
+      VALUES($1, $2, $3, $4)',
+    values: [id_users, id_charities, amount, date]
+  },
+  function(err, result) {
+    if (err) {
+      console.log('ERROR IN THE INSERT', err);
+      callback(err);
+    } else {
+      callback('success');
+    }
   });
 };
 
@@ -43,7 +39,7 @@ exports.getTransactions = function(email, callback) {
 };
 
 //EXAMPLE USAGE
-// exports.insert('herbert@gmail.com', 'Save the Helgas', 100, function(response) {
+// exports.insert(4, 1, 90, function(response) {
 //   console.log(response);
 // })
 

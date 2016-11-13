@@ -1,5 +1,5 @@
 var Users = require('./db/controllers/users');
-// var Transactions = require('./db/controllers/transactions');
+var Transactions = require('./db/controllers/transactions');
 var UsersCharities = require('./db/controllers/usersCharities');
 var Charities = require('./db/controllers/charities');
 var axios = require('axios');
@@ -9,25 +9,23 @@ var test_key = 'sk_test_eKJNtjs3Il6V1QZvyKs1dS6y';
 var stripe = require('stripe')(test_key);
 
 var roundDailyTransactions = function() {
-  Users.getUserFields('', function(err, results) {
-    var users = results.rows;
+  Users.getUserFields('', function(err, users) {
     users.forEach(user => {
-      //TODO: THIS NEEDS TO BE IMPLEMENTED
-      axios.post('http://localhost:8080/connect/get', {
-          access_token: user.plaid_access_token
-        })
-        .then(function (transactions) {
-
-          findRecentTransactions().forEach(transaction => {
-            var amtToCharge = roundUpTransaction(user, transaction);
-            if (amtToCharge) {
-              charge(user, amount);
-            }
-          });
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      //If the user has linked a bank account through plaid
+      if (user.plaid_access_token) { 
+        axios.post('http://localhost:8080/transactions', {
+            'access_token': user.plaid_access_token
+          })
+          .then(transactions => {
+            findRecentTransactions().forEach(transaction => {
+              var amtToCharge = roundUpTransaction(user, transaction);
+              if (amtToCharge) {
+                charge(user, amount);
+              }
+            });
+          })
+          .catch(err => console.log('error pinging localhost:', err));
+      }
     });
   });
 };
@@ -90,19 +88,21 @@ var charge = function(user, amount) {
     }
     console.log('CHARGE', charge);
     var chargeAmount = charge.amount / 100;
-    //TODO: Determine how much to send to each charity the user has chosen
+    // Determine how much to send to each charity the user has chosen
     distributeDonation(user, chargeAmount);
   });
 };
 
 var distributeDonation = function(user, amount) {
-  // TODO: Get all from users_charities for user, and split up donation based on percentages
-  // var charities = UsersCharities...
-  charities.forEach(charity => {
-    //TODO: Save amount, charity id , user id to database (transactions)
-    Transactions.createTransaction(user._id, amount, charity._id, result => console.log(result));
-    //TODO: Save that amount to a charity in the db
-    // Charities.updateBalance();
+  var charities = UsersCharities.getUserCharityFields(user.email, (err, charities) => {
+    charities.forEach(charity => {
+      var amountForCharity = amount * charity.percentage;
+      // Save amount, charity id , user id to db
+      Transactions.insert(user._id, charity._id, amountForCharity, result => console.log(result));
+      // Save that amount to a charity in the db
+      Charities.updateBalance(charity_id, {total_donated: amountForCharity, balance_owed: amountForCharity}, 
+        result => console.log(result));
+    });
   });
 }
 

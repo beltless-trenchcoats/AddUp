@@ -4,6 +4,7 @@ var plaid = require('plaid');
 var request = require('request');
 var session = require('express-session');
 var db = require('./db/controllers/users');
+var apiKeys = require('./config/API_Keys');
 
 var app = express();
 var port = process.env.PORT || 8080;
@@ -114,31 +115,28 @@ app.get('/logout', function(req, res) {
   //call the function that destroys the user's token
 });
 
+//Sample request body (body can take category, searchTerm, category, city, state, zipCode)
+// {
+//   "category": "A",
+//   "city": "Santa Rosa",
+//   "state": "CA"
+// }
 app.post('/charitySearch', function(req, res) {
   console.log('req.body', req.body);
-  // var body = {};
-  // var searchOptions = ['searchTerm', 'city', 'state', 'zipCode', 'category'];
-  // for (var i = 0; i < searchOptions.length; i++) {
-  //   if (req.body[searchOptions[i]]) {
-  //     body[searchOptions[i]] = req.body[searchOptions[i]];
-  //   }
-  // }
-  // console.log('body', body);
-  // var options = {
-  //   method: 'post',
-  //   body: body,
-  //   json: true,
-  //   url: 'http://data.orghunter.com/v1/charitysearch?user_key=5473ac682c52543bcf470af956205eec'
-  // }
-  // request(options, function (err, res, body) {
-  //   if (err) {
-  //     console.log(err);
-  //   } else {
-  //     console.log('response', body);
-  //     res.send(body);
-  //   }
-  // });
-  res.send('success');
+  var options = {
+    method: 'post',
+    body: req.body,
+    json: true,
+    url: 'http://data.orghunter.com/v1/charitysearch?user_key=' + apiKeys.orgHunter
+  };
+  request(options, function (err, result, body) {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    } else {
+      res.send(JSON.stringify(body.data));
+    }
+  });
 });
 
 

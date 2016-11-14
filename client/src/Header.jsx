@@ -261,6 +261,7 @@ class Header extends Component {
             <p> Would you like to logout?</p>
             <Button className="modalButton" bsStyle="primary" onClick={this.logoutUser}>Logout</Button>
             <Button className="modalButton" onClick={this.closeLogout}>Cancel</Button>
+
           </Modal.Body>
         </Modal>
 

@@ -6,39 +6,37 @@ exports.getIDs = function(email, charity, callback) {
       text: 'SELECT id FROM charities \
         WHERE name = \'' + charity + '\';'
     }, 
-    function(err, rows) {
+    function(err, results) {
       if (err) {
         callback(err);
       } else {
-        var id_charities = rows.rows[0].id;
-        console.log('second query about to run');
-        console.log('email', email, "charity", charity);
+        var id_charities = results.rows[0].id;
         db.query({
           text: 'SELECT id FROM users \
             WHERE email = \'' + email + '\';'
         }, 
-        function(err, rows) {
+        function(err, results) {
           if (err) {
             callback(err);
           } else {
-            console.log('users id', rows.rows);
-            var id_users = rows.rows[0].id;
+            var id_users = results.rows[0].id;
             callback({id_users: id_users, id_charities: id_charities});
           }
         });
       }
     });
   } else if (email !== '') {
+    console.log('SELECT id FROM users \
+        WHERE email = \'' + email + '\';');
     db.query({
       text: 'SELECT id FROM users \
         WHERE email = \'' + email + '\';'
     }, 
-    function(err, rows) {
+    function(err, results) {
       if (err) {
         callback(err);
       } else {
-        console.log('users id', rows.rows);
-        var id_users = rows.rows[0].id;
+        var id_users = results.rows[0].id;
         callback({id_users: id_users, id_charities: ''});
       }
     });
@@ -47,11 +45,11 @@ exports.getIDs = function(email, charity, callback) {
       text: 'SELECT id FROM charities \
         WHERE name = \'' + charity + '\';'
     }, 
-    function(err, rows) {
+    function(err, results) {
       if (err) {
         callback(err);
       } else {
-        var id_charities = rows.rows[0].id;
+        var id_charities = results.rows[0].id;
         callback({id_users: '', id_charities: id_charities});
       }
     });

@@ -32,36 +32,7 @@ exports.createCharity = Promise.promisify(function(values, callback) {
   });
 });
 
-// exports.createCharity = function(values, callback) {
-//     var queryAsync = Promise.promisify(db.query);
-//     queryAsync({
-//       text: 'SELECT name FROM charities \
-//         WHERE name = \'' + values.name + '\';'
-//     }).then(function(results) {
-//       if (results.rowCount > 0) {
-//         callback(null, 'charity already in database ' + values.name);
-//       } else {
-//         db.query({
-//           text: 'INSERT INTO charities(name, category, ein, donation_url, city, state, zip, balance_owed, total_donated, mission_statement) \
-//             VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
-//           values: [values.name, values.category, values.ein, values.donation_url, values.city, 
-//               values.state, values.zip, 0, 0, values.mission_statement]
-//         },
-//         function(error, result) {
-//           if (error) {
-//             callback(error, null);
-//           } else {
-//             callback(null, 'success');
-//           }
-//         });
-//       }
-//     }).catch(function(err) {
-//       console.log(err);
-//     })
-// }
-
 exports.updateBalance = function(charityId, amountObj, callback) {
-  console.log('**ABOUT TO UPDATE BALANCE OF CHARITY for', charityId);
   db.query({
     text: 'SELECT balance_owed, total_donated FROM charities \
       WHERE id = \'' + charityId + '\';'
@@ -70,7 +41,6 @@ exports.updateBalance = function(charityId, amountObj, callback) {
     if (err) {
       callback(err);
     } else {
-      console.log('***found existing charity', results.rows);
       if (results.rowCount > 0) {
         var total_donated_add = parseFloat(amountObj.total_donated);
         var balance_owed_add = parseFloat(amountObj.balance_owed);

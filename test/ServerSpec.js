@@ -109,7 +109,7 @@ describe('Worker functions', function() {
   //   });
   // });
 
-  describe('distributing donations amongst charities', function() {
+  xdescribe('distributing donations amongst charities', function() {
 
     // before(function() {
     //   Users.createUser('test@gmail.com', 'password', 'Test', 'Test', function(response) {
@@ -147,4 +147,17 @@ describe('Worker functions', function() {
       });
     });
   });
+
+  describe('linking together worker functions', function() {
+    it('should log transactions in db for recent transactions', function(done) {
+      worker.processDailyTransactions();
+      setTimeout(() => {
+        Transactions.getTransactions('test@gmail.com', (err, results) => {
+        if (err) console.log('error getting transactions');
+        expect(results.length).to.equal(1);
+        done();
+        });
+      }, 500);
+    });
+  })
 });

@@ -21,7 +21,9 @@ CREATE TABLE users (
   pending_balance REAL NULL DEFAULT NULL,
   monthly_total REAL NULL DEFAULT NULL,
   monthly_limit REAL NULL DEFAULT NULL,
-  last_transaction_id VARCHAR(64) NULL DEFAULT NULL
+  last_transaction_id VARCHAR(64) NULL DEFAULT NULL,
+  bank_name VARCHAR(64) NULL DEFAULT NULL,
+  bank_digits VARCHAR(4) NULL DEFAULT NULL
 );
 
 -- ---

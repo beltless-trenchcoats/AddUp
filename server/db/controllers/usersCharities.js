@@ -15,10 +15,8 @@ exports.insert = function(email, charity, percentage, callback) {
       if (err) {
         callback(err);
       } else if (rows.rowCount > 0) {
-        console.log(rows.rows);
         callback('email and charity are already in database');
       } else {
-        console.log('fourth query about to run');
         db.query({
           text: 'INSERT INTO usersCharities(percentage, id_users, id_charities) \
             VALUES($1, $2, $3)',
@@ -26,7 +24,6 @@ exports.insert = function(email, charity, percentage, callback) {
         },
         function(err, result) {
           if (err) {
-            console.log('ERROR IN THE INSERT', err);
             callback(err);
           } else {
             callback('success');
@@ -39,7 +36,6 @@ exports.insert = function(email, charity, percentage, callback) {
 
 exports.updatePercentage = function(email, charity, percentage, callback) {
   helpers.getIDs(email, charity, function(idObj) {
-    console.log(idObj);
     var id_users = idObj.id_users;
     var id_charities = idObj.id_charities;
     console.log('SELECT * FROM usersCharities \
@@ -52,7 +48,6 @@ exports.updatePercentage = function(email, charity, percentage, callback) {
       if (err) {
         callback(err);
       } else if (rows.rowCount > 0) {
-        console.log(rows.rows);
         db.query({
           text: 'UPDATE usersCharities SET percentage = ' + percentage + ' \
             WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';'
@@ -68,8 +63,6 @@ exports.updatePercentage = function(email, charity, percentage, callback) {
             function(err, rows) {
               if (err) {
                 callback(err);
-              } else {
-                console.log(rows.rows);
               }
             });
             callback('success');
@@ -100,11 +93,11 @@ exports.getUserCharityFields = function(email, charity, callback) {
     db.query({
       text: queryString
     }, 
-    function(err, rows) {
+    function(err, results) {
       if (err) {
         callback(err, null);
-      } else if (rows.rowCount > 0) {
-        callback(null, rows.rows);
+      } else if (results.rowCount > 0) {
+        callback(null, results.rows);
       } else {
         callback('no records', null);
       }
@@ -121,8 +114,15 @@ exports.getUserCharityFields = function(email, charity, callback) {
 //   console.log(result);
 // });
 
-// exports.getUserCharityFields('herbert@gmail.com', 'Save the Helgas', function(err, result) {
-//   console.log(err, result);
+// exports.getUserCharityFields('herbert@gmail.com', '', function(err, charities) {
+//   if (err) {
+//     console.log('ERROR getting users charities', err);
+//   }
+//   // console.log(err, result);
+//   if (charities) {
+//     console.log('CHARITIES ARE');
+//     charities.forEach(charity => console.log(charity));
+//   }
 // });
 
 // -- CREATE TABLE usersCharities (

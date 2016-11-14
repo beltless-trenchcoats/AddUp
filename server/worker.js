@@ -8,11 +8,11 @@ var axios = require('axios');
 var test_key = 'sk_test_eKJNtjs3Il6V1QZvyKs1dS6y';
 var stripe = require('stripe')(test_key);
 
+// This function will be called whenever we want to check if a user has made new transactions
 var roundDailyTransactions = function() {
   Users.getUserFields('', function(err, users) {
     users.forEach(user => {
-      //If the user has linked a bank account through plaid
-      if (user.plaid_access_token) { 
+      if (user.plaid_access_token) { //If the user has linked a bank account through plaid
         axios.post('http://localhost:8080/transactions', {
             'access_token': user.plaid_access_token
           })
@@ -32,14 +32,17 @@ var roundDailyTransactions = function() {
 
 // Return new transactions since last transaction checked
 var findRecentTransactions = function(user, transactions) {
+  var usersTransactions = transactions.filter(function(transaction) {
+    return transaction._account === user.plaid_account_id;
+  });
   var mostRecentTransactionId = user.last_transaction_id;
   var newTransactions = [];
   var index = 0;
-  var trans = transactions[index];
-  while (trans._id && trans._id !== mostRecentTransactionId) {
+  var trans = usersTransactions[index];
+  while (trans && trans._id && trans._id !== mostRecentTransactionId) {
     newTransactions.push(trans);
     index++;
-    trans = transactions[index];
+    trans = usersTransactions[index];
   }
   return newTransactions;
 };
@@ -64,10 +67,10 @@ var roundUpTransaction = function(user, transaction) {
 
     // If the amount is still too small to charge, save to db and exit function
     if (updatedPendingBalance < 0.50) { 
-      Users.updateUser(user.email, {pending_balance: updatedPendingBalance}, result => console.log(result));
+      Users.updateUser(user.email, {pending_balance: updatedPendingBalance}, () => {});
       return 0;
     } else { // Else, zero out the user's pending balance and return new amount to charge
-      Users.updateUser(user.email, {pending_balance: 0}, result => console.log(result));
+      Users.updateUser(user.email, {pending_balance: 0}, () => {});
       return updatedPendingBalance;
     }
   }
@@ -76,8 +79,7 @@ var roundUpTransaction = function(user, transaction) {
 
 var charge = function(user, amount) {
   var stripe_token = user.stripe_bank_account_token;
-  // Note: The stripe charge takes an integer representing the number of cents (100 = $1.00)
-  var chargeAmount = amount * 100;
+  var chargeAmount = amount * 100; // Note: The stripe charge takes an integer representing the number of cents (100 = $1.00)
   var charge = stripe.charges.create({
     amount: chargeAmount,
     currency: "usd",
@@ -87,21 +89,20 @@ var charge = function(user, amount) {
       console.log('Card Declined');
     }
     console.log('CHARGE', charge);
-    var chargeAmount = charge.amount / 100;
-    // Determine how much to send to each charity the user has chosen
-    distributeDonation(user, chargeAmount);
+    if (charge) { //if the charge goes through 
+      var chargeAmount = charge.amount / 100; //Change the amount back to a normal $X.XX number
+      distributeDonation(user, chargeAmount);
+    }
   });
 };
 
 var distributeDonation = function(user, amount) {
-  var charities = UsersCharities.getUserCharityFields(user.email, (err, charities) => {
-    charities.forEach(charity => {
-      var amountForCharity = amount * charity.percentage;
-      // Save amount, charity id , user id to db
-      Transactions.insert(user._id, charity._id, amountForCharity, result => console.log(result));
-      // Save that amount to a charity in the db
-      Charities.updateBalance(charity_id, {total_donated: amountForCharity, balance_owed: amountForCharity}, 
-        result => console.log(result));
+  UsersCharities.getUserCharityFields(user.email, '', (err, charities) => {
+    charities.forEach(userCharity => {
+      var charity_id = userCharity.id_charities;
+      var amountForCharity = (amount * userCharity.percentage).toFixed(2);
+      Transactions.insert(user.id, charity_id, amountForCharity, () => {});
+      Charities.updateBalance(charity_id, {total_donated: amountForCharity, balance_owed: amountForCharity}, () => {});
     });
   });
 }

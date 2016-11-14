@@ -94,7 +94,6 @@ app.post('/signup', function(req, res) {
 //login users
 app.post('/login', function(req, res) {
   console.log('req', req.body);
-  req.session.email = req.body.email
   var email = req.body.email;
   var password = req.body.password;
   db.loginUser(email, password, function(response) {
@@ -103,6 +102,7 @@ app.post('/login', function(req, res) {
     if(response) {
       //update currentUser
       currentUser = email;
+      req.session.email = req.body.email
       //gets user info to send back to client for dynamic loading such as "Hello, X!"
       db.getUserFields(currentUser, function(err, data) {
         if(err) {

@@ -9,18 +9,25 @@ var test_key = 'sk_test_eKJNtjs3Il6V1QZvyKs1dS6y';
 var stripe = require('stripe')(test_key);
 
 // This function will be called whenever we want to check if a user has made new transactions
-var roundDailyTransactions = function() {
+var processDailyTransactions = function() {
   Users.getUserFields('', function(err, users) {
     users.forEach(user => {
-      if (user.plaid_access_token) { //If the user has linked a bank account through plaid
+      if (user.email==='test@gmail.com' && user.plaid_access_token) { //If the user has linked a bank account through plaid
         axios.post('http://localhost:8080/transactions', {
             'access_token': user.plaid_access_token
           })
-          .then(transactions => {
-            findRecentTransactions().forEach(transaction => {
+          .then(resp => {
+            var transactions = resp.data;
+            // console.log(transactions.length);
+            var newTransactions = findRecentTransactions(user, transactions);
+            // console.log(newTransactions);
+            newTransactions.forEach(transaction => {
+              console.log('user', user);
+              console.log('transaction', transaction);
               var amtToCharge = roundUpTransaction(user, transaction);
               if (amtToCharge) {
-                charge(user, amount);
+                console.log('charging', amtToCharge);
+                charge(user, amtToCharge);
               }
             });
           })
@@ -108,9 +115,11 @@ var distributeDonation = function(user, amount) {
 }
 
 module.exports = {
-  roundDailyTransactions: roundDailyTransactions,
+  processDailyTransactions: processDailyTransactions,
   findRecentTransactions: findRecentTransactions,
   roundUpTransaction: roundUpTransaction,
   charge: charge,
   distributeDonation: distributeDonation
 };
+
+processDailyTransactions();

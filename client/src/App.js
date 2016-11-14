@@ -28,7 +28,7 @@ class App extends Component {
             <Col xs={6} md={4} className="infoColumn">
               <Panel header="Find Charities and Causes" bsStyle="primary">
                 <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec hendrerit tempor tellus. Donec pretium posuere tellus. Proin quam nisl, tincidunt et, mattis eget, convallis nec, purus. Cum sociis natoque penatibu</p>
-                <Link to="/user"><Button bsStyle="primary">Check for User</Button></Link>
+                <Link to="/search"><Button bsStyle="primary">Find Charities</Button></Link>
               </Panel>
             </Col>
 

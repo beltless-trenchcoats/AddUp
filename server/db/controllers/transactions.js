@@ -6,6 +6,8 @@ exports.insert = function(id_users, id_charities, amount, callback) {
   var month = (today.getMonth() + 1) < 10 ? '' + 0 + (today.getMonth() + 1) : '' + (today.getMonth() + 1);
   var day = today.getDate() < 10 ? '' + 0 + today.getDate() : '' + today.getDate();
   var date = '' + today.getFullYear() + '-' + month + '-' + day;
+  console.log('INSERT INTO transactions(id_users, id_charities, amount, date_time) \
+      VALUES(' + id_users + ',' +  id_charities + ',' + amount + ',' + date + ')');
   db.query({
     text: 'INSERT INTO transactions(id_users, id_charities, amount, date_time) \
       VALUES($1, $2, $3, $4)',
@@ -13,7 +15,6 @@ exports.insert = function(id_users, id_charities, amount, callback) {
   },
   function(err, result) {
     if (err) {
-      console.log('ERROR IN THE INSERT', err);
       callback(err);
     } else {
       callback('success');
@@ -28,11 +29,11 @@ exports.getTransactions = function(email, callback) {
     db.query({
       text: 'SELECT * FROM transactions WHERE id_users =\'' + id_users + '\';'
     },
-    function(err, rows) {
+    function(err, results) {
       if (err) {
         callback(err, null);
       } else {
-        callback(null, rows.rows);
+        callback(null, results.rows);
       }
     });
   });

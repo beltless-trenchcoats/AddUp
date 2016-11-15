@@ -78,9 +78,11 @@ class Header extends Component {
       password: this.state.password,
       firstname: this.state.firstname,
       lastname: this.state.lastname,
-      loggedIn: true
     })
     .then((res) => {
+      this.setState({
+        loggedIn: true
+      });
       this.closeSignup();
     })
     .catch((err) => {

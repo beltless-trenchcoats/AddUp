@@ -4,10 +4,7 @@ var plaid = require('plaid');
 var request = require('request');
 var session = require('express-session');
 var db = require('./db/controllers/users');
-<<<<<<< a6e65eeabbf39cc07166450e6a9b18793dd2558c
 var apiKeys = require('./config/API_Keys');
-=======
->>>>>>> (feat) POST to transactions will return transactions from plaid
 var axios = require('axios');
 
 var app = express();
@@ -82,16 +79,19 @@ app.post('/signup', function(req, res) {
   var password = req.body.password;
   var firstName = req.body.firstname;
   var lastName = req.body.lastname;
-  //create new user in local db
-  db.createUser(email, password, firstName, lastName, function(response) {
-    //response is true or false
-    console.log('Create User Response ', response);
-    if(response) {
-      res.send('Successful Signup');
-    } else {
-      res.send('Failed Signup');
-    }
-  })
+  db.createUser(email, password, firstName, lastName)
+    .then(function() {
+      axios.post('http://localhost:8080/login', {
+        email: email,
+        password: password
+      })
+      .then(function() {
+        res.status(200).send('Success!');
+      })
+      .catch(function(err) {
+        console.log(err);
+      });
+    });
 });
 
 //login users

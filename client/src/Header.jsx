@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Button, Modal, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import { Link } from 'react-router';
 
-import logo from './logo.svg';
+import logo from '../assets/images/[AddUp++]Logo.png';
 import FaUser from 'react-icons/lib/fa/user';
 
 const FieldGroup = ({ id, label, ...props }) => {
@@ -137,15 +137,12 @@ class Header extends Component {
     this.setState({lastname: e.target.value})
   }
 
-  componentDidMount () {
-    
-  }
 
   render() {
     return (
       <header>
         <div className="App-header">
-          <Link to="/">
+          <Link to="/" className="logo">
             <img src={logo} className="App-logo" alt="logo" />
             <div className="name">AddUp+</div>
           </Link>
@@ -261,6 +258,7 @@ class Header extends Component {
             <p> Would you like to logout?</p>
             <Button className="modalButton" bsStyle="primary" onClick={this.logoutUser}>Logout</Button>
             <Button className="modalButton" onClick={this.closeLogout}>Cancel</Button>
+
           </Modal.Body>
         </Modal>
 

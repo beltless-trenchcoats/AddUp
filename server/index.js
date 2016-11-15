@@ -7,6 +7,7 @@ var db = require('./db/controllers/users');
 var apiKeys = require('./config/API_Keys');
 var axios = require('axios');
 
+
 var app = express();
 var port = process.env.PORT || 8080;
 
@@ -35,7 +36,6 @@ var plaidClient = new plaid.Client(client_id, secret, plaid.environments.tartan)
 app.post('/authenticate', function(req, res) {
   var public_token = req.body.public_token;
   var account_id = req.body.account_id;
-  var institution_name = req.body.institution_name;
   // Exchange a public_token for a Plaid access_token
   plaidClient.exchangeToken(public_token, account_id, function(err, exchangeTokenRes) {
     if (err != null) {
@@ -43,21 +43,13 @@ app.post('/authenticate', function(req, res) {
     } else {
       var access_token = exchangeTokenRes.access_token;
       var stripe_token = exchangeTokenRes.stripe_bank_account_token;
+      console.log('access token', access_token);
+      console.log('stripe token', stripe_token);
       //save access tokens to the local db
-      axios.post('https://tartan.plaid.com/connect/get', {
-        client_id: '58224c96a753b9766d52bbd1',
-        secret: '04137ebffb7d68729f7182dd0a9e71',
-        access_token: access_token
-      })
-      .then(function(response) {
-        db.updateUser(currentUser, { plaid_access_token: access_token,
-          stripe_bank_account_token: stripe_token, plaid_account_id: account_id,
-          bank_name: institution_name, last_transaction_id: response.data.transactions[0]._id},
-          function(result) {
-          });
-      })
-      .catch(function(response) {
-        console.log('error in /authenticate', response);
+      db.updateUser(currentUser, { plaid_access_token: access_token,
+      stripe_bank_account_token: stripe_token },
+      function(result) {
+        console.log('result ', result);
       })
     }
   });
@@ -135,19 +127,37 @@ app.get('/logout', function(req, res) {
 //   "state": "CA"
 // }
 app.post('/charitySearch', function(req, res) {
-  console.log('req.body', req.body);
   var options = {
     method: 'post',
     body: req.body,
     json: true,
     url: 'http://data.orghunter.com/v1/charitysearch?user_key=' + apiKeys.orgHunter
   };
+  console.log('search req', req.body.searchTerm)
   request(options, function (err, result, body) {
     if (err) {
       console.log(err);
       res.send(err);
     } else {
       res.send(JSON.stringify(body.data));
+    }
+  });
+});
+
+app.post('/charityInfo', function (req, res) {
+  var options = {
+    method: 'post',
+    body: req.body,
+    json: true,
+    url: 'http://data.orghunter.com/v1/charitypremium?user_key=' + apiKeys.orgHunter + 'ein=' + req.body.charityId  //+ '&searchTerm=' + req.body.searchTerm
+  };
+  request(options, function (err, result, body) {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    } else {
+      console.log('result', result)
+      res.send(JSON.stringify(data.body))
     }
   });
 });

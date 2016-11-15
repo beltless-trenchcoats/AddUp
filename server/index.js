@@ -192,13 +192,14 @@ app.get('/logout', function(req, res) {
 //   "state": "CA"
 // }
 app.post('/charitySearch', function(req, res) {
+  console.log('search terms', req.body);
   var options = {
     method: 'post',
     body: req.body,
     json: true,
     url: 'http://data.orghunter.com/v1/charitysearch?user_key=' + apiKeys.orgHunter
   };
-  console.log('search req', req.body.searchTerm)
+  console.log('search req', req.body.searchTerm);
   request(options, function (err, result, body) {
     if (err) {
       console.log(err);

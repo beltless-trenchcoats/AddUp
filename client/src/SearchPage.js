@@ -32,6 +32,9 @@ class SearchPage extends Component {
   handleSelect (evt,evtKey) {
       // what am I suppose to write in there to get the value?
     console.log('EVENT', evt);
+    if(evt[1].split('').length > 25) {
+      evt[1] = evt[1].substring(0, 25) + '...';
+    }
     this.setState({category: evt[0], categoryName: evt[1]});
   }
 
@@ -68,13 +71,13 @@ class SearchPage extends Component {
             <Navbar.Collapse>
               <Navbar.Form pullLeft >
                 <div>Fill in one of more fields and find your charity!</div>
-                <FormGroup>
+                <FormGroup className="dropdownCat">
                   <FormControl
                     type="text"
                     placeholder="Search"
                     onChange={this.onSearchInput.bind(this, 'searchTerm')}
                   />
-                  <DropdownButton bsStyle={'default'} class="dropdownCat" title={this.state.categoryName || 'Category'} id={'categoryDropdown'} onSelect={this.handleSelect.bind(this)}>
+                  <DropdownButton bsStyle={'default'} title={this.state.categoryName || 'Category'} id={'categoryDropdown'} onSelect={this.handleSelect.bind(this)}>
                     <MenuItem eventKey={["", 'Category']}>Category</MenuItem>
                     <MenuItem eventKey={["A", 'Arts, Culture and Humanities']}>Arts, Culture and Humanities</MenuItem>
                     <MenuItem eventKey={["B", 'Educational Institutions and Related Activities']}>Educational Institutions and Related Activities</MenuItem>
@@ -109,6 +112,7 @@ class SearchPage extends Component {
                   />
                   <FormControl
                     type="text"
+                    className='form-control'
                     placeholder="State (2 letter abbrev)"
                     onChange={this.onSearchInput.bind(this, 'state')}
                   />

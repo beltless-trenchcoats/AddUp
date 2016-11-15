@@ -7,6 +7,7 @@ var db = require('./db/controllers/users');
 var apiKeys = require('./config/API_Keys');
 var axios = require('axios');
 var worker = require('./worker');
+var bcrypt = require('bcrypt');
 
 var app = express();
 var port = process.env.PORT || 8080;
@@ -131,7 +132,9 @@ app.post('/login', function(req, res) {
     //if response is true continue with login
     if(response) {
       //update currentUser
-      currentUser = email;
+      bcrypt.hash(email, 10, function(error, hash) {
+        currentUser = hash;
+      })
       req.session.email = req.body.email
       //gets user info to send back to client for dynamic loading such as "Hello, X!"
       db.getUserFields(currentUser, function(err, data) {
@@ -151,7 +154,8 @@ app.post('/login', function(req, res) {
             };
           });
           //send response to client with first_name, last_name, and email
-          res.send({"first_name": data[0].first_name, "last_name": data[0].last_name, "email": data[0].email});
+          res.send({"first_name": data[0].first_name, "last_name": data[0].last_name,
+          "email": data[0].email, currentUser: currentUser});
         }
       })
     };

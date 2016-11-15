@@ -17,7 +17,7 @@ var processDailyTransactions = function() {
             'access_token': user.plaid_access_token
           })
           .then(resp => {
-            var transactions = resp.data;
+            var transactions = resp.data.transactions;
             // console.log(transactions.length);
             var newTransactions = findRecentTransactions(user, transactions);
             // console.log(newTransactions);

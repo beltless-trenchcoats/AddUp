@@ -63,7 +63,9 @@ class SearchPage extends Component {
           </Navbar>
 
           <div className="results">
-          {this.state.searchResults.map((charity, i) => 
+            {(this.state.searchResults.length === 0) ? 
+            <p className="noResults">There are no charities for that search, please try another search Term</p>
+            : this.state.searchResults.map((charity, i) => 
             <CharitySearchResult key={i} info={charity} />)}
           </div>
         </div>

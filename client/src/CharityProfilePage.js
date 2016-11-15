@@ -12,19 +12,19 @@ class CharityProfilePage extends Component {
     }
   }
 
-  ComponentWillMount () {
+  ComponentDidMount () {
     console.log('hello')
-    axios.post('http://localhost:8080/charityInfo', {
-      charityId: this.state.charityId
-    })
-    .then((res) => {
-      console.log("hello")
-      console.log(res)
-      this.setState({})
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+    // axios.post('http://localhost:8080/charityInfo', {
+    //   charityId: this.state.charityId
+    // })
+    // .then((res) => {
+    //   console.log("hello")
+    //   console.log(res)
+    //   this.setState({})
+    // })
+    // .catch((err) => {
+    //   console.log(err)
+    // })
   }
 
   render() {

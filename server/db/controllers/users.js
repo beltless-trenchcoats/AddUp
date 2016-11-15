@@ -1,7 +1,8 @@
 var db = require('../config/db');
 var bcrypt = require('bcrypt');
+var Promise = require('bluebird');
 
-exports.createUser = function(email, password, first_name, last_name, callback) {
+exports.createUser = Promise.promisify(function(email, password, first_name, last_name, callback) {
   db.query({
     text: 'SELECT email, password, first_name, last_name FROM users \
       WHERE email = \'' + email + '\';'
@@ -10,26 +11,25 @@ exports.createUser = function(email, password, first_name, last_name, callback) 
     if (err) {
       console.log(err);
     } else if (rows.rowCount > 0) {
-      callback('user already exists');
+      callback(null, 'user already exists');
     } else {
-      console.log('no user found');
       bcrypt.hash(password, 10, function(err, hash) {
         db.query({
           text: 'INSERT INTO users(email, password, first_name, last_name) \
             VALUES($1, $2, $3, $4)',
           values: [email, hash, first_name, last_name]
         },
-
         function(err, result) {
           if (err) {
+            callback(err, null);
           } else {
-            callback('success');
+            callback(null, 'success');
           }
         });
       });
     }
   });
-};
+});
 
 exports.loginUser = function(email, password, callback) {
   db.query({
@@ -107,9 +107,10 @@ exports.getUserFields = function(email, callback) {
 }
 
 //EXAMPLE USAGE:
-// exports.createUser('herbert@gmail.com', 'test', 'Herbert', 'Williams', function(response) {
-//   console.log(response);
-// });
+// exports.createUser('a@gmail.com', 'test', 'asdf', 'fds')
+//   .then(function() {
+//     exports.createUser('b@gmail.com', 'test', 'wersf', 'asdbfg');
+//   });
 
 // exports.loginUser('herbert@gmail.com', 'test', function(response) {
 //   console.log(response);

@@ -15,7 +15,7 @@ class App extends Component {
 
           <div className="imageDiv">
             <img src={homeImage} className="homeImage" alt="home" />
-            <Jumbotron className='jumbortron'>
+            <Jumbotron className='jumbotron'>
               <h2>Make a Difference</h2>
               <p className="homePageSubtitle">Have a voice. Make a Difference. AddUp.</p>
               <p>Find a support charitable causes on your budget</p>

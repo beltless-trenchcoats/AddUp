@@ -3,10 +3,9 @@ import ReactDOM from 'react-dom';
 import { Router, Route, browserHistory } from 'react-router';
 
 import App from './App';
-import UserProfile from './userProfile';
+import UserProfile from './UserProfile';
 import SearchPage from './SearchPage';
 import CharityProfilePage from "./CharityProfilePage";
-import './index.css';
 
 ReactDOM.render (
 	<Router history={browserHistory}>

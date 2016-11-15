@@ -17,6 +17,7 @@ CREATE TABLE users (
   last_name VARCHAR(64) NOT NULL,
   phone_number VARCHAR(64) NULL DEFAULT NULL,
   plaid_access_token VARCHAR(256) NULL DEFAULT NULL,
+  plaid_account_id VARCHAR(64) NULL DEFAULT NULL,
   stripe_bank_account_token VARCHAR(256) NULL DEFAULT NULL,
   pending_balance REAL NULL DEFAULT NULL,
   monthly_total REAL NULL DEFAULT NULL,

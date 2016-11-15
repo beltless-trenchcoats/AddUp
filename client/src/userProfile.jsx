@@ -35,6 +35,26 @@ class UserProfile extends Component {
 
   }
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      userInfo: {}
+    }
+  }
+
+  componentWillMount() {
+    axios.get('http://localhost:8080/userInfo')
+    .then((res) => {
+      console.log('userInfo', res);
+      this.setState({
+        userInfo: res.data
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
   render() {
     return (
       <Header>

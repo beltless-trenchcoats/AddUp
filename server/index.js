@@ -12,6 +12,7 @@ var app = express();
 var port = process.env.PORT || 8080;
 
 var currentUser = undefined;
+var userInfo = {};
 
 app.use(parser.json(), function(req, res, next) {
   //allow cross origin requests from client, and Plaid API
@@ -104,6 +105,17 @@ app.post('/login', function(req, res) {
           //if error send error to client
           res.send('Error in User Login');
         } else {
+          req.session.regenerate(function(err) {
+            // will have a new session here
+            req.session.email = email;
+            req.session.firstName = data[0].first_name;
+            req.session.lastName = data[0].last_name;
+            userInfo = {
+              email: email,
+              firstName: data[0].first_name,
+              lastName: data[0].last_name
+            };
+          });
           //send response to client with first_name, last_name, and email
           res.send({"first_name": data[0].first_name, "last_name": data[0].last_name, "email": data[0].email});
         }
@@ -113,10 +125,25 @@ app.post('/login', function(req, res) {
   })
 });
 
+app.get('/userInfo', function(req, res) {
+  console.log('USER INFO IS RUNNING!!!!!!', userInfo);
+  req.session.reload(function(err) {
+    res.send(JSON.stringify(userInfo));
+    // session updated
+  })
+});
+
 //replace session email and currentUser with undefined
 app.get('/logout', function(req, res) {
-  req.session.email = undefined;
   currentUser = undefined;
+  userInfo = {};
+  req.session.destroy(function(err) {
+    // cannot access session here
+    if (err) {
+      console.log(err);
+    }
+    res.send('sucess');
+  });
   //call the function that destroys the user's token
 });
 

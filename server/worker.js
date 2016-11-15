@@ -7,7 +7,7 @@ var axios = require('axios');
 // Note: This should be the testing key unless we actually want to charge real money!
 var test_key = 'sk_test_eKJNtjs3Il6V1QZvyKs1dS6y';
 var stripe = require('stripe')(test_key);
-
+console.log('worker called!!!!!!!!!');
 // This function will be called whenever we want to check if a user has made new transactions
 var processDailyTransactions = function() {
   Users.getUserFields('', function(err, users) {
@@ -63,17 +63,17 @@ var roundUpTransaction = function(user, transaction) {
   }
   // Calculate round-up amount
   var roundUpAmt = 1 - (transAmt % 1).toFixed(2);
-  
+
   //if user's monthly limit would be exceeded by this roundUpAmt, only charge amt up to monthly_limit
   roundUpAmt = (user.monthly_total + roundUpAmt) > user.monthly_limit ? user.monthly_limit - user.monthly_total : roundUpAmt;
 
   // If the amount < 0.50, we can't charge it yet...
-  if (roundUpAmt < 0.50) { 
+  if (roundUpAmt < 0.50) {
     // Check what pending balance the user has and add roundUpAmt to this
     var updatedPendingBalance = roundUpAmt + user.pending_balance;
 
     // If the amount is still too small to charge, save to db and exit function
-    if (updatedPendingBalance < 0.50) { 
+    if (updatedPendingBalance < 0.50) {
       Users.updateUser(user.email, {pending_balance: updatedPendingBalance}, () => {});
       return 0;
     } else { // Else, zero out the user's pending balance and return new amount to charge
@@ -96,7 +96,7 @@ var charge = function(user, amount) {
       console.log('Card Declined');
     }
     console.log('CHARGE', charge);
-    if (charge) { //if the charge goes through 
+    if (charge) { //if the charge goes through
       var chargeAmount = charge.amount / 100; //Change the amount back to a normal $X.XX number
       distributeDonation(user, chargeAmount);
     }

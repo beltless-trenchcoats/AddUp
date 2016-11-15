@@ -162,6 +162,16 @@ app.post('/charityInfo', function (req, res) {
   });
 });
 
+app.post('/userfield', function(req, res) {
+  db.getUserFields(req.body.email, function(err, data) {
+    if(err) {
+      res.send(err)
+    } else {
+      res.send(data[0].plaid_access_token);
+    }
+  });
+})
+
 
 app.listen(port, function() {
   console.log('listening on ', port);

@@ -90,3 +90,11 @@
   width: 80%;
   margin: 10px auto;
 }
+
+/*
+* CHARITY PROFILE PAGE
+*/
+.charityProfilePage {
+  top: 55px;
+  position: relative;
+}

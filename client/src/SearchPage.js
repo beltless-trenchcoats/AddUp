@@ -32,6 +32,9 @@ class SearchPage extends Component {
   handleSelect (evt,evtKey) {
       // what am I suppose to write in there to get the value?
     console.log('EVENT', evt);
+    if(evt[1].split('').length > 25) {
+      evt[1] = evt[1].substring(0, 25) + '...';
+    }
     this.setState({category: evt[0], categoryName: evt[1]});
   }
 
@@ -67,14 +70,14 @@ class SearchPage extends Component {
           <Navbar>
             <Navbar.Collapse>
               <Navbar.Form pullLeft >
-                <div>Fill in one of more fields and find your charity!</div> 
-                <FormGroup>
-                  <FormControl 
-                    type="text" 
+                <div>Fill in one of more fields and find your charity!</div>
+                <FormGroup className="dropdownCat">
+                  <FormControl
+                    type="text"
                     placeholder="Search"
                     onChange={this.onSearchInput.bind(this, 'searchTerm')}
                   />
-                  <DropdownButton bsStyle={'default'} class="dropdownCat" title={this.state.categoryName || 'Category'} id={'categoryDropdown'} onSelect={this.handleSelect.bind(this)}>
+                  <DropdownButton bsStyle={'default'} title={this.state.categoryName || 'Category'} id={'categoryDropdown'} onSelect={this.handleSelect.bind(this)}>
                     <MenuItem eventKey={["", 'Category']}>Category</MenuItem>
                     <MenuItem eventKey={["A", 'Arts, Culture and Humanities']}>Arts, Culture and Humanities</MenuItem>
                     <MenuItem eventKey={["B", 'Educational Institutions and Related Activities']}>Educational Institutions and Related Activities</MenuItem>
@@ -102,24 +105,25 @@ class SearchPage extends Component {
                     <MenuItem eventKey={["X", 'Religion-Related, Spiritual Development']}>Religion-Related, Spiritual Development</MenuItem>
                     <MenuItem eventKey={["Y", 'Mutual/Membership Benefit Organizations, Other']}>Mutual/Membership Benefit Organizations, Other</MenuItem>
                   </DropdownButton>
-                  <FormControl 
-                    type="text" 
+                  <FormControl
+                    type="text"
                     placeholder="City"
                     onChange={this.onSearchInput.bind(this, 'city')}
                   />
-                  <FormControl 
-                    type="text" 
+                  <FormControl
+                    type="text"
+                    className='form-control'
                     placeholder="State (2 letter abbrev)"
                     onChange={this.onSearchInput.bind(this, 'state')}
                   />
-                  <FormControl 
-                    type="text" 
+                  <FormControl
+                    type="text"
                     placeholder="Zip Code"
                     onChange={this.onSearchInput.bind(this, 'zipCode')}
                   />
                 </FormGroup>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={this.state.isLoading}
                   onClick={!this.state.isLoading ? this.getResults : null}>{this.state.isLoading ? 'Finding Causes...' : 'Find Cause'}
                 </Button>
@@ -128,9 +132,9 @@ class SearchPage extends Component {
           </Navbar>
 
           <div className="results">
-            {(this.state.searchResults.length === 0) ? 
+            {(this.state.searchResults.length === 0) ?
             <p className="noResults">There are no charities for that search, please try another search</p>
-            : this.state.searchResults.map((charity, i) => 
+            : this.state.searchResults.map((charity, i) =>
             <CharitySearchResult key={i} info={charity} />)}
           </div>
         </div>

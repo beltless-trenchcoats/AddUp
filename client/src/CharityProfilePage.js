@@ -23,6 +23,7 @@ class CharityProfilePage extends Component {
     .then((res) => {
       console.log('response', res.data)
       this.setState({charity: res.data})
+
     })
     .catch((err) => {
       console.log(err)
@@ -55,7 +56,7 @@ class CharityProfilePage extends Component {
             <Row>
               <h2 className="charityName">{this.state.charity.name}</h2>
               <div className="charityType">{this.state.charity.nteeType}</div>
-              <div className="charityActivities">{this.state.charity.activity1} {this.state.charity.activity2} {this.state.charity.activity3}</div>
+              <div className="charityActivities">{this.state.charity.activity1}, {this.state.charity.activity2}, {this.state.charity.activity3}</div>
               <h3> Total AddUp+ Donations to Date: </h3>
 
               {this.state.selected ? <Button className="removeCharity" bsStyle="primary">Remove from My Charities</Button> : <Button className="addCharity" bsStyle="primary">Add to My Charities</Button>}

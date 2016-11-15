@@ -8,18 +8,16 @@ class CharityProfilePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      charityId: this.props.charityId
+      charityId: this.props.params.id
     }
   }
 
   componentDidMount () {
-    console.log('hello')
     axios.post('http://localhost:8080/charityInfo', {
       charityId: this.state.charityId
     })
     .then((res) => {
-      console.log("hello")
-      console.log(res)
+      console.log('response', res)
       this.setState({})
     })
     .catch((err) => {

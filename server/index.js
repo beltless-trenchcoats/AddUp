@@ -4,6 +4,8 @@ var plaid = require('plaid');
 var request = require('request');
 var session = require('express-session');
 var db = require('./db/controllers/users');
+var dbHelpers = require('./db/controllers/helpers');
+var dbConfig = require('./db/config/db');
 var apiKeys = require('./config/API_Keys');
 var axios = require('axios');
 var worker = require('./worker');
@@ -171,6 +173,8 @@ app.get('/userInfo', function(req, res) {
   })
 });
 
+
+
 //replace session email and currentUser with undefined
 app.get('/logout', function(req, res) {
   currentUser = undefined;
@@ -207,6 +211,33 @@ app.post('/charitySearch', function(req, res) {
     } else {
       res.send(JSON.stringify(body.data));
     }
+  });
+});
+
+app.post('/userCharities', function(req, res) {
+  console.log(req.body.email);
+  dbHelpers.getIDs(req.body.email, '', function(idObj) {
+    var id_users = idObj.id_users;
+    console.log('SELECT * FROM usersCharities INNER JOIN charities ON charities.id = usersCharities.id_charities WHERE \
+      id_users = \'' + id_users + '\';');
+    var queryString = 'SELECT * FROM usersCharities INNER JOIN charities ON charities.id = usersCharities.id_charities;';
+    dbConfig.query({
+        text: queryString
+      }, 
+      function(err, results) {
+        if (err) {
+          res.send(err);
+        } else if (results.rowCount > 0) {
+          console.log(results.rows);
+          var sendResults = results.rows.filter(function(item) {
+            return (item.id_users === ''+id_users);
+          });
+          res.send(sendResults);
+        } else {
+          res.send('NO RECORDS');
+        }
+      }
+    );
   });
 });
 

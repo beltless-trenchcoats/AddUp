@@ -6,13 +6,47 @@ var session = require('express-session');
 var db = require('./db/controllers/users');
 var apiKeys = require('./config/API_Keys');
 var axios = require('axios');
-
+var worker = require('./worker');
 
 var app = express();
 var port = process.env.PORT || 8080;
 
 var currentUser = undefined;
 var userInfo = {};
+
+//accurate interval timer +- 1ms
+function interval(duration, fn){
+  this.baseline = undefined
+
+  this.run = function(){
+    if(this.baseline === undefined){
+      this.baseline = new Date().getTime()
+    }
+    fn()
+    var end = new Date().getTime()
+    this.baseline += duration
+
+    var nextTick = duration - (end - this.baseline)
+    if(nextTick<0){
+      nextTick = 0
+    }
+    (function(i){
+        i.timer = setTimeout(function(){
+        i.run(end)
+      }, nextTick)
+    }(this))
+  }
+
+  this.stop = function(){
+   clearTimeout(this.timer)
+  }
+}
+//interval function, runs every 15 minutes
+var callWorker = new interval(900000, function(){
+  worker.processDailyTransactions();
+})
+//calls interval function on worker file
+callWorker.run()
 
 app.use(parser.json(), function(req, res, next) {
   //allow cross origin requests from client, and Plaid API
@@ -126,7 +160,6 @@ app.post('/login', function(req, res) {
 });
 
 app.get('/userInfo', function(req, res) {
-  console.log('USER INFO IS RUNNING!!!!!!', userInfo);
   req.session.reload(function(err) {
     res.send(JSON.stringify(userInfo));
     // session updated

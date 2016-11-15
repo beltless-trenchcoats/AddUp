@@ -8,6 +8,7 @@ var apiKeys = require('./config/API_Keys');
 var axios = require('axios');
 var worker = require('./worker');
 var bcrypt = require('bcrypt');
+var charitiesDB = require('./db/controllers/usersCharities');
 
 var app = express();
 var port = process.env.PORT || 8080;
@@ -234,6 +235,17 @@ app.post('/userfield', function(req, res) {
       res.send(data[0].plaid_access_token);
     }
   });
+})
+
+app.post('/addcharity', function(req, res) {
+  var percentage = req.body.percentage || 1;
+  charitiesDB.insert(req.body.email, req.body.charity, percentage, function(err, response) {
+    if(err) {
+      res.send(err);
+    } else {
+      res.send(200);
+    }
+  })
 })
 
 

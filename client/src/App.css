@@ -83,6 +83,7 @@
 */
 .searchPage {
   top: 55px;
+  width: 100%;
   position: relative;
 }
 
@@ -91,6 +92,10 @@
   margin: 10px auto;
 }
 
+.noResults {
+  margin: 30px auto;
+  text-align: center;
+}
 /*
 * CHARITY PROFILE PAGE
 */

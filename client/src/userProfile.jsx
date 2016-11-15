@@ -5,6 +5,16 @@ import { Col, Row, Grid, Table } from 'react-bootstrap';
 import Header from './Header';
 
 class UserProfile extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      transactions: []
+    }
+  }
+
+  ComponentDidMount () {
+
+  }
 
   render() {
     return (

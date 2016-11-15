@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Panel } from 'react-bootstrap'
+import { Panel, Button } from 'react-bootstrap'
 // import axios from 'axios';
 
 class CharitySearchResult extends Component {
@@ -14,11 +14,13 @@ class CharitySearchResult extends Component {
   render() {
     return (
      <div>
-      <Panel className="charityCard" charityId={this.state.charityId} header={<a href={"/charity/" + this.state.charityId}>{this.props.info.charityName}</a>} bsStyle="info">
+     {console.log("charity", this.props.info)}
+      <Panel className="charityCard" header={<a href={"/charity/" + this.state.charityId}>{this.props.info.charityName}</a>} bsStyle="info">
         <p className="category">{this.props.info.category}</p>
         <p className="missionStatement"><span className="missionStatementTitle">Mission Statement: </span>{this.props.info.missionStatement}</p>
         <p className="location">{this.props.info.city}, {this.props.info.state}</p>
         <p className="website">{this.props.info.website}</p>
+        <a href={"/charity/" + this.state.charityId}><Button bsStyle="primary">Learn More and Donate</Button></a>
       </Panel>
      </div>
     );

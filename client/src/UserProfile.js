@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PlaidLinkComponent from './PlaidLink';
 import { Col, Row, Grid, Table } from 'react-bootstrap';
 import axios from 'axios';
+import $ from "jquery";
 
 import Header from './Header';
 import Transaction from './Transaction';
@@ -11,7 +12,8 @@ class UserProfile extends Component {
     super(props)
     this.state = {
       transactions: [],
-      userInfo: {}
+      userInfo: {},
+      hasLinkAccount: false
     }
   }
 
@@ -35,6 +37,10 @@ class UserProfile extends Component {
     })
   }
 
+  componentDidMount() {
+    $('.userBankInfo div button span').html('Add Account');
+  }
+
   render() {
     return (
       <Header>
@@ -42,21 +48,47 @@ class UserProfile extends Component {
           
           <Grid>
             <Row> 
-            <Col className="userProfile"md={6} mdPush={6} >
-              <h1>Profile</h1>
-              <h3> Email: </h3>
-              <h3> Donated to Date: </h3>
-            </Col>
+            {
+              !this.state.hasLinkAccount ? 
+              <Col className="userBankInfo shadowbox" md={5}>
+                <form id="some-id" method="POST" action="/authenticate"></form>
+                <h1>Link an account to start donating!</h1>
+                <PlaidLinkComponent className='plaidLinkButton'/>
+              </Col>
+              :
+              <Col className="userBankInfo shadowbox" md={5}>
+                <h1>Your Bank Institution</h1>
+                <text>Account ending in: 4345</text>
+              </Col>
+            }
 
-            <Col className="userBankInfo" md={6} mdPull={6}>
-              <form id="some-id" method="POST" action="/authenticate"></form>
-              CHECK ON THE USER INFO
-              <PlaidLinkComponent />
-            </Col>
+              <Col className="userProfile shadowbox"md={6}>
+                <h1>My Profile</h1>
+                <div className='profileField'><span className='label'>Name:</span><span className='value'> {this.state.userInfo.firstName} {this.state.userInfo.lastName}</span><button>Change</button></div>
+                <div className='profileField'><span className='label'>Email:</span><span className='value'> {this.state.userInfo.email}</span><button>Change</button></div>
+                <div className='profileField'><span className='label'>Password: </span><button>Change</button></div>
+              </Col>
             </Row>
 
+            <Row >
+              <Col className="userCharitiesContainer" md={11}>
+                <h1>Your Charities</h1>
+                <div className='userCharities'>
+                  <div className='userCharity'>
+                    <text className='title'>Charity name</text>
+                    <text className='amount'>$4.38</text>
+                    <text className='since'>since Nov 15, 2016</text>
+                  </div>
+                  <div className='userCharity'>
+                    <text className='title'>Charity name</text>
+                    <text className='amount'>$12.07</text>
+                    <text className='since'>since Apr 2, 2016</text>
+                  </div>
+                </div>
+              </Col>
+            </Row>
             <Row className="transactionHistory">
-              <h2>TransactionHistory</h2>
+              <h2>Transaction History</h2>
 
               <Table responsive striped hover>
                 <thead>
@@ -77,7 +109,6 @@ class UserProfile extends Component {
 
               </Table>
             </Row>
-
           </Grid>
 
         </div>

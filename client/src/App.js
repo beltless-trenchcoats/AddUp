@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { Button, Jumbotron, Col, Panel } from 'react-bootstrap';
+import axios from 'axios';
 
 import homeImage from '../public/background.jpg'
 import './App.css';
@@ -8,6 +9,26 @@ import './App.css';
 import Header from './Header';
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      userInfo: {}
+    }
+  }
+
+  componentWillMount() {
+    axios.get('http://localhost:8080/userInfo')
+    .then((res) => {
+      console.log('userInfo', res.data);
+      this.setState({
+        userInfo: res.data
+      })
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
   render() {
     return (
       <Header>

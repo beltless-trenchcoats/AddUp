@@ -107,4 +107,35 @@
 .charityProfilePage {
   top: 55px;
   position: relative;
+  padding: 15px;
+  width: 80%;
+}
+
+.addCharity, .removeCharity {
+  float: right;
+  position: fixed;
+  top: 85px;
+  right: 15px;
+}
+
+.addressHeader {
+  font-weight: 800;
+}
+
+.address {
+  font-size: 0.8em;
+  font-style: italic;
+  color: grey;
+}
+
+.charityClassification {
+}
+
+.charityLocation {
+}
+
+.corpInfo {
+  font-size: 0.8em;
+  font-style: italic;
+  color: grey;
 }

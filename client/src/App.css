@@ -16,11 +16,16 @@
 .App-header {
   z-index: 1000;
   width: 100%;
-  background-color: #0066ff;
+  background-color: #337AB7;
   height: 55px;
   padding: 5px;
   color: white;
   position: absolute;
+}
+.logo, .name {
+  font-size: 1.4em;
+  font-weight: 800;
+  color: white;
 }
 
 .userButtons {
@@ -31,7 +36,6 @@
 }
 
 .modalButton {
-  /*float: right;*/
   margin: 0 5px;
 } 
 
@@ -76,4 +80,31 @@
 }
 
 .transactionHistory {
+}
+
+/*
+* SEARCH PAGE
+*/
+.searchPage {
+  top: 55px;
+  width: 100%;
+  position: relative;
+}
+
+.charityCard {
+  width: 80%;
+  margin: 10px auto;
+}
+
+.noResults {
+  margin: 30px auto;
+  text-align: center;
+  color: lightgrey;
+}
+/*
+* CHARITY PROFILE PAGE
+*/
+.charityProfilePage {
+  top: 55px;
+  position: relative;
 }

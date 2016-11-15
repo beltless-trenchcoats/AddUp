@@ -11,14 +11,10 @@ class CharitySearchResult extends Component {
     }
   }
 
-  componentWillMount () {
-    console.log('props', this.props)
-  }
-
   render() {
     return (
      <div>
-      <Panel className="charityCard" header={this.props.info.charityName} bsStyle="info">
+      <Panel className="charityCard" charityId={this.state.charityId} header={<a href={"/charity/" + this.state.charityId}>{this.props.info.charityName}</a>} bsStyle="info">
         <p className="category">{this.props.info.category}</p>
         <p className="missionStatement"><span className="missionStatementTitle">Mission Statement: </span>{this.props.info.missionStatement}</p>
         <p className="location">{this.props.info.city}, {this.props.info.state}</p>
@@ -31,22 +27,4 @@ class CharitySearchResult extends Component {
 
 export default CharitySearchResult;
 
-
-acceptingDonations:1
-category:"Health - General and Rehabilitative"
-charityName:"PLANNED PARENTHOOD PASADENA AND SAN GABRIEL VALLEY INC"
-city:"ALTADENA"
-deductibilityCd:1
-donationUrl:"http://donate.makemydonation.org/donate/951916050"
-ein:"951916050"
-eligibleCd:1
-missionStatement:""
-recordCount:943
-rows:20
-score:9.924065
-start:0
-state:"California"
-statusCd:1
-url:"http://www.orghunter.com/organization/951916050"
-website:""
-zipCode:"91001-2463"
+//<a href="/charity/"+this.state.charityId>this.props.info.charityName</a>

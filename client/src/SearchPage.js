@@ -22,21 +22,17 @@ class SearchPage extends Component {
   }
 
   getResults() {
-    console.log('hello')
-    console.log(this.state.searchTerm)
     this.setState({isLoading: true})
     axios.post('http://localhost:8080/charitySearch',{
       searchTerm: this.state.searchTerm,
       eligible: 1
     })
     .then((res) => {
-      console.log(res.data)
       this.setState({
         searchResults: res.data,
         searchTerm: '',
         isLoading: false
       })
-      console.log(this.state.searchResults)
     })
     .catch((err) => {
       console.log(err)

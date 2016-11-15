@@ -86,11 +86,10 @@ app.post('/signup', function(req, res) {
         password: password
       })
       .then(function() {
-        console.log('LOGGED INNNNN');
         res.status(200).send('Success!');
       })
       .catch(function(err) {
-        console.log('PROMISE ERRORRR', err);
+        console.log(err);
       });
     });
 });

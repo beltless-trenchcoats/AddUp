@@ -209,15 +209,14 @@ app.post('/charityInfo', function (req, res) {
     method: 'post',
     body: req.body,
     json: true,
-    url: 'http://data.orghunter.com/v1/charitypremium?user_key=' + apiKeys.orgHunter + 'ein=' + req.body.charityId  //+ '&searchTerm=' + req.body.searchTerm
+    url: 'http://data.orghunter.com/v1/charitypremium?user_key=' + apiKeys.orgHunter + '&ein=' + req.body.charityId
   };
   request(options, function (err, result, body) {
     if (err) {
       console.log(err);
       res.send(err);
     } else {
-      console.log('result', result)
-      res.send(JSON.stringify(data.body))
+      res.send(JSON.stringify(body.data))
     }
   });
 });

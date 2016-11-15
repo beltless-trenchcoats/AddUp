@@ -45,6 +45,22 @@ class Header extends Component {
     this.onLastnameChange = this.onLastnameChange.bind(this)
   }
 
+  componentWillMount() {
+    axios.get('http://localhost:8080/userInfo')
+    .then((res) => {
+      console.log('userInfo', res);
+      this.setState({
+        email: res.data.email || '',
+        firstname: res.data.firstName || '',
+        lastname: res.data.lastName || '',
+        loggedIn: (res.data.email) || false
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
   closeLogin() {
     this.setState({ showLoginModal: false });
   }
@@ -111,14 +127,22 @@ class Header extends Component {
   }
 
   logoutUser () {
-    this.setState({
-      loggedIn: false,
-      email: '',
-      password: '',
-      firstname: '',
-      lastname: ''
+    console.log('this is running');
+    axios.get('http://localhost:8080/logout')
+    .then((res) => {
+      console.log(res);
+      this.setState({
+        loggedIn: false,
+        email: '',
+        password: '',
+        firstname: '',
+        lastname: ''
+      });
+      this.closeLogout();
     })
-    this.closeLogout();
+    .catch((err) => {
+      console.log(err);
+    });
   }
 
   onPasswordChange (e) {
@@ -136,7 +160,6 @@ class Header extends Component {
   onLastnameChange (e) {
     this.setState({lastname: e.target.value})
   }
-
 
   render() {
     return (

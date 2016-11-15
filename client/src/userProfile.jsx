@@ -9,11 +9,23 @@ class UserProfile extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      transactions: []
+      transactions: [],
+      userInfo: {}
     }
   }
 
-  ComponentDidMount () {
+  componentWillMount() {
+    axios.get('http://localhost:8080/userInfo')
+    .then((res) => {
+      console.log('userInfo', res);
+      this.setState({
+        userInfo: res.data
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
     // Users.getUserFields('helga@gmail.com', () => {
     //   console.log('getting User fields')
     // })
@@ -32,7 +44,6 @@ class UserProfile extends Component {
     // .catch((error) => {
     //   console.log(error)
     // })
-
   }
 
   render() {

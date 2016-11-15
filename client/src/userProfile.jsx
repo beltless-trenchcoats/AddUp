@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PlaidLinkComponent from './PlaidLink';
 import { Col, Row, Grid, Table } from 'react-bootstrap';
+import axios from 'axios';
 
 import Header from './Header';
+import Users from '../../server/db/controllers/users'
 
 class UserProfile extends Component {
   constructor(props) {
@@ -13,6 +15,24 @@ class UserProfile extends Component {
   }
 
   ComponentDidMount () {
+    Users.getUserFields('helga@gmail.com', () => {
+      console.log('getting User fields')
+    })
+    .then((response) => {
+      console.log('response', response)
+      axios.post('http://localhost:8080/transactions', {
+        access_token: ''
+      })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    })
+    .catch((error) => {
+      console.log(error)
+    })
 
   }
 

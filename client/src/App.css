@@ -22,6 +22,11 @@
   color: white;
   position: absolute;
 }
+.logo, .name {
+  font-size: 2em;
+  font-weight: 800;
+  color: white;
+}
 
 .userButtons {
   float: right;
@@ -31,7 +36,6 @@
 }
 
 .modalButton {
-  /*float: right;*/
   margin: 0 5px;
 } 
 
@@ -95,6 +99,7 @@
 .noResults {
   margin: 30px auto;
   text-align: center;
+  color: lightgrey;
 }
 /*
 * CHARITY PROFILE PAGE

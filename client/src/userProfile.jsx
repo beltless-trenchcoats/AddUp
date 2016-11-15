@@ -4,6 +4,7 @@ import { Col, Row, Grid, Table } from 'react-bootstrap';
 import axios from 'axios';
 
 import Header from './Header';
+import Transaction from './Transaction';
 
 class UserProfile extends Component {
   constructor(props) {
@@ -14,36 +15,24 @@ class UserProfile extends Component {
     }
   }
 
-  componentWillMount() {
-    axios.get('http://localhost:8080/userInfo')
-    .then((res) => {
-      console.log('userInfo', res);
-      this.setState({
-        userInfo: res.data
-      });
+  componentDidMount() {
+    axios.post('http://localhost:8080/userfield', {
+      email: 'test@gmail.com'
+    }).then((response) => {
+      axios.post('http://localhost:8080/transactions', {
+        access_token: response.data
+      })
+      .then((res) => {
+        console.log(res.data.transactions)
+        this.setState({transactions: res.data.transactions})
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     })
-    .catch((err) => {
-      console.log(err);
-    });
-
-    // Users.getUserFields('helga@gmail.com', () => {
-    //   console.log('getting User fields')
-    // })
-    // .then((response) => {
-    //   console.log('response', response)
-    //   axios.post('http://localhost:8080/transactions', {
-    //     access_token: ''
-    //   })
-    //   .then((res) => {
-    //     console.log(res)
-    //   })
-    //   .catch((err) => {
-    //     console.log(err)
-    //   })
-    // })
-    // .catch((error) => {
-    //   console.log(error)
-    // })
+    .catch((error) => {
+      console.log(error)
+    })
   }
 
   render() {
@@ -78,6 +67,13 @@ class UserProfile extends Component {
                     <th>Cause</th>
                   </tr>
                 </thead>
+
+                <tbody>
+                  {this.state.transactions.filter((transaction) => transaction.amount > 0).map ((transaction, i) => 
+                    <Transaction key={i} info={transaction} />
+                  )}
+
+                </tbody>
 
               </Table>
             </Row>

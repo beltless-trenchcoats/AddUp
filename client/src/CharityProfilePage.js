@@ -12,7 +12,7 @@ class CharityProfilePage extends Component {
     }
   }
 
-  ComponentDidMount () {
+  componentDidMount () {
     console.log('hello')
     axios.post('http://localhost:8080/charityInfo', {
       charityId: this.state.charityId

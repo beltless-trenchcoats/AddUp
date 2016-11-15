@@ -12,12 +12,23 @@ class UserProfile extends Component {
     super(props)
     this.state = {
       transactions: [],
-      userInfo: {},
-      hasLinkAccount: false
+      userSession: {},
+      hasLinkAccount: false,
+      userInfo: {}
     }
   }
 
+  componentWillMount() {
+    axios.get('http://localhost:8080/userSession')
+    .then(res => {
+      this.setState({
+        userSession: res.data
+      });
+    })
+  }
+  
   componentDidMount() {
+    $('.userBankInfo div button span').html('Add Account');
     axios.post('http://localhost:8080/userfield', {
       email: 'test@gmail.com'
     }).then((response) => {
@@ -34,11 +45,7 @@ class UserProfile extends Component {
     })
     .catch((error) => {
       console.log(error)
-    })
-  }
-
-  componentDidMount() {
-    $('.userBankInfo div button span').html('Add Account');
+    }
   }
 
   render() {
@@ -64,8 +71,8 @@ class UserProfile extends Component {
 
               <Col className="userProfile shadowbox"md={6}>
                 <h1>My Profile</h1>
-                <div className='profileField'><span className='label'>Name:</span><span className='value'> {this.state.userInfo.firstName} {this.state.userInfo.lastName}</span><button>Change</button></div>
-                <div className='profileField'><span className='label'>Email:</span><span className='value'> {this.state.userInfo.email}</span><button>Change</button></div>
+                <div className='profileField'><span className='label'>Name:</span><span className='value'> {this.state.userSession.firstName} {this.state.userSession.lastName}</span><button>Change</button></div>
+                <div className='profileField'><span className='label'>Email:</span><span className='value'> {this.state.userSession.email}</span><button>Change</button></div>
                 <div className='profileField'><span className='label'>Password: </span><button>Change</button></div>
               </Col>
             </Row>

@@ -12,16 +12,16 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      userInfo: {}
+      userSession: {}
     }
   }
 
   componentWillMount() {
-    axios.get('http://localhost:8080/userInfo')
+    axios.get('http://localhost:8080/userSession')
     .then((res) => {
-      console.log('userInfo', res.data);
+      console.log('userSession', res.data);
       this.setState({
-        userInfo: res.data
+        userSession: res.data
       })
     })
     .catch((err) => {

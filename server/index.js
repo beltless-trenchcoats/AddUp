@@ -16,7 +16,7 @@ var app = express();
 var port = process.env.PORT || 8080;
 
 var currentUser = undefined;
-var userInfo = {};
+var userSession = {};
 
 //accurate interval timer +- 1ms
 function interval(duration, fn){
@@ -153,7 +153,7 @@ app.post('/login', function(req, res) {
             req.session.email = email;
             req.session.firstName = data[0].first_name;
             req.session.lastName = data[0].last_name;
-            userInfo = {
+            userSession = {
               email: email,
               firstName: data[0].first_name,
               lastName: data[0].last_name
@@ -169,10 +169,10 @@ app.post('/login', function(req, res) {
   })
 });
 
-app.get('/userInfo', function(req, res) {
+
+app.get('/userSession', function(req, res) {
   req.session.reload(function(err) {
-    console.log('CALLING USER INFO', JSON.stringify(userInfo));
-    res.send(JSON.stringify(userInfo));
+    res.send(JSON.stringify(userSession));
     // session updated
   })
 });
@@ -182,7 +182,7 @@ app.get('/userInfo', function(req, res) {
 //replace session email and currentUser with undefined
 app.get('/logout', function(req, res) {
   currentUser = undefined;
-  userInfo = {};
+  userSession = {};
   req.session.destroy(function(err) {
     // cannot access session here
     if (err) {

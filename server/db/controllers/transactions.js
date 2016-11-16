@@ -25,10 +25,10 @@ exports.insert = function(id_users, id_charities, amount, callback) {
 exports.getTransactions = function(email, callback) {
   helpers.getIDs(email, '', function(idObj) {
     var id_users = idObj.id_users;
-    console.log('SELECT * FROM (SELECT * FROM transactions WHERE id_users = \'' + id_users + '\') AS t \
+    console.log('SELECT date_time, amount, name FROM (SELECT * FROM transactions WHERE id_users = \'' + id_users + '\') AS t \
       INNER JOIN charities ON charities.id = t.id_charities;');
     db.query({
-      text: 'SELECT * FROM (SELECT * FROM transactions WHERE id_users = \'' + id_users + '\') AS t \
+      text: 'SELECT date_time, amount, name FROM (SELECT * FROM transactions WHERE id_users = \'' + id_users + '\') AS t \
       INNER JOIN charities ON charities.id = t.id_charities;'
     },
     function(err, results) {

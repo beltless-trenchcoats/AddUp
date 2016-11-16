@@ -6,18 +6,19 @@ import React, { Component } from 'react';
 class Transaction extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      
-    }
+  }
+
+  convertToReadableDate(date_time) {
+    var date = new Date(date_time);
+    return date.toDateString();
   }
 
   render() {
     return (
       <tr>
-        <td>{this.props.info.date_time}</td>
-        <td>${this.props.info.amount}</td>
-        <td>Charity Name</td>
-
+        <td>{this.convertToReadableDate(this.props.transaction.date_time)}</td>
+        <td>${this.props.transaction.amount}</td>
+        <td>{this.props.transaction.name}</td>
       </tr>
       
     );

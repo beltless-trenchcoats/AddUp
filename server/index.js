@@ -85,7 +85,8 @@ app.post('/authenticate', function(req, res) {
       console.log('access token', access_token);
       console.log('stripe token', stripe_token);
       //save access tokens to the local db
-      db.updateUser(currentUser, { plaid_access_token: access_token,
+      console.log('user email for stripe', userInfo.email);
+      db.updateUser(userInfo.email, { plaid_access_token: access_token,
       stripe_bank_account_token: stripe_token },
       function(result) {
         console.log('result ', result);
@@ -140,11 +141,13 @@ app.post('/login', function(req, res) {
       })
       req.session.email = req.body.email
       //gets user info to send back to client for dynamic loading such as "Hello, X!"
-      db.getUserFields(currentUser, function(err, data) {
+      console.log('this is running');
+      db.getUserFields(email, function(err, data) {
         if(err) {
           //if error send error to client
           res.send('Error in User Login');
         } else {
+          console.log('this is also running');
           req.session.regenerate(function(err) {
             // will have a new session here
             req.session.email = email;
@@ -155,6 +158,7 @@ app.post('/login', function(req, res) {
               firstName: data[0].first_name,
               lastName: data[0].last_name
             };
+            console.log('LOOOOOOOOGGGGGGIIIIIIIINNNNNNNNNN', userInfo);
           });
           //send response to client with first_name, last_name, and email
           res.send({"first_name": data[0].first_name, "last_name": data[0].last_name,
@@ -162,12 +166,12 @@ app.post('/login', function(req, res) {
         }
       })
     };
-    console.log('currentUser ', currentUser);
   })
 });
 
 app.get('/userInfo', function(req, res) {
   req.session.reload(function(err) {
+    console.log('CALLING USER INFO', JSON.stringify(userInfo));
     res.send(JSON.stringify(userInfo));
     // session updated
   })
@@ -218,9 +222,10 @@ app.post('/userCharities', function(req, res) {
   console.log(req.body.email);
   dbHelpers.getIDs(req.body.email, '', function(idObj) {
     var id_users = idObj.id_users;
-    console.log('SELECT * FROM usersCharities INNER JOIN charities ON charities.id = usersCharities.id_charities WHERE \
-      id_users = \'' + id_users + '\';');
-    var queryString = 'SELECT * FROM usersCharities INNER JOIN charities ON charities.id = usersCharities.id_charities;';
+    console.log('SELECT * FROM (SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\') AS uc \
+      INNER JOIN charities ON charities.id = uc.id_charities;');
+    var queryString = 'SELECT * FROM (SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\') AS uc \
+      INNER JOIN charities ON charities.id = uc.id_charities;';
     dbConfig.query({
         text: queryString
       }, 
@@ -228,11 +233,11 @@ app.post('/userCharities', function(req, res) {
         if (err) {
           res.send(err);
         } else if (results.rowCount > 0) {
-          console.log(results.rows);
-          var sendResults = results.rows.filter(function(item) {
-            return (item.id_users === ''+id_users);
-          });
-          res.send(sendResults);
+          // console.log(results.rows);
+          // var sendResults = results.rows.filter(function(item) {
+          //   return (item.id_users === ''+id_users);
+          // });
+          res.send(results.rows);
         } else {
           res.send('NO RECORDS');
         }

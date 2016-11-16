@@ -60,12 +60,15 @@ class UserProfile extends Component {
 
   convertToReadableDate(date_time) {
     var date = new Date(date_time);
+    if (date.getFullYear() < 2015) { //if the user hasn't donated yet, it returns default date from 1960s (don't want to display)
+      return 'No Donations On File';
+    }
     var options = {
       month: "short",
       year: "numeric",
       day: "numeric"
     };
-    return date.toLocaleDateString("en-us", options)
+    return 'since ' + date.toLocaleDateString("en-us", options)
   }
 
   render() {
@@ -111,7 +114,7 @@ class UserProfile extends Component {
                         : null
                       }
                       <div className='amount'>${charity.user_donation_total}</div>
-                      <div className='since'>since {this.convertToReadableDate(charity.initial_date)}</div>
+                      <div className='since'>{this.convertToReadableDate(charity.initial_date)}</div>
                     </div>
                     )
                 }

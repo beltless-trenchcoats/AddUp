@@ -10,9 +10,9 @@ var apiKeys = require('./config/API_Keys');
 var axios = require('axios');
 var worker = require('./worker');
 var bcrypt = require('bcrypt');
-var charitiesDB = require('./db/controllers/usersCharities');
 var Transactions = require('./db/controllers/transactions');
-
+var userCharitiesDB = require('./db/controllers/usersCharities');
+var charitiesDB = require('./db/controllers/charities')
 
 var app = express();
 var port = process.env.PORT || 8080;
@@ -90,7 +90,6 @@ app.post('/authenticate', function(req, res) {
       db.updateUser(userSession.email, { plaid_access_token: access_token,
       stripe_bank_account_token: stripe_token },
       function(result) {
-        console.log('result ', result);
       })
     }
   });
@@ -129,11 +128,9 @@ app.post('/signup', function(req, res) {
 
 //login users
 app.post('/login', function(req, res) {
-  console.log('req', req.body);
   var email = req.body.email;
   var password = req.body.password;
   db.loginUser(email, password, function(response) {
-    console.log('Login User Response ', response);
     //if response is true continue with login
     if(response) {
       //update currentUser
@@ -207,7 +204,6 @@ app.post('/charitySearch', function(req, res) {
     json: true,
     url: 'http://data.orghunter.com/v1/charitysearch?user_key=' + apiKeys.orgHunter
   };
-  console.log('search req', req.body.searchTerm);
   request(options, function (err, result, body) {
     if (err) {
       console.log(err);
@@ -268,14 +264,14 @@ app.post('/userfield', function(req, res) {
     if(err) {
       res.send(err)
     } else {
-      res.send(data[0].plaid_access_token);
+      res.send(data[0]);
     }
   });
 })
 
 app.post('/addcharity', function(req, res) {
   var percentage = req.body.percentage || 1;
-  charitiesDB.insert(req.body.email, req.body.charity, percentage, function(err, response) {
+  userCharitiesDB.insert(req.body.email, req.body.charity, percentage, function(err, response) {
     if(err) {
       res.send(err);
     } else {
@@ -305,7 +301,7 @@ app.post('/api/user/transactions', function(req, res) {
 })
 
 app.post('/api/user/charities/info', function(req, res) {
-  charitiesDB.getUsersCharityDonationsInfo(req.body.email, function(err, data) {
+  userCharitiesDB.getUsersCharityDonationsInfo(req.body.email, function(err, data) {
     if (err) {
       res.send(err);
     } else {
@@ -313,6 +309,7 @@ app.post('/api/user/charities/info', function(req, res) {
     }
   })
 })
+
 
 
 app.listen(port, function() {

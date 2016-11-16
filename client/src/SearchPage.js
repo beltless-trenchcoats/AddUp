@@ -45,7 +45,6 @@ class SearchPage extends Component {
 
 
   getResults() {
-    console.log('called~~~~~~~~~~~~~~~~~~~~~~');
     this.setState({isLoading: true});
     var searchTerms = {
       eligible: 1
@@ -78,6 +77,9 @@ class SearchPage extends Component {
     var activePage = data.selected;
     //lastActivePage is the last page the user selected
     var lastActivePage = this.state.lastPage;
+    //these two are set for future use in if statements
+    var pageDifference = undefined;
+    var resultDifference = undefined;
     //on first select if statement will be called, it moves activePage up but leaves
     //lastPage at 1 still
     if(activePage >= lastActivePage && this.state.firstPageChange === false) {
@@ -94,9 +96,9 @@ class SearchPage extends Component {
     } else if(activePage > lastActivePage) {
       //pageDifference is if the user skips from 1 -> 9 so we can Calculate where to
       //start the API call
-      var pageDifference = activePage - lastActivePage;
+      pageDifference = activePage - lastActivePage;
       //resultDifference uses pageDifference and multiplies it by 20
-      var resultDifference = pageDifference * 20;
+      resultDifference = pageDifference * 20;
         this.setState({activePage: activePage += pageDifference, start: previousStart += resultDifference,
           lastPage: lastActivePage += pageDifference},
           function() {
@@ -115,8 +117,8 @@ class SearchPage extends Component {
     //else if the user is making steps down 5 -> 4, etc...
     } else {
       //same concept as stepping up but in reverse order
-      var pageDifference = lastActivePage - activePage;
-      var resultDifference = pageDifference * 20;
+      pageDifference = lastActivePage - activePage;
+      resultDifference = pageDifference * 20;
       this.setState({activePage: activePage -= pageDifference, start: previousStart -= resultDifference,
          lastPage: lastActivePage -= pageDifference},
       function() {

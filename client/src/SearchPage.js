@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Navbar, FormGroup, FormControl, Button, DropdownButton, MenuItem } from 'react-bootstrap'
+import { Navbar, FormGroup, FormControl, Button, DropdownButton, MenuItem } from 'react-bootstrap';
+import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 
 import Header from './Header';
@@ -16,8 +17,12 @@ class SearchPage extends Component {
       state: '',
       zipCode: '',
       category: '',
+      start: 0,
       categoryName: '',
-      searchResults: []
+      searchResults: [],
+      activePage: 1,
+      lastPage: 1,
+      firstPageChange: false
     }
     this.getResults = this.getResults.bind(this)
     this.onSearchInput = this.onSearchInput.bind(this)
@@ -38,19 +43,21 @@ class SearchPage extends Component {
     this.setState({category: evt[0], categoryName: evt[1]});
   }
 
+
   getResults() {
+    console.log('called~~~~~~~~~~~~~~~~~~~~~~');
     this.setState({isLoading: true});
     var searchTerms = {
       eligible: 1
     };
-    var options = ['searchTerm', 'city', 'state', 'zipCode', 'category'];
+    var options = ['searchTerm', 'city', 'state', 'zipCode', 'category', 'start'];
     for (var i = 0; i < options.length; i ++) {
       if (this.state[options[i]] !== '') {
         searchTerms[options[i]] = this.state[options[i]]
       }
     }
 
-    console.log('search terms', searchTerms);
+    // console.log('search terms', searchTerms);
     axios.post('http://localhost:8080/charitySearch', searchTerms)
     .then((res) => {
       this.setState({
@@ -62,6 +69,63 @@ class SearchPage extends Component {
       console.log(err)
     })
   }
+
+  //this function is called by ReactPaginate component
+  pageSelect = (data) => {
+    //previous start is what rows to request from the api
+    var previousStart = this.state.start;
+    //activePage is the current selected page
+    var activePage = data.selected;
+    //lastActivePage is the last page the user selected
+    var lastActivePage = this.state.lastPage;
+    //on first select if statement will be called, it moves activePage up but leaves
+    //lastPage at 1 still
+    if(activePage >= lastActivePage && this.state.firstPageChange === false) {
+      //sets activePage state up 1 and firstPageChange state to false
+      this.setState({activePage: activePage += 1, start: previousStart += 20, firstPageChange: true},
+        function() {
+          //gets results from API
+          this.getResults.call(this);
+          //maps over results and re renders them
+          this.state.searchResults.map((charity, i) =>
+          <CharitySearchResult key={i} info={charity} />)
+        })
+    //gets called when the user increments up in numbers like 1 -> 2
+    } else if(activePage > lastActivePage) {
+      //pageDifference is if the user skips from 1 -> 9 so we can Calculate where to
+      //start the API call
+      var pageDifference = activePage - lastActivePage;
+      //resultDifference uses pageDifference and multiplies it by 20
+      var resultDifference = pageDifference * 20;
+        this.setState({activePage: activePage += pageDifference, start: previousStart += resultDifference,
+          lastPage: lastActivePage += pageDifference},
+          function() {
+            this.getResults.call(this);
+            this.state.searchResults.map((charity, i) =>
+            <CharitySearchResult key={i} info={charity} />)
+          });
+    //this route is for when users go down 1 by 1, eventually lastActivePage and activePage will be =
+    } else if(activePage === lastActivePage) {
+      this.setState({activePage: activePage -= 1, start: previousStart -= 20},
+        function() {
+          this.getResults.call(this);
+          this.state.searchResults.map((charity, i) =>
+          <CharitySearchResult key={i} info={charity} />)
+        });
+    //else if the user is making steps down 5 -> 4, etc...
+    } else {
+      //same concept as stepping up but in reverse order
+      var pageDifference = lastActivePage - activePage;
+      var resultDifference = pageDifference * 20;
+      this.setState({activePage: activePage -= pageDifference, start: previousStart -= resultDifference,
+         lastPage: lastActivePage -= pageDifference},
+      function() {
+        this.getResults.call(this);
+        this.state.searchResults.map((charity, i) =>
+        <CharitySearchResult key={i} info={charity} />)
+      });
+    }
+}
 
   render() {
     return (
@@ -137,6 +201,16 @@ class SearchPage extends Component {
             : this.state.searchResults.map((charity, i) =>
             <CharitySearchResult key={i} info={charity} />)}
           </div>
+            <ReactPaginate previousLabel={"previous"}
+               nextLabel={"next"}
+               breakLabel={<a href="">...</a>}
+               breakClassName={"break-me"}
+               marginPagesDisplayed={2}
+               pageRangeDisplayed={5}
+               clickCallback={this.pageSelect.bind(this)}
+               containerClassName={"pagination"}
+               subContainerClassName={"pages pagination"}
+               activeClassName={"active"} />
         </div>
       </Header>
     );

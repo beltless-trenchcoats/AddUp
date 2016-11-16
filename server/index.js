@@ -11,12 +11,14 @@ var axios = require('axios');
 var worker = require('./worker');
 var bcrypt = require('bcrypt');
 var charitiesDB = require('./db/controllers/usersCharities');
+var Transactions = require('./db/controllers/transactions');
+
 
 var app = express();
 var port = process.env.PORT || 8080;
 
 var currentUser = undefined;
-var userInfo = {};
+var userSession = {};
 
 //accurate interval timer +- 1ms
 function interval(duration, fn){
@@ -85,8 +87,7 @@ app.post('/authenticate', function(req, res) {
       console.log('access token', access_token);
       console.log('stripe token', stripe_token);
       //save access tokens to the local db
-      console.log('user email for stripe', userInfo.email);
-      db.updateUser(userInfo.email, { plaid_access_token: access_token,
+      db.updateUser(userSession.email, { plaid_access_token: access_token,
       stripe_bank_account_token: stripe_token },
       function(result) {
         console.log('result ', result);
@@ -141,7 +142,6 @@ app.post('/login', function(req, res) {
       })
       req.session.email = req.body.email
       //gets user info to send back to client for dynamic loading such as "Hello, X!"
-      console.log('this is running');
       db.getUserFields(email, function(err, data) {
         if(err) {
           //if error send error to client
@@ -153,12 +153,12 @@ app.post('/login', function(req, res) {
             req.session.email = email;
             req.session.firstName = data[0].first_name;
             req.session.lastName = data[0].last_name;
-            userInfo = {
+            userSession = {
               email: email,
               firstName: data[0].first_name,
               lastName: data[0].last_name
             };
-            console.log('LOOOOOOOOGGGGGGIIIIIIIINNNNNNNNNN', userInfo);
+            console.log('LOOOOOOOOGGGGGGIIIIIIIINNNNNNNNNN', userSession);
           });
           //send response to client with first_name, last_name, and email
           res.send({"first_name": data[0].first_name, "last_name": data[0].last_name,
@@ -169,10 +169,10 @@ app.post('/login', function(req, res) {
   })
 });
 
-app.get('/userInfo', function(req, res) {
+
+app.get('/userSession', function(req, res) {
   req.session.reload(function(err) {
-    console.log('CALLING USER INFO', JSON.stringify(userInfo));
-    res.send(JSON.stringify(userInfo));
+    res.send(JSON.stringify(userSession));
     // session updated
   })
 });
@@ -182,7 +182,7 @@ app.get('/userInfo', function(req, res) {
 //replace session email and currentUser with undefined
 app.get('/logout', function(req, res) {
   currentUser = undefined;
-  userInfo = {};
+  userSession = {};
   req.session.destroy(function(err) {
     // cannot access session here
     if (err) {
@@ -280,6 +280,36 @@ app.post('/addcharity', function(req, res) {
       res.send(err);
     } else {
       res.send(200);
+    }
+  })
+})
+
+app.post('/api/user/info', function(req, res) {
+  db.getUserFields(req.body.email, function(err, data) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(data[0]);
+    }
+  });
+})
+
+app.post('/api/user/transactions', function(req, res) {
+  Transactions.getTransactions(req.body.email, function(err, data) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(data);
+    }
+  });
+})
+
+app.post('/api/user/charities/info', function(req, res) {
+  charitiesDB.getUsersCharityDonationsInfo(req.body.email, function(err, data) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(data);
     }
   })
 })

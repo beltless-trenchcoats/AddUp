@@ -47,9 +47,8 @@ class Header extends Component {
   }
 
   componentWillMount() {
-    axios.get('http://localhost:8080/userInfo')
+    axios.get('http://localhost:8080/userSession')
     .then((res) => {
-      console.log('userInfo', res);
       this.setState({
         email: res.data.email || '',
         firstname: res.data.firstName || '',

@@ -21,31 +21,33 @@ class UserProfile extends Component {
   componentWillMount() {
     axios.get('http://localhost:8080/userSession')
     .then(res => {
+      console.log('userSession', res.data);
       this.setState({
         userSession: res.data
       });
+
+      var email = this.state.userSession.email;
+      console.log('session email', email);
+
+      axios.post('http://localhost:8080/api/user/info', {
+        'email': email
+      })
+      .then(res => {
+        console.log('USER INFO', res.data);
+        axios.post('http://localhost:8080/api/user/transactions', {
+          'email': email
+        })
+        .then(res => {
+          console.log('USER TRANSACTIONS', res.data);
+          this.setState({transactions: res.data})
+        })
+      })
     })
   }
   
   componentDidMount() {
     $('.userBankInfo div button span').html('Add Account');
-    axios.post('http://localhost:8080/userfield', {
-      email: 'test@gmail.com'
-    }).then((response) => {
-      axios.post('http://localhost:8080/transactions', {
-        access_token: response.data
-      })
-      .then((res) => {
-        console.log(res.data.transactions)
-        this.setState({transactions: res.data.transactions})
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+
   }
 
   render() {

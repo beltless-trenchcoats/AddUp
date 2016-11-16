@@ -87,10 +87,17 @@ app.post('/authenticate', function(req, res) {
       console.log('access token', access_token);
       console.log('stripe token', stripe_token);
       //save access tokens to the local db
-      db.updateUser(userSession.email, { plaid_access_token: access_token,
-      stripe_bank_account_token: stripe_token },
-      function(result) {
+      axios.post('http://localhost:8080/transactions', {
+        access_token: access_token
       })
+      .then(resp => {
+        db.updateUser(userSession.email, { plaid_access_token: access_token,
+          stripe_bank_account_token: stripe_token, bank_digits: resp.data.accounts[0].meta.number },
+          function(result) {
+            res.sendStatus(201);
+          })
+      })
+      .catch(err => console.log('error authenicating bank ', err));
     }
   });
 });
@@ -101,7 +108,9 @@ app.post('/transactions', function(req, res) {
     'client_id': '58224c96a753b9766d52bbd1',
     'secret': '04137ebffb7d68729f7182dd0a9e71',
     'access_token': req.body.access_token
-  }).then(resp => res.send(resp.data))
+  }).then(resp => {
+    res.send(resp.data)
+  })
     .catch(err => console.log('error pinging plaid', err));
 });
 
@@ -224,7 +233,7 @@ app.post('/userCharities', function(req, res) {
       INNER JOIN charities ON charities.id = uc.id_charities;';
     dbConfig.query({
         text: queryString
-      }, 
+      },
       function(err, results) {
         if (err) {
           res.send(err);

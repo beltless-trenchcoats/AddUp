@@ -1,12 +1,12 @@
 var db = require('../config/db');
 var helpers = require('./helpers');
 
-exports.insert = function(email, charity, percentage, callback) {
-  helpers.getIDs(email, charity, function(idObj) {
+exports.insert = function(email, charityID, percentage, callback) {
+  helpers.getIDs(email, '', function(idObj) {
     var id_users = idObj.id_users;
-    var id_charities = idObj.id_charities;
+    var id_charities = charityID;
     console.log('SELECT * FROM usersCharities \
-        WHERE id_users = ' + idObj.id_users + ' AND id_charities = ' + idObj.id_charities + ';');
+        WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';');
     db.query({
       text: 'SELECT * FROM usersCharities \
         WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';'
@@ -85,7 +85,9 @@ exports.getUserCharityFields = function(email, charity, callback) {
     } else if (charity !== '' && email === '') {
       queryString += 'SELECT * FROM usersCharities WHERE id_charities = \'' + id_charities + '\';'
     } else if (email !== '' && charity === '') {
-      queryString += 'SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\';'
+      queryString += 'SELECT * FROM (SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\') AS uc \
+      INNER JOIN charities ON charities.id = uc.id_charities;'
+      // 'SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\';'
     } else {
       queryString += 'SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\' AND id_charities = \'' + id_charities + '\';'
     }
@@ -137,15 +139,15 @@ exports.getUsersCharityDonationsInfo = function(email, callback) {
 
 // exports.getUsersCharityDonationsInfo('test@gmail.com', (err, results) => console.log(results));
 
-// exports.insert('herbert@gmail.com', 'Save the Helgas', .5, function(result) {
-//   console.log(result);
-// });
+exports.insert('test@gmail.com', 14, .5, function(result) {
+  console.log(result);
+});
 
 // exports.updatePercentage('herbert@gmail.com', 'Save the Helgas', .8, function(result) {
 //   console.log(result);
 // });
 
-// exports.getUserCharityFields('herbert@gmail.com', '', function(err, charities) {
+// exports.getUserCharityFields('test@gmail.com', '', function(err, charities) {
 //   if (err) {
 //     console.log('ERROR getting users charities', err);
 //   }

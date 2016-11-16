@@ -11,6 +11,8 @@ var axios = require('axios');
 var worker = require('./worker');
 var bcrypt = require('bcrypt');
 var charitiesDB = require('./db/controllers/usersCharities');
+var Transactions = require('./db/controllers/transactions');
+
 
 var app = express();
 var port = process.env.PORT || 8080;
@@ -141,7 +143,6 @@ app.post('/login', function(req, res) {
       })
       req.session.email = req.body.email
       //gets user info to send back to client for dynamic loading such as "Hello, X!"
-      console.log('this is running');
       db.getUserFields(email, function(err, data) {
         if(err) {
           //if error send error to client
@@ -282,6 +283,26 @@ app.post('/addcharity', function(req, res) {
       res.send(200);
     }
   })
+})
+
+app.post('/api/user/info', function(req, res) {
+  db.getUserFields(req.body.email, function(err, data) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(data[0]);
+    }
+  });
+})
+
+app.post('/api/user/transactions', function(req, res) {
+  Transactions.getTransactions(req.body.email, function(err, data) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(data[0]);
+    }
+  });
 })
 
 

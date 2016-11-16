@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import apiKeys from '../../server/config/API_Keys';
 import Header from './Header';
+import CharityModal from './CharityModal';
 
 class CharityProfilePage extends Component {
   constructor(props) {
@@ -12,8 +13,12 @@ class CharityProfilePage extends Component {
     this.state = {
       charityId: this.props.params.id,
       charity: {},
-      selected: false
+      selected: false,
+      showModal: false
     }
+    this.updateCharities = this.updateCharities.bind(this)
+    this.openModal = this.openModal.bind(this)
+    this.closeModal = this.closeModal.bind(this)
   }
 
   componentDidMount () {
@@ -21,31 +26,34 @@ class CharityProfilePage extends Component {
       charityId: this.state.charityId
     })
     .then((res) => {
-      console.log('response', res.data)
       this.setState({charity: res.data})
-
     })
     .catch((err) => {
       console.log(err)
     })
   }
 
+  openModal() {
+    this.setState({ showModal: true });
+  }
+  closeModal() {
+    this.setState({ showModal: false });
+  }
+
+  updateCharities () {
+
+  }
+
+  /*
+  * Google Maps functions
+  */
   onMapCreated(map) {
     map.setOptions({
       disableDefaultUI: true
     });
   }
-
   onDragEnd(e) {
     console.log('onDragEnd', e);
-  }
-
-  onCloseClick() {
-    console.log('onCloseClick');
-  }
-
-  onClick(e) {
-    console.log('onClick', e);
   }
 
   render() {
@@ -59,7 +67,7 @@ class CharityProfilePage extends Component {
               <div className="charityActivities">{this.state.charity.activity1}, {this.state.charity.activity2}, {this.state.charity.activity3}</div>
               <h3> Total AddUp+ Donations to Date: </h3>
 
-              {this.state.selected ? <Button className="removeCharity" bsStyle="primary">Remove from My Charities</Button> : <Button className="addCharity" bsStyle="primary">Add to My Charities</Button>}
+              {this.state.selected ? <Button onClick={this.openModal} className="removeCharity" bsStyle="primary">Remove from My Charities</Button> : <Button onClick={this.openModal} className="addCharity" bsStyle="primary">Add to My Charities</Button>}
             </Row>
 
             <Row>
@@ -97,9 +105,11 @@ class CharityProfilePage extends Component {
                 </div>
               </Col>
             </Row>
-
           </Grid>
         </div>
+
+        <CharityModal show={this.state.showModal} onHide={this.closeModal} currentCharity={this.state.charity} />
+
       </Header>
     );
   }

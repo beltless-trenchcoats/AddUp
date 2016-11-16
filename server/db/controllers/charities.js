@@ -85,7 +85,7 @@ exports.getCharityFields = function(charityId, callback) {
       callback('no rows for charityId ' + charityId, null);
     }
   });
-}
+};
 
 //EXAMPLE USAGE:
 

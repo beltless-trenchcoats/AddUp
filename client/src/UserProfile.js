@@ -42,7 +42,6 @@ class UserProfile extends Component {
           'email': email
         })
         .then(res => {
-          console.log(res.data);
           this.setState({transactions: res.data})
         });
 
@@ -57,7 +56,16 @@ class UserProfile extends Component {
   
   componentDidMount() {
     $('.userBankInfo div button span').html('Add Account');
+  }
 
+  convertToReadableDate(date_time) {
+    var date = new Date(date_time);
+    var options = {
+      month: "short",
+      year: "numeric",
+      day: "numeric"
+    };
+    return date.toLocaleDateString("en-us", options)
   }
 
   render() {
@@ -98,7 +106,7 @@ class UserProfile extends Component {
                     <div className='userCharity'>
                       <text className='title'>{charity.name}</text>
                       <text className='amount'>${charity.total_donated}</text>
-                      <text className='since'>since [date of first transaction]</text>
+                      <text className='since'>since {this.convertToReadableDate(charity.initial_date)}</text>
                     </div>
                     )
                 }

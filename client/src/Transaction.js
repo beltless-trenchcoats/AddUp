@@ -10,7 +10,7 @@ class Transaction extends Component {
 
   convertToReadableDate(date_time) {
     var date = new Date(date_time);
-    return date.toDateString();
+    return date.toLocaleDateString();
   }
 
   render() {

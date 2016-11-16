@@ -17,6 +17,7 @@ exports.insert = function(email, charity, percentage, callback) {
       } else if (rows.rowCount > 0) {
         callback('email and charity are already in database');
       } else {
+        console.log('INSERT INTO usersCharities(percentage, id_users, id_charities) VALUES(...)');
         db.query({
           text: 'INSERT INTO usersCharities(percentage, id_users, id_charities) \
             VALUES($1, $2, $3)',

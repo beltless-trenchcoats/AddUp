@@ -104,9 +104,14 @@ class UserProfile extends Component {
                 {
                   this.state.charities.map(charity => 
                     <div className='userCharity'>
-                      <text className='title'>{charity.name}</text>
-                      <text className='amount'>${charity.total_donated}</text>
-                      <text className='since'>since {this.convertToReadableDate(charity.initial_date)}</text>
+                      <div className='title'>{charity.name}</div>
+                      {
+                        (charity.goal_reached === '1') ? 
+                        <div className='completed'>&#10004; Goal Reached</div>
+                        : null
+                      }
+                      <div className='amount'>${charity.user_donation_total}</div>
+                      <div className='since'>since {this.convertToReadableDate(charity.initial_date)}</div>
                     </div>
                     )
                 }

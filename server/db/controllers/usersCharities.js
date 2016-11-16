@@ -120,10 +120,10 @@ exports.getUsersCharityDonationsInfo = function(email, callback) {
     db.query({
         text: 'SELECT name, percentage, \
           (SELECT SUM(amount) FROM transactions WHERE id_users=\'' + id_users + '\' AND id_charities=charities.id) \
-            AS total_donated, \
+            AS user_donation_total, \
           (SELECT MIN(date_time) FROM transactions WHERE id_users=\'' + id_users + '\' AND id_charities=charities.id) \
             AS initial_date, \
-          (CASE WHEN dollar_goal >= total_donated THEN '1' ELSE '0' END) \
+          (CASE WHEN total_donated >= dollar_goal THEN \'1\' ELSE \'0\' END) \
             AS goal_reached \
           FROM userscharities INNER JOIN charities ON userscharities.id_charities=charities.id WHERE id_users=\'' + id_users + '\';'
       }, 

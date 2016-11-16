@@ -87,8 +87,7 @@ app.post('/authenticate', function(req, res) {
       console.log('access token', access_token);
       console.log('stripe token', stripe_token);
       //save access tokens to the local db
-      console.log('user email for stripe', userInfo.email);
-      db.updateUser(userInfo.email, { plaid_access_token: access_token,
+      db.updateUser(userSession.email, { plaid_access_token: access_token,
       stripe_bank_account_token: stripe_token },
       function(result) {
         console.log('result ', result);
@@ -159,7 +158,7 @@ app.post('/login', function(req, res) {
               firstName: data[0].first_name,
               lastName: data[0].last_name
             };
-            console.log('LOOOOOOOOGGGGGGIIIIIIIINNNNNNNNNN', userInfo);
+            console.log('LOOOOOOOOGGGGGGIIIIIIIINNNNNNNNNN', userSession);
           });
           //send response to client with first_name, last_name, and email
           res.send({"first_name": data[0].first_name, "last_name": data[0].last_name,
@@ -300,7 +299,7 @@ app.post('/api/user/transactions', function(req, res) {
     if (err) {
       res.send(err);
     } else {
-      res.send(data[0]);
+      res.send(data);
     }
   });
 })

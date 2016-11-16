@@ -35,6 +35,7 @@ class UserProfile extends Component {
           'email': email
         })
         .then(res => {
+          console.log(res.data);
           this.setState({transactions: res.data})
         })
       })

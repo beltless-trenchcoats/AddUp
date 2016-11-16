@@ -39,7 +39,7 @@ body {
   float: right;
   height: 55px;
 }
-.loginButton, .signupButton, .logoutButton, .userIcon{
+.loginButton, .signupButton, .logoutButton, .userIcon, .navButton{
   margin: 5px;
 }
 

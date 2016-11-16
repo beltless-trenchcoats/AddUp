@@ -85,8 +85,9 @@ body {
 }
 
 h1 {
-  padding: 20px;
+  padding: 10px 20px;
   font-size: 45px;
+  margin-top: 30px;
 }
 
 .profileField {
@@ -137,23 +138,19 @@ h1 {
   height: 35vh;
   margin: 50px 20px 0px 20px;
   background-color: #f1f1f1;
-}
-
-.userProfile {
   display: flex;
   flex-direction: column;
   justify-content: 'space-around';
 }
 
-.userProfile h1 {
-  margin-top: 5px;
-  margin-bottom: 0;
-  padding-bottom: 10px;
-}
-
 .userBankInfo {
   background-color: #BDD4E7;
   color: #001328;
+}
+
+.userBankInfo .account {
+  margin-left: 20px;
+  font-size: 24px;
 }
 
 .userBankInfo div button {
@@ -180,6 +177,7 @@ h1 {
 }
 
 .userCharitiesContainer h1{
+  margin-top: 20px;
   font-size: 48px;
   text-align: center
 }

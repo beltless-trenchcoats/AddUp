@@ -79,19 +79,19 @@ class UserProfile extends Component {
               !this.state.hasLinkAccount ? 
               <Col className="userBankInfo shadowbox" md={5}>
                 <form id="some-id" method="POST" action="/authenticate"></form>
+                <text className='profileHeader'> </text>
                 <h1>Link an account to start donating!</h1>
                 <PlaidLinkComponent className='plaidLinkButton'/>
               </Col>
               :
               <Col className="userBankInfo shadowbox" md={5}>
                 <h1>{this.state.userInfo.bank_name}</h1>
-                <text>Account ending in: {this.state.userInfo.bank_digits}</text>
+                <text className='account'>Account ending in: {this.state.userInfo.bank_digits}</text>
               </Col>
             }
 
               <Col className="userProfile shadowbox"md={6}>
-                <h1>My Profile</h1>
-                <div className='profileField'><span className='label'>Name:</span><span className='value'> {this.state.userSession.firstName} {this.state.userSession.lastName}</span><button>Change</button></div>
+                <h1>{this.state.userSession.firstName} {this.state.userSession.lastName}</h1>
                 <div className='profileField'><span className='label'>Email:</span><span className='value'> {this.state.userSession.email}</span><button>Change</button></div>
                 <div className='profileField'><span className='label'>Password: </span><button>Change</button></div>
               </Col>

@@ -37,9 +37,16 @@ body {
 
 .userButtons {
   float: right;
+  height: 55px;
 }
 .loginButton, .signupButton, .logoutButton, .userIcon{
   margin: 5px;
+}
+
+.userProfileLink {
+  font-weight: 800;
+  color: white;
+  position: relative;
 }
 
 .modalButton {

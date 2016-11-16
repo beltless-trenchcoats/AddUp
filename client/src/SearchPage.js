@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Navbar, FormGroup, FormControl, Button, DropdownButton, MenuItem } from 'react-bootstrap'
+import { Navbar, FormGroup, FormControl, Button, DropdownButton, MenuItem } from 'react-bootstrap';
+import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 
 import Header from './Header';
@@ -16,8 +17,12 @@ class SearchPage extends Component {
       state: '',
       zipCode: '',
       category: '',
+      start: 0,
       categoryName: '',
-      searchResults: []
+      searchResults: [],
+      activePage: 1,
+      lastPage: 1,
+      firstPageChange: false
     }
     this.getResults = this.getResults.bind(this)
     this.onSearchInput = this.onSearchInput.bind(this)
@@ -38,19 +43,21 @@ class SearchPage extends Component {
     this.setState({category: evt[0], categoryName: evt[1]});
   }
 
+
   getResults() {
+    console.log('called~~~~~~~~~~~~~~~~~~~~~~');
     this.setState({isLoading: true});
     var searchTerms = {
       eligible: 1
     };
-    var options = ['searchTerm', 'city', 'state', 'zipCode', 'category'];
+    var options = ['searchTerm', 'city', 'state', 'zipCode', 'category', 'start'];
     for (var i = 0; i < options.length; i ++) {
       if (this.state[options[i]] !== '') {
         searchTerms[options[i]] = this.state[options[i]]
       }
     }
 
-    console.log('search terms', searchTerms);
+    // console.log('search terms', searchTerms);
     axios.post('http://localhost:8080/charitySearch', searchTerms)
     .then((res) => {
       this.setState({
@@ -62,6 +69,48 @@ class SearchPage extends Component {
       console.log(err)
     })
   }
+
+  pageSelect = (data) => {
+    var previousStart = this.state.start;
+    var activePage = data.selected;
+    var lastActivePage = this.state.lastPage;
+    console.log('previousStart !!!!!!!!!!!!!!!!!!!!!', previousStart);
+    console.log('lastpage ', lastActivePage);
+    console.log('activePage', activePage);
+    if(activePage >= lastActivePage && this.state.firstPageChange === false) {
+      console.log('first if');
+      this.setState({activePage: activePage += 1, start: previousStart += 20, firstPageChange: true},
+        function() {
+          this.getResults.call(this);
+          this.state.searchResults.map((charity, i) =>
+          <CharitySearchResult key={i} info={charity} />)
+        })
+      } else if(activePage > lastActivePage) {
+        console.log('2nd if');
+          this.setState({activePage: activePage+= 1, start: previousStart += 20, lastPage: lastActivePage += 1},
+            function() {
+              this.getResults.call(this);
+              this.state.searchResults.map((charity, i) =>
+              <CharitySearchResult key={i} info={charity} />)
+            });
+      } else if(activePage === lastActivePage) {
+        console.log('2nd if');
+        this.setState({activePage: activePage -= 1, start: previousStart -= 20},
+          function() {
+            this.getResults.call(this);
+            this.state.searchResults.map((charity, i) =>
+            <CharitySearchResult key={i} info={charity} />)
+          });
+      } else {
+    console.log('last if');
+    this.setState({activePage: activePage -= 1, start: previousStart -= 20, lastPage: lastActivePage -= 1},
+      function() {
+        this.getResults.call(this);
+        this.state.searchResults.map((charity, i) =>
+        <CharitySearchResult key={i} info={charity} />)
+    });
+  }
+}
 
   render() {
     return (
@@ -137,6 +186,16 @@ class SearchPage extends Component {
             : this.state.searchResults.map((charity, i) =>
             <CharitySearchResult key={i} info={charity} />)}
           </div>
+            <ReactPaginate previousLabel={"previous"}
+               nextLabel={"next"}
+               breakLabel={<a href="">...</a>}
+               breakClassName={"break-me"}
+               marginPagesDisplayed={2}
+               pageRangeDisplayed={5}
+               clickCallback={this.pageSelect.bind(this)}
+               containerClassName={"pagination"}
+               subContainerClassName={"pages pagination"}
+               activeClassName={"active"} />
         </div>
       </Header>
     );

@@ -14,7 +14,7 @@ class CharitySearchResult extends Component {
   render() {
     return (
      <div>
-     {console.log("charity", this.props.info)}
+     {/* {console.log("charity", this.props.info)} */}
       <Panel className="charityCard" header={<a href={"/charity/" + this.state.charityId}>{this.props.info.charityName}</a>} bsStyle="info">
         <p className="category">{this.props.info.category}</p>
         <p className="missionStatement"><span className="missionStatementTitle">Mission Statement: </span>{this.props.info.missionStatement}</p>

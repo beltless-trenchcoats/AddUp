@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Button, Modal, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
-import { Link } from 'react-router';
+import { Router, Link, Navigation } from 'react-router';
+// import { Router, Route, browserHistory } from 'react-router';
 
 import logo from '../assets/images/[AddUp++]Logo.png';
 import FaUser from 'react-icons/lib/fa/user';
@@ -279,8 +280,8 @@ class Header extends Component {
           </Modal.Header>
           <Modal.Body>
             <p> Would you like to logout?</p>
-            <Button className="modalButton" bsStyle="primary" onClick={this.logoutUser}>Logout</Button>
-            <Button className="modalButton" onClick={this.closeLogout}>Cancel</Button>
+            <Link to="/" className="modalButton" bsStyle="primary" onClick={this.logoutUser}>Logout</Link>
+            <Link className="modalButton" onClick={this.closeLogout}>Cancel</Link>
 
           </Modal.Body>
         </Modal>

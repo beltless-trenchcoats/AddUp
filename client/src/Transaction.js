@@ -14,9 +14,8 @@ class Transaction extends Component {
   render() {
     return (
       <tr>
-        <td>{this.props.info.date}</td>
-        <td>{this.props.info.name}</td>
-        <td>${(Math.ceil(this.props.info.amount)-this.props.info.amount).toFixed(2)}</td>
+        <td>{this.props.info.date_time}</td>
+        <td>${this.props.info.amount}</td>
         <td>Charity Name</td>
 
       </tr>

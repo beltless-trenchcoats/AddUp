@@ -171,7 +171,8 @@ class Header extends Component {
           </Link>
 
           <div className="userButtons">
-            {this.state.loggedIn ? <Link to="/user"><div className="userProfileLink"><FaUser className="userIcon"/> Hello, {this.state.firstname}!</div></Link> : null}
+            {this.state.loggedIn ? <Link to="/user"><span className="userProfileLink"><FaUser className="userIcon"/> Hello, {this.state.firstname}!</span></Link> : null}
+            <Button className="navButton" bsSize="small" href="/search"><div className="searchLink">Search</div></Button>
             {this.state.loggedIn ? <Button className="logoutButton" bsSize="small" onClick={this.openLogout}>Logout</Button> : null}
             {this.state.loggedIn ? null : <Button className="loginButton" bsSize="small" onClick={this.openLogin}>Login</Button>}
             {this.state.loggedIn ? null : <Button className="signupButton" bsSize="small" onClick={this.openSignup}>Sign Up</Button>} 
@@ -279,8 +280,8 @@ class Header extends Component {
           </Modal.Header>
           <Modal.Body>
             <p> Would you like to logout?</p>
-            <Link to="/" className="modalButton" bsStyle="primary" onClick={this.logoutUser}>Logout</Link>
-            <Link className="modalButton" onClick={this.closeLogout}>Cancel</Link>
+            <Button href="/" className="modalButton" bsStyle="primary" onClick={this.logoutUser}>Logout</Button>
+            <Button className="modalButton" onClick={this.closeLogout}>Cancel</Button>
 
           </Modal.Body>
         </Modal>

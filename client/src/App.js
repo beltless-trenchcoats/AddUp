@@ -48,22 +48,19 @@ class App extends Component {
           
             <Col xs={6} md={4} className="infoColumn">
               <Panel header="Find Charities and Causes" bsStyle="primary">
-                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec hendrerit tempor tellus. Donec pretium posuere tellus. Proin quam nisl, tincidunt et, mattis eget, convallis nec, purus. Cum sociis natoque penatibu</p>
-                <Link to="/search"><Button bsStyle="primary">Find Charities</Button></Link>
+                <p>Find your perfect charity with over 92357923875 to choose from.</p>
               </Panel>
             </Col>
 
             <Col xs={6} md={4} className="infoColumn">
               <Panel header="Securely Link your Accounts" bsStyle="primary">
-                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec hendrerit tempor tellus. Donec pretium posuere tellus. Proin quam nisl, tincidunt et, mattis eget, convallis nec, purus. Cum sociis natoque penatibu</p>
-                <Link to="/search"><Button bsStyle="primary">Check for User</Button></Link>
+                <p>We use Plaid and Stripe to securely link your accounts. We never store your account information.</p>
               </Panel>
             </Col>
 
             <Col xs={6} md={4} className="infoColumn">
               <Panel header="Set Monthly Limits" bsStyle="primary">
-                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec hendrerit tempor tellus. Donec pretium posuere tellus. Proin quam nisl, tincidunt et, mattis eget, convallis nec, purus. Cum sociis natoque penatibu</p>
-                <Link to="/search"><Button bsStyle="primary">Check for User</Button></Link>
+                <p>Set monthly donation limits so you don't have to worry about going overboard.</p>
               </Panel>
             </Col>
 

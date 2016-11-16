@@ -110,17 +110,21 @@ exports.getUsersCharityDonationsInfo = function(email, callback) {
   helpers.getIDs(email, '', function(idObj) {
     var id_users = idObj.id_users;
     // console.log('SELECT name, percentage, \
-    //     (SELECT SUM(amount) FROM transactions WHERE id_users=\'' + id_users + '\' AND id_charities=charities.id) \
-    //       AS total_donated,\
-    //     (SELECT MIN(date_time) FROM transactions WHERE id_users=\'' + id_users + '\' AND id_charities=charities.id) \
-    //       AS initial_date \
-    //     FROM userscharities INNER JOIN charities ON userscharities.id_charities=charities.id WHERE id_users=\'' + id_users + '\';');
+    //       (SELECT SUM(amount) FROM transactions WHERE id_users=\'' + id_users + '\' AND id_charities=charities.id) \
+    //         AS total_donated, \
+    //       (SELECT MIN(date_time) FROM transactions WHERE id_users=\'' + id_users + '\' AND id_charities=charities.id) \
+    //         AS initial_date, \
+    //       (CASE WHEN dollar_goal >= total_donated THEN '1' ELSE '0' END) \
+    //         AS goal_reached \
+    //       FROM userscharities INNER JOIN charities ON userscharities.id_charities=charities.id WHERE id_users=\'' + id_users + '\';');
     db.query({
         text: 'SELECT name, percentage, \
           (SELECT SUM(amount) FROM transactions WHERE id_users=\'' + id_users + '\' AND id_charities=charities.id) \
-            AS total_donated,\
+            AS total_donated, \
           (SELECT MIN(date_time) FROM transactions WHERE id_users=\'' + id_users + '\' AND id_charities=charities.id) \
-            AS initial_date \
+            AS initial_date, \
+          (CASE WHEN dollar_goal >= total_donated THEN '1' ELSE '0' END) \
+            AS goal_reached \
           FROM userscharities INNER JOIN charities ON userscharities.id_charities=charities.id WHERE id_users=\'' + id_users + '\';'
       }, 
       function(err, results) {

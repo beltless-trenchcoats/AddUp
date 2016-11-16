@@ -13,7 +13,7 @@ class UserProfile extends Component {
     this.state = {
       transactions: [],
       userSession: {},
-      hasLinkAccount: true,
+      hasLinkAccount: false,
       userInfo: {}
     }
   }
@@ -32,6 +32,9 @@ class UserProfile extends Component {
       })
       .then(res => {
         this.setState({userInfo: res.data});
+        if (this.state.userInfo.bank_name) {
+          this.setState({hasLinkAccount: true});
+        }
         axios.post('http://localhost:8080/api/user/transactions', {
           'email': email
         })

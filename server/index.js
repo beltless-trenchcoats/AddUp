@@ -319,6 +319,40 @@ app.post('/api/user/charities/info', function(req, res) {
   })
 })
 
+//===================CUSTOM CAUSES=====================
+app.post('/api/customCause/add', function(req, res) {
+  console.log('body', req.body);
+  charitiesDB.createCharity(req.body, function(err, result) {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    } else {
+      console.log(result);
+      res.send(result);
+    }
+  })
+});
+
+
+app.post('/api/customCause/search', function(req, res) {
+  console.log('body', req.body);
+  charitiesDB.searchCustomCauses(req.body, function(err, result) {
+    if (err) {
+      console.log(err);
+      res.send(err);
+    } else {
+      console.log(result);
+      res.send(result);
+    }
+  })
+});
+
+app.post('/api/charity/update', function(req, res) {
+  console.log('body', req.body);
+  charitiesDB.updateCharity(req.body.charityID, req.body.updateFields, function(result) {
+    res.send(result);
+  });
+});
 
 
 app.listen(port, function() {

@@ -103,13 +103,20 @@ var charge = function(user, amount) {
   });
 };
 
+//check if limit has been reached for custom charity
 var distributeDonation = function(user, amount) {
   UsersCharities.getUserCharityFields(user.email, '', (err, charities) => {
     charities.forEach(userCharity => {
       var charity_id = userCharity.id_charities;
       var amountForCharity = (amount * userCharity.percentage).toFixed(2);
       Transactions.insert(user.id, charity_id, amountForCharity, () => {});
-      Charities.updateBalance(charity_id, {total_donated: amountForCharity, balance_owed: amountForCharity}, () => {});
+      Charities.updateBalance(charity_id, {total_donated: amountForCharity, balance_owed: amountForCharity}, () => {
+        if (userCharity.type === 'custom' && userCharity.total_donated >= userCharity.dollar_goal) {
+          UsersCharities.updatePercentage(user.email, userCharity.name, 0, function(response) {
+            console.log(response);
+          });
+        };     
+      });
     });
   });
 }

@@ -21,24 +21,20 @@ class UserProfile extends Component {
   componentWillMount() {
     axios.get('http://localhost:8080/userSession')
     .then(res => {
-      console.log('userSession', res.data);
       this.setState({
         userSession: res.data
       });
 
       var email = this.state.userSession.email;
-      console.log('session email', email);
 
       axios.post('http://localhost:8080/api/user/info', {
         'email': email
       })
       .then(res => {
-        console.log('USER INFO', res.data);
         axios.post('http://localhost:8080/api/user/transactions', {
           'email': email
         })
         .then(res => {
-          console.log('USER TRANSACTIONS', res.data);
           this.setState({transactions: res.data})
         })
       })
@@ -96,27 +92,28 @@ class UserProfile extends Component {
                 </div>
               </Col>
             </Row>
-            <Row className="transactionHistory">
-              <h2>Transaction History</h2>
+            <Row >
+              <Col className="userTransactionsContainer">
+                <h2>Transaction History</h2>
+                <div className="transactionHistory">
 
-              <Table responsive striped hover>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>AddUp Amount</th>
-                    <th>Cause</th>
-                  </tr>
-                </thead>
+                  <Table responsive striped hover>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Recipient</th>
+                      </tr>
+                    </thead>
 
-                <tbody>
-                  {this.state.transactions.filter((transaction) => transaction.amount > 0).map ((transaction, i) => 
-                    <Transaction key={i} info={transaction} />
-                  )}
-
-                </tbody>
-
-              </Table>
+                    <tbody>
+                      {this.state.transactions.map ((transaction, i) => 
+                        <Transaction key={i} info={transaction} />
+                      )}
+                    </tbody>
+                  </Table>
+                </div>
+              </Col>
             </Row>
           </Grid>
 

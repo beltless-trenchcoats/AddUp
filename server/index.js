@@ -290,7 +290,7 @@ app.post('/api/user/info', function(req, res) {
     if (err) {
       res.send(err);
     } else {
-      res.send(data[0]);
+      res.send(data);
     }
   });
 })

@@ -218,9 +218,10 @@ app.post('/userCharities', function(req, res) {
   console.log(req.body.email);
   dbHelpers.getIDs(req.body.email, '', function(idObj) {
     var id_users = idObj.id_users;
-    console.log('SELECT * FROM usersCharities INNER JOIN charities ON charities.id = usersCharities.id_charities WHERE \
-      id_users = \'' + id_users + '\';');
-    var queryString = 'SELECT * FROM usersCharities INNER JOIN charities ON charities.id = usersCharities.id_charities;';
+    console.log('SELECT * FROM (SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\') AS uc \
+      INNER JOIN charities ON charities.id = uc.id_charities;');
+    var queryString = 'SELECT * FROM (SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\') AS uc \
+      INNER JOIN charities ON charities.id = uc.id_charities;';
     dbConfig.query({
         text: queryString
       }, 
@@ -228,11 +229,11 @@ app.post('/userCharities', function(req, res) {
         if (err) {
           res.send(err);
         } else if (results.rowCount > 0) {
-          console.log(results.rows);
-          var sendResults = results.rows.filter(function(item) {
-            return (item.id_users === ''+id_users);
-          });
-          res.send(sendResults);
+          // console.log(results.rows);
+          // var sendResults = results.rows.filter(function(item) {
+          //   return (item.id_users === ''+id_users);
+          // });
+          res.send(results.rows);
         } else {
           res.send('NO RECORDS');
         }

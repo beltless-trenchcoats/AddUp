@@ -105,7 +105,32 @@ exports.getUserCharityFields = function(email, charity, callback) {
   });
 }
 
+exports.getUsersCharityDonationsInfo = function(email, callback) {
+  helpers.getIDs(email, '', function(idObj) {
+    var id_users = idObj.id_users;
+    console.log('SELECT name, percentage, (SELECT SUM(amount) FROM transactions WHERE id_users=\'' + id_users + '\' AND \
+          id_charities=charities.id) AS total_donated FROM userscharities INNER JOIN charities \
+          ON userscharities.id_charities=charities.id WHERE id_users=\'' + id_users + '\';');
+    db.query({
+        text: 'SELECT name, percentage, (SELECT SUM(amount) FROM transactions WHERE id_users=\'' + id_users + '\' AND \
+          id_charities=charities.id) AS total_donated FROM userscharities INNER JOIN charities \
+          ON userscharities.id_charities=charities.id WHERE id_users=\'' + id_users + '\';'
+      }, 
+      function(err, results) {
+        if (err) {
+          callback(err, null);
+        } else {
+          callback(null, results.rows);
+        }
+      }
+    );
+  });
+}
+
 // EXAMPLE USAGE:
+
+// exports.getUsersCharityDonationsInfo('test@gmail.com', (err, results) => console.log(results));
+
 // exports.insert('herbert@gmail.com', 'Save the Helgas', .5, function(result) {
 //   console.log(result);
 // });

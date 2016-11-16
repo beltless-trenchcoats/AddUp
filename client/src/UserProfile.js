@@ -42,14 +42,14 @@ class UserProfile extends Component {
           'email': email
         })
         .then(res => {
+          console.log(res.data);
           this.setState({transactions: res.data})
         });
 
-      axios.post('http://localhost:8080/userCharities', {
+      axios.post('http://localhost:8080/api/user/charities/info', {
         'email': email
         })
         .then(res => {
-          console.log(res.data);
           this.setState({charities: res.data})
         });
     })
@@ -97,7 +97,7 @@ class UserProfile extends Component {
                   this.state.charities.map(charity => 
                     <div className='userCharity'>
                       <text className='title'>{charity.name}</text>
-                      <text className='amount'>$X.XX</text>
+                      <text className='amount'>${charity.total_donated}</text>
                       <text className='since'>since [date of first transaction]</text>
                     </div>
                     )

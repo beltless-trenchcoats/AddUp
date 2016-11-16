@@ -304,6 +304,16 @@ app.post('/api/user/transactions', function(req, res) {
   });
 })
 
+app.post('/api/user/charities/info', function(req, res) {
+  charitiesDB.getUsersCharityDonationsInfo(req.body.email, function(err, data) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(data);
+    }
+  })
+})
+
 
 app.listen(port, function() {
   console.log('listening on ', port);

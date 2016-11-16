@@ -13,7 +13,7 @@ class UserProfile extends Component {
     this.state = {
       transactions: [],
       userSession: {},
-      hasLinkAccount: false,
+      hasLinkAccount: true,
       userInfo: {}
     }
   }
@@ -31,6 +31,7 @@ class UserProfile extends Component {
         'email': email
       })
       .then(res => {
+        this.setState({userInfo: res.data});
         axios.post('http://localhost:8080/api/user/transactions', {
           'email': email
         })
@@ -63,8 +64,8 @@ class UserProfile extends Component {
               </Col>
               :
               <Col className="userBankInfo shadowbox" md={5}>
-                <h1>Your Bank Institution</h1>
-                <text>Account ending in: 4345</text>
+                <h1>{this.state.userInfo.bank_name}</h1>
+                <text>Account ending in: {this.state.userInfo.bank_digits}</text>
               </Col>
             }
 
@@ -109,7 +110,7 @@ class UserProfile extends Component {
 
                     <tbody>
                       {this.state.transactions.map ((transaction, i) => 
-                        <Transaction key={i} info={transaction} />
+                        <Transaction key={i} transaction={transaction} />
                       )}
                     </tbody>
                   </Table>

@@ -25,9 +25,11 @@ exports.insert = function(id_users, id_charities, amount, callback) {
 exports.getTransactions = function(email, callback) {
   helpers.getIDs(email, '', function(idObj) {
     var id_users = idObj.id_users;
-    console.log('SELECT * FROM transactions WHERE id_users =\'' + id_users + '\';');
+    console.log('SELECT * FROM (SELECT * FROM transactions WHERE id_users = \'' + id_users + '\') AS t \
+      INNER JOIN charities ON charities.id = t.id_charities;');
     db.query({
-      text: 'SELECT * FROM transactions WHERE id_users =\'' + id_users + '\';'
+      text: 'SELECT * FROM (SELECT * FROM transactions WHERE id_users = \'' + id_users + '\') AS t \
+      INNER JOIN charities ON charities.id = t.id_charities;'
     },
     function(err, results) {
       if (err) {
@@ -44,9 +46,9 @@ exports.getTransactions = function(email, callback) {
 //   console.log(response);
 // })
 
-// exports.getTransactions('herbert@gmail.com', function(err, result) {
-//   console.log(err, result);
-// });
+exports.getTransactions('test@gmail.com', function(err, result) {
+  console.log(err, result);
+});
 
 
 

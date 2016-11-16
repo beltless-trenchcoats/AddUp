@@ -103,7 +103,7 @@ exports.getUserCharityFields = function(email, charity, callback) {
       }
     });
   });
-}
+};
 
 exports.getUsersCharityDonationsInfo = function(email, callback) {
   helpers.getIDs(email, '', function(idObj) {

@@ -7,7 +7,7 @@ var axios = require('axios');
 // Note: This should be the testing key unless we actually want to charge real money!
 var test_key = 'sk_test_eKJNtjs3Il6V1QZvyKs1dS6y';
 var stripe = require('stripe')(test_key);
-console.log('worker called!!!!!!!!!');
+// console.log('worker called!!!!!!!!!');
 // This function will be called whenever we want to check if a user has made new transactions
 var processDailyTransactions = function() {
   Users.getUserFields('', function(err, users) {
@@ -22,11 +22,11 @@ var processDailyTransactions = function() {
             var newTransactions = findRecentTransactions(user, transactions);
             // console.log(newTransactions);
             newTransactions.forEach(transaction => {
-              console.log('user', user);
-              console.log('transaction', transaction);
+              // console.log('user', user);
+              // console.log('transaction', transaction);
               var amtToCharge = roundUpTransaction(user, transaction);
               if (amtToCharge) {
-                console.log('charging', amtToCharge);
+                // console.log('charging', amtToCharge);
                 charge(user, amtToCharge);
               }
             });
@@ -95,7 +95,7 @@ var charge = function(user, amount) {
     if (err && err.type === 'StripeCardError') {
       console.log('Card Declined');
     }
-    console.log('CHARGE', charge);
+    // console.log('CHARGE', charge);
     if (charge) { //if the charge goes through
       var chargeAmount = charge.amount / 100; //Change the amount back to a normal $X.XX number
       distributeDonation(user, chargeAmount);

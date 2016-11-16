@@ -14,7 +14,8 @@ class UserProfile extends Component {
       transactions: [],
       userSession: {},
       hasLinkAccount: false,
-      userInfo: {}
+      userInfo: {},
+      charities: []
     }
   }
 
@@ -29,20 +30,28 @@ class UserProfile extends Component {
 
       axios.post('http://localhost:8080/api/user/info', {
         'email': email
-      })
-      .then(res => {
-        this.setState({userInfo: res.data});
-        if (this.state.userInfo.bank_name) {
-          this.setState({hasLinkAccount: true});
-        }
-        axios.post('http://localhost:8080/api/user/transactions', {
+        })
+        .then(res => {
+          this.setState({userInfo: res.data});
+          if (this.state.userInfo.bank_name) {
+            this.setState({hasLinkAccount: true});
+          } 
+        });
+
+      axios.post('http://localhost:8080/api/user/transactions', {
           'email': email
         })
         .then(res => {
-          console.log(res.data);
           this.setState({transactions: res.data})
+        });
+
+      axios.post('http://localhost:8080/userCharities', {
+        'email': email
         })
-      })
+        .then(res => {
+          console.log(res.data);
+          this.setState({charities: res.data})
+        });
     })
   }
   
@@ -84,16 +93,15 @@ class UserProfile extends Component {
               <Col className="userCharitiesContainer" md={11}>
                 <h1>Your Charities</h1>
                 <div className='userCharities'>
-                  <div className='userCharity'>
-                    <text className='title'>Charity name</text>
-                    <text className='amount'>$4.38</text>
-                    <text className='since'>since Nov 15, 2016</text>
-                  </div>
-                  <div className='userCharity'>
-                    <text className='title'>Charity name</text>
-                    <text className='amount'>$12.07</text>
-                    <text className='since'>since Apr 2, 2016</text>
-                  </div>
+                {
+                  this.state.charities.map(charity => 
+                    <div className='userCharity'>
+                      <text className='title'>{charity.name}</text>
+                      <text className='amount'>$X.XX</text>
+                      <text className='since'>since [date of first transaction]</text>
+                    </div>
+                    )
+                }
                 </div>
               </Col>
             </Row>

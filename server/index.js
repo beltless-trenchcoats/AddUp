@@ -215,7 +215,7 @@ app.post('/charitySearch', function(req, res) {
 });
 
 app.post('/userCharities', function(req, res) {
-  console.log(req.body.email);
+  console.log('BLAHBLHAHLAHSDFHASDF', req.body.email);
   dbHelpers.getIDs(req.body.email, '', function(idObj) {
     var id_users = idObj.id_users;
     console.log('SELECT * FROM (SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\') AS uc \

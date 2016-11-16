@@ -14,8 +14,7 @@ class CharityProfilePage extends Component {
       charityId: this.props.params.id,
       charity: {},
       selected: false,
-      showModal: false,
-      userInfo: {}
+      showModal: false
     }
     this.updateCharities = this.updateCharities.bind(this)
     this.openModal = this.openModal.bind(this)

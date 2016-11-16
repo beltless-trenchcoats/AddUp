@@ -46,9 +46,9 @@ exports.getTransactions = function(email, callback) {
 //   console.log(response);
 // })
 
-exports.getTransactions('test@gmail.com', function(err, result) {
-  console.log(err, result);
-});
+// exports.getTransactions('test@gmail.com', function(err, result) {
+//   console.log(err, result);
+// });
 
 
 

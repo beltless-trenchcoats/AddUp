@@ -101,6 +101,7 @@ class Header extends Component {
           loggedIn: true
         });
         this.closeSignup();
+        browserHistory.push('/user');
       } else {
         this.setState({
           validationError: true

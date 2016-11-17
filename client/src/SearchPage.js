@@ -19,6 +19,7 @@ class SearchPage extends Component {
       category: '',
       start: 0,
       categoryName: '',
+      type: 'Charity',
       searchResults: [],
       activePage: 1,
       lastPage: 1,
@@ -43,11 +44,15 @@ class SearchPage extends Component {
     this.setState({category: evt[0], categoryName: evt[1]});
   }
 
+  handleTypeSelect (evt) {
+    this.setState({type: evt});
+  }
 
   getResults() {
     this.setState({isLoading: true});
     var searchTerms = {
-      eligible: 1
+      eligible: 1,
+      type: this.state.type
     };
     var options = ['searchTerm', 'city', 'state', 'zipCode', 'category', 'start'];
     for (var i = 0; i < options.length; i ++) {
@@ -56,9 +61,10 @@ class SearchPage extends Component {
       }
     }
 
-    // console.log('search terms', searchTerms);
+    console.log('search terms', searchTerms);
     axios.post('http://localhost:8080/charitySearch', searchTerms)
     .then((res) => {
+      console.log('search response', res.data);
       this.setState({
         searchResults: res.data,
         isLoading: false
@@ -187,6 +193,10 @@ class SearchPage extends Component {
                     placeholder="Zip Code"
                     onChange={this.onSearchInput.bind(this, 'zipCode')}
                   />
+                  <DropdownButton bsStyle={'default'} title={this.state.type || 'Charity'} id={'typeDropdown'} onSelect={this.handleTypeSelect.bind(this)}>
+                    <MenuItem eventKey={'Charity'}>Charity</MenuItem>
+                    <MenuItem eventKey={'Custom Cause'}>Custom Cause</MenuItem>
+                  </DropdownButton>
                 </FormGroup>
                 <Button
                   type="submit"

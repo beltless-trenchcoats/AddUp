@@ -56,16 +56,22 @@ class UserProfile extends Component {
   
   componentDidMount() {
     $('.userBankInfo div button span').html('Add Account');
+
+    //This is currently not working...supposed to dim any charities that have reached their goals
+    $('.completed').closest('.userCharity').addClass('dim');
   }
 
   convertToReadableDate(date_time) {
     var date = new Date(date_time);
+    if (date.getFullYear() < 2015) { //if the user hasn't donated yet, it returns default date from 1960s (don't want to display)
+      return 'No Donations On File';
+    }
     var options = {
       month: "short",
       year: "numeric",
       day: "numeric"
     };
-    return date.toLocaleDateString("en-us", options)
+    return 'since ' + date.toLocaleDateString("en-us", options)
   }
 
   render() {
@@ -104,9 +110,14 @@ class UserProfile extends Component {
                 {
                   this.state.charities.map(charity => 
                     <div className='userCharity'>
-                      <text className='title'>{charity.name}</text>
-                      <text className='amount'>${charity.total_donated}</text>
-                      <text className='since'>since {this.convertToReadableDate(charity.initial_date)}</text>
+                      <div className='title'>{charity.name}</div>
+                      {
+                        (charity.goal_reached === '1') ? 
+                        <div className='completed'>&#10004; Goal Reached</div>
+                        : null
+                      }
+                      <div className='amount'>${charity.user_donation_total}</div>
+                      <div className='since'>{this.convertToReadableDate(charity.initial_date)}</div>
                     </div>
                     )
                 }

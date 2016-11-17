@@ -11,7 +11,7 @@ exports.createUser = Promise.promisify(function(email, password, first_name, las
     if (err) {
       console.log(err);
     } else if (rows.rowCount > 0) {
-      callback(null, 'user already exists');
+      callback(null, false);
     } else {
       bcrypt.hash(password, 10, function(err, hash) {
         db.query({
@@ -23,7 +23,7 @@ exports.createUser = Promise.promisify(function(email, password, first_name, las
           if (err) {
             callback(err, null);
           } else {
-            callback(null, 'success');
+            callback(null, true);
           }
         });
       });

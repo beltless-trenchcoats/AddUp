@@ -32,7 +32,8 @@ class UserProfile extends Component {
       showChangeEmailModal: false,
       newPassword1: undefined,
       newPassword2: undefined,
-      newEmail: undefined
+      newEmail1: undefined,
+      newEmail2: undefined
     }
     this.openEmail = this.openEmail.bind(this);
     this.closeEmail = this.closeEmail.bind(this);
@@ -41,6 +42,9 @@ class UserProfile extends Component {
     this.newPassword1 = this.newPassword1.bind(this);
     this.newPassword2 = this.newPassword2.bind(this);
     this.checkPassword = this.checkPassword.bind(this);
+    this.checkEmail = this.checkEmail.bind(this);
+    this.newEmail1 = this.newEmail1.bind(this);
+    this.newEmail2 = this.newEmail2.bind(this);
   }
 
   componentWillMount() {
@@ -117,6 +121,14 @@ class UserProfile extends Component {
     this.setState({ newPassword2: e.target.value});
   }
 
+  newEmail1 (e) {
+    this.setState({ newEmail1: e.target.value});
+  }
+
+  newEmail2 (e) {
+    this.setState({ newEmail2: e.target.value});
+  }
+
   toggleModal () {
     this.setState({
       showChangeEmailModal: !this.state.showChangeEmailModal,
@@ -163,7 +175,7 @@ class UserProfile extends Component {
       this.closePassword();
       axios.post('http://localhost:8080/api/user/updateUser', {
         email: this.state.userSession.email,
-        newEmail: this.state.newEmail,
+        newEmail1: this.state.newEmail1,
         newPassword: this.state.newPassword1
       })
       .then(function(res) {
@@ -176,6 +188,27 @@ class UserProfile extends Component {
       console.log('Passwords dont match!');
     }
     this.setState({newPassword1: undefined, newPassword2: undefined});
+  }
+
+  checkEmail(e) {
+    e.preventDefault();
+    if(this.state.newEmail1 === this.state.newEmail2) {
+      this.closeEmail();
+      axios.post('http://localhost:8080/api/user/updateUser', {
+        email: this.state.userSession.email,
+        newEmail1: this.state.newEmail1,
+        newPassword: this.state.newPassword1
+      })
+      .then(function(res) {
+        console.log('res ', res);
+      })
+      .catch(function(err) {
+        console.log('error in checkEmail POST ', err);
+      })
+    } else {
+      console.log('Emails dont match!');
+    }
+    this.setState({newEmail1: undefined, newEmail2: undefined});
   }
 
   render() {
@@ -202,12 +235,51 @@ class UserProfile extends Component {
 
               <Col className="userProfile shadowbox"md={6}>
                 <h1>{this.state.userSession.firstName} {this.state.userSession.lastName}</h1>
-                <div className='profileField'><span className='label'>Email:</span><span className='value'> {this.state.userSession.email}</span><button>Change</button></div>
+                <div className='profileField'><span className='label'>Email:</span><span className='value'> {this.state.userSession.email}</span>
+                  {<Button className="loginButton" bsSize="small" onClick={this.openEmail}>Change</Button>}</div>
                 <div className='profileField'><span className='label'>Password: </span>
                   {<Button className="loginButton" bsSize="small" onClick={this.openPassword}>Change</Button>}
                 </div>
               </Col>
             </Row>
+            <div>
+              <Modal className="modal" show={this.state.showChangeEmailModal} onHide={this.closeEmail}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Change Email</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <p>Please enter your new email</p>
+
+                  <form onSubmit={this.signupUser}>
+                    <FieldGroup
+                      id="formControlsFirstname"
+                      type="text"
+                      required={true}
+                      label="New Email*"
+                      placeholder="Email"
+                      onChange={this.newEmail1}
+                    />
+                    <FieldGroup
+                      id="formControlsLastname"
+                      type="text"
+                      required={true}
+                      label="Confirm Email*"
+                      placeholder="Confirm Email"
+                      onChange={this.newEmail2}
+                    />
+                    <Button
+                      className="modalButton"
+                      type="submit"
+                      bsStyle="primary"
+                      onClick={this.checkEmail}
+                      >Change Email
+                    </Button>
+                    <Button className="modalButton" onClick={this.closeEmail}>Cancel</Button>
+
+                  </form>
+                </Modal.Body>
+              </Modal>
+            </div>
             <div>
               <Modal className="modal" show={this.state.showChangePasswordModal} onHide={this.closePassword}>
                 <Modal.Header closeButton>
@@ -219,7 +291,7 @@ class UserProfile extends Component {
                   <form onSubmit={this.signupUser}>
                     <FieldGroup
                       id="formControlsFirstname"
-                      type="text"
+                      type="password"
                       required={true}
                       label="New Password*"
                       placeholder="Password"
@@ -227,7 +299,7 @@ class UserProfile extends Component {
                     />
                     <FieldGroup
                       id="formControlsLastname"
-                      type="text"
+                      type="password"
                       required={true}
                       label="Confirm Password*"
                       placeholder="Confirm Password"

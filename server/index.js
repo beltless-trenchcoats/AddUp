@@ -372,7 +372,7 @@ app.post('/api/user/charities/info', function(req, res) {
 
 app.post('/api/user/updateUser', function(req, res) {
   var email = req.body.email;
-  var newEmail = req.body.newEmail;
+  var newEmail = req.body.newEmail1;
   var newPassword = req.body.newPassword;
   if(newEmail === undefined) {
     db.updateUser(email, {password: newPassword}, function(result) {

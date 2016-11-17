@@ -7,25 +7,25 @@
 -- ---
 DROP TABLE IF EXISTS transactions;
 DROP TABLE IF EXISTS usersCharities;
--- DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS users;
     
--- CREATE TABLE users (
---   id BIGSERIAL   PRIMARY KEY,
---   email VARCHAR(64) NOT NULL,
---   password VARCHAR(64) NOT NULL,
---   first_name VARCHAR(64) NOT NULL,
---   last_name VARCHAR(64) NOT NULL,
---   phone_number VARCHAR(64) NULL DEFAULT NULL,
---   plaid_access_token VARCHAR(256) NULL DEFAULT NULL,
---   plaid_account_id VARCHAR(64) NULL DEFAULT NULL,
---   stripe_bank_account_token VARCHAR(256) NULL DEFAULT NULL,
---   pending_balance REAL NULL DEFAULT NULL,
---   monthly_total REAL NULL DEFAULT NULL,
---   monthly_limit REAL NULL DEFAULT NULL,
---   last_transaction_id VARCHAR(64) NULL DEFAULT NULL,
---   bank_name VARCHAR(64) NULL DEFAULT NULL,
---   bank_digits VARCHAR(4) NULL DEFAULT NULL
--- );
+CREATE TABLE users (
+  id BIGSERIAL   PRIMARY KEY,
+  email VARCHAR(64) NOT NULL,
+  password VARCHAR(64) NOT NULL,
+  first_name VARCHAR(64) NOT NULL,
+  last_name VARCHAR(64) NOT NULL,
+  phone_number VARCHAR(64) NULL DEFAULT NULL,
+  plaid_access_token VARCHAR(256) NULL DEFAULT NULL,
+  plaid_account_id VARCHAR(64) NULL DEFAULT NULL,
+  stripe_bank_account_token VARCHAR(256) NULL DEFAULT NULL,
+  pending_balance REAL NULL DEFAULT NULL,
+  monthly_total REAL NULL DEFAULT NULL,
+  monthly_limit REAL NULL DEFAULT NULL,
+  last_transaction_id VARCHAR(64) NULL DEFAULT NULL,
+  bank_name VARCHAR(64) NULL DEFAULT NULL,
+  bank_digits VARCHAR(4) NULL DEFAULT NULL
+);
 
 -- ---
 -- Table 'charities'

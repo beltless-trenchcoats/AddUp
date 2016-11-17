@@ -13,15 +13,14 @@ class CharityProfilePage extends Component {
     this.state = {
       charityId: this.props.params.id,
       charity: {},
-      selected: false,
-      showModal: false
+      showModal: false,
+      selected: false //TODO: Add flag to change button depending on if charity is already selected
     }
-    this.updateCharities = this.updateCharities.bind(this)
     this.openModal = this.openModal.bind(this)
     this.closeModal = this.closeModal.bind(this)
   }
 
-  componentDidMount () {
+  componentWillMount () {
     axios.post('http://localhost:8080/charityInfo', {
       charityId: this.state.charityId
     })
@@ -40,10 +39,6 @@ class CharityProfilePage extends Component {
     this.setState({ showModal: false });
   }
 
-  updateCharities () {
-
-  }
-
   /*
   * Google Maps functions
   */
@@ -60,6 +55,7 @@ class CharityProfilePage extends Component {
     return (
       <Header>
         <div className="charityProfilePage">
+
           <Grid>
             <Row>
               <h2 className="charityName">{this.state.charity.name}</h2>
@@ -108,7 +104,11 @@ class CharityProfilePage extends Component {
           </Grid>
         </div>
 
-        <CharityModal show={this.state.showModal} onHide={this.closeModal} currentCharity={this.state.charity} />
+        <CharityModal 
+          show={this.state.showModal} 
+          onHide={this.closeModal} 
+          currentCharity={this.state.charity} 
+        />
 
       </Header>
     );

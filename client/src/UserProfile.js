@@ -35,7 +35,8 @@ class UserProfile extends Component {
       newEmail1: undefined,
       newEmail2: undefined,
       newEmailMatch: true,
-      newPasswordMatch: true
+      newPasswordMatch: true,
+      showCauseModal: false
     }
     this.openEmail = this.openEmail.bind(this);
     this.closeEmail = this.closeEmail.bind(this);
@@ -48,6 +49,7 @@ class UserProfile extends Component {
     this.newEmail1 = this.newEmail1.bind(this);
     this.newEmail2 = this.newEmail2.bind(this);
     this.renderEmailChange = this.renderEmailChange.bind(this);
+    this.closeCause = this.closeCause.bind(this);
   }
 
   componentWillMount() {
@@ -73,6 +75,7 @@ class UserProfile extends Component {
           if (this.state.bankInfo.bank_name) {
             this.setState({hasLinkAccount: true});
           }
+          console.log('id ', res.data.id);
           axios.post('http://localhost:8080/charitySearch', {
             'id_owner': res.data.id,
             'type': 'Custom Cause'
@@ -130,6 +133,14 @@ class UserProfile extends Component {
 
   newEmail2 (e) {
     this.setState({ newEmail2: e.target.value});
+  }
+
+  closeCause () {
+    this.setState({ showCauseModal: false})
+  }
+
+  onFieldChange() {
+
   }
 
   toggleModal () {
@@ -328,10 +339,92 @@ class UserProfile extends Component {
                     {this.state.newPasswordMatch ? null : <div className="matchError">Password's do not match</div>}
                     <Button className="modalButton" onClick={this.closePassword}>Cancel</Button>
                   </form>
+                  </Modal.Body>
+                </Modal>
+              </div>
+            <Modal className="modal" show={this.state.showCauseModal} onHide={this.closeCause.bind(this)}>
+              <Modal.Header closeButton>
+                <Modal.Title>Add a Cause</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <p>Please provide detailed information so users will want to donate to your cause!</p>
+
+              <form onSubmit={this.addCauseUser}>
+                <FieldGroup
+                  id="formControlsCausename"
+                  type="text"
+                  required={true}
+                  label="Cause Name*"
+                  placeholder="Cause Name*"
+                  onChange={this.onFieldChange.bind(this, 'name')}
+                />
+                <FieldGroup
+                  id="formControlsCategory"
+                  type="text"
+                  required={true}
+                  label="Category*"
+                  placeholder="Category*"
+                  onChange={this.onFieldChange}
+                />
+                <FieldGroup
+                  id="formControlsDescription"
+                  type="text"
+                  required={true}
+                  label="Description*"
+                  placeholder="Description*"
+                  onChange={this.onFieldChange}
+                />
+                <FieldGroup
+                  id="formControlsGoal"
+                  type="text"
+                  required={true}
+                  label="Fundraising Goal*"
+                  placeholder="Fundraising Goal*"
+                  onChange={this.onFieldChange}
+                />
+                <FieldGroup
+                  id="formControlsCity"
+                  type="text"
+                  required={true}
+                  label="City*"
+                  placeholder="City*"
+                  onChange={this.onFieldChange}
+                />
+                <FieldGroup
+                  id="formControlsState"
+                  type="text"
+                  required={true}
+                  label="State*"
+                  placeholder="State*"
+                  onChange={this.onFieldChange}
+                />
+                <FieldGroup
+                  id="formControlsZip"
+                  type="text"
+                  required={true}
+                  label="Zip*"
+                  placeholder="Zip Code*"
+                  onChange={this.onFieldChange}
+                />
+                <FieldGroup
+                  id="formControlsPrivate"
+                  type="text"
+                  required={true}
+                  label="Private*"
+                  placeholder="Private*"
+                  onChange={this.onFieldChange}
+                />
+                <Button
+                  className="modalButton"
+                  type="submit"
+                  bsStyle="primary"
+                  >Save
+                </Button>
+                <Button className="modalButton" onClick={this.closeCause.bind(this)}>Cancel</Button>
+              </form>
 
                 </Modal.Body>
               </Modal>
-            </div>
             <Row >
               <Col className="userCharitiesContainer" md={11}>
                 <h1>Your Charities</h1>

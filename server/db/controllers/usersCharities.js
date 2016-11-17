@@ -144,9 +144,9 @@ exports.getUsersCharityDonationsInfo = function(email, callback) {
 
 // exports.getUsersCharityDonationsInfo('test@gmail.com', (err, results) => console.log(results));
 
-exports.insert('test@gmail.com', 14, .5, function(result) {
-  console.log(result);
-});
+// exports.insert('test@gmail.com', 14, .5, function(result) {
+//   console.log(result);
+// });
 
 // exports.updatePercentage('herbert@gmail.com', 'Save the Helgas', .8, function(result) {
 //   console.log(result);

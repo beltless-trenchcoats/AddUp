@@ -122,17 +122,21 @@ app.post('/signup', function(req, res) {
   var firstName = req.body.firstname;
   var lastName = req.body.lastname;
   db.createUser(email, password, firstName, lastName)
-    .then(function() {
-      axios.post('http://localhost:8080/login', {
-        email: email,
-        password: password
-      })
-      .then(function(resp) {
-        res.status(201).send(resp.data);
-      })
-      .catch(function(err) {
-        console.log(err);
-      });
+    .then(function(success) {
+      if (success) {
+        axios.post('http://localhost:8080/login', {
+          email: email,
+          password: password
+        })
+        .then(function(resp) {
+          res.status(201).send(resp.data);
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
+      } else {
+        res.send();
+      }
     });
 });
 
@@ -154,7 +158,6 @@ app.post('/login', function(req, res) {
           //if error send error to client
           res.send('Error in User Login');
         } else {
-          console.log('this is also running');
           req.session.regenerate(function(err) {
             // will have a new session here
             req.session.email = email;
@@ -165,14 +168,13 @@ app.post('/login', function(req, res) {
               firstName: data[0].first_name,
               lastName: data[0].last_name
             };
-            console.log('LOOOOOOOOGGGGGGIIIIIIIINNNNNNNNNN', userSession);
           });
           //send response to client with first_name, last_name, and email
           res.send({"first_name": data[0].first_name, "last_name": data[0].last_name,
           "email": data[0].email, currentUser: currentUser});
         }
       })
-    } else {
+    } else { // No user exists
       res.send();
     }
   })

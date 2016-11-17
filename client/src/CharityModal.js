@@ -9,33 +9,53 @@ class CharityModal extends Component {
     super(props);
     this.state = {
       charities: [],
-      userEmail: ''
+      userEmail: '',
+      donationTotal: 0
     }
+    this.updateCharities = this.updateCharities.bind(this)
+    this.updateTotal = this.updateTotal.bind(this)
+    this.close = this.close.bind(this)
   }
 
   componentWillMount () {
-    axios.get('http://localhost:8080/userInfo')
-    .then((res) => {
-      this.setState({ userEmail: res.data.email || '' });
-      axios.post('http://localhost:8080/userCharities', {
-        email: this.state.userEmail
-      })
-      .then((response) => {
-        response.data.push(this.props.currentCharity)
-        this.setState({ charities: response.data })
+    axios.get('http://localhost:8080/userSession')
+      .then((res) => {
+        this.setState({ userEmail: res.data.email || '' });
+        axios.post('http://localhost:8080/api/user/charities/donationInfo', {
+          email: this.state.userEmail
+        })
+        .then((res) => {
+          if (this.props.currentCharity)
+          this.setState({ charities: res.data })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
       })
       .catch((err) => {
-        console.log(err)
-      })
-    })
-    .catch((err) => {
-      console.log(err);
-    }); 
+        console.log(err);
+      }); 
+  }
+
+  updateTotal (percentage) {
+    let oldTotal = this.state.donationTotal;
+    this.setState( { donationTotal: this.state.donationTotal += Number(percentage) })
+    console.log('total', this.state.donationTotal)
+  }
+
+  close() {
+    this.props.onHide();
+    this.setState( {donationTotal: 0} )
+  }
+
+  updateCharities (style, percentage) {
+    console.log('style:', style, 'percentage:', percentage)
+    axios.post()
   }
 
   render() {
     return (
-      <Modal className="charityModal" show={this.props.show} onHide={this.props.onHide}>
+      <Modal className="charityModal" show={this.props.show} onHide={this.close}>
         <Modal.Header closeButton>
           <Modal.Title>Update Your Charity Selections</Modal.Title>
         </Modal.Header>
@@ -53,8 +73,7 @@ class CharityModal extends Component {
 
             <tbody>
               {this.state.charities.map((charity, i) => 
-                // console.log('charity', charity)
-                <CharityModalEntry key={i} charity={charity} />
+                <CharityModalEntry key={i} charity={charity} updateTotal={this.updateTotal} save={this.updateCharities}/>
               )}
             </tbody>
           </Table>
@@ -62,8 +81,9 @@ class CharityModal extends Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button bsStyle="primary">Save</Button>
-          <Button>Cancel</Button>
+          <div className="percentageError">{this.state.donationTotal > 1 ? <div>Donation total cannot be over 100%</div> : null}</div>
+          <Button bsStyle="primary" onClick={this.updateCharities} disabled={this.state.donationTotal > 1} >Save</Button>
+          <Button onClick={this.close}>Cancel</Button>
         </Modal.Footer>
       </Modal>
     );

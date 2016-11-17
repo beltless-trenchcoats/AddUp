@@ -73,6 +73,14 @@ class UserProfile extends Component {
     });
   }
 
+  displayLinkAccount() {
+    //TODO: Need to reset userInfo state with the new bank information
+    //maybe add new states for bank info?
+    this.setState({
+      hasLinkAccount: true
+    });
+  }
+
   convertToReadableDate(date_time) {
     var date = new Date(date_time);
     if (date.getFullYear() < 2015) { //if the user hasn't donated yet, it returns default date from 1960s (don't want to display)
@@ -99,7 +107,7 @@ class UserProfile extends Component {
                 <form id="some-id" method="POST" action="/authenticate"></form>
                 <text className='profileHeader'> </text>
                 <h1>Link an account to start donating!</h1>
-                <PlaidLinkComponent className='plaidLinkButton'/>
+                <PlaidLinkComponent successFunc={this.displayLinkAccount.bind(this)}/>
               </Col>
               :
               <Col className="userBankInfo shadowbox" md={5}>

@@ -2,9 +2,16 @@ var db = require('../config/db');
 var Promise = require('bluebird');
 
 exports.createCharity = Promise.promisify(function(values, callback) {
-  db.query({
-    text: 'SELECT name FROM charities \
+  if (values.id_owner) {
+    var queryText = 'SELECT name FROM charities \
+      WHERE name = \'' + values.name + '\' AND id_owner = \'' + values.id_owner + '\';'
+  } else {
+    var queryText = 'SELECT name FROM charities \
       WHERE name = \'' + values.name + '\';'
+  }
+  console.log(queryText);
+  db.query({
+    text: queryText
   }, 
   function(err, results) {
     if (err) {
@@ -15,10 +22,11 @@ exports.createCharity = Promise.promisify(function(values, callback) {
         callback(null, null);
       } else {
         db.query({
-          text: 'INSERT INTO charities(name, category, ein, donation_url, city, state, zip, balance_owed, total_donated, mission_statement) \
-            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
-          values: [values.name, values.category, values.ein, values.donation_url, values.city, 
-              values.state, values.zip, 0, 0, values.mission_statement]
+          text: 'INSERT INTO charities(name, category, ein, donation_url, city, state, zip, balance_owed, total_donated, mission_statement, \
+            id_owner, dollar_goal, type, private, photo) \
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)',
+          values: [values.name, values.category, values.ein || null, values.donation_url || null, values.city, 
+              values.state, values.zip, 0, 0, values.mission_statement, values.id_owner || null, values.dollar_goal || null, values.type || null, values.private || null, values.photo || null]
         },
         function(err, result) {
           if (err) {
@@ -31,6 +39,30 @@ exports.createCharity = Promise.promisify(function(values, callback) {
     }
   });
 });
+
+exports.updateCharity = function(charityID, updateFields, callback) {
+  var updateString = '';
+  for (var key in updateFields) {
+    if (typeof updateFields[key] === 'string') {
+      updateString +=  key + " = '" + updateFields[key] + "', "
+    } else {
+      updateString +=  key + ' = ' + updateFields[key] + ', '
+    }
+  }
+  updateString = updateString.slice(0, updateString.length - 2);
+  console.log('UPDATE charities SET ' + updateString + ' \
+      WHERE id = \'' + charityID + '\';');
+  db.query({
+    text: 'UPDATE charities SET ' + updateString + ' \
+      WHERE id = \'' + charityID + '\';'
+  }, function(err, rows) {
+    if (err) {
+      callback(err);
+    } else {
+      callback('success');
+    }
+  });
+};
 
 exports.updateBalance = function(charityId, amountObj, callback) {
   db.query({
@@ -87,6 +119,36 @@ exports.getCharityFields = function(charityId, callback) {
   });
 };
 
+exports.searchCustomCauses = function(searchFields, callback) {
+  var searchString = 'SELECT * FROM charities WHERE ';
+  for (var key in searchFields) {
+    if (key !== 'name') {
+      if (typeof searchFields[key] === 'string') {
+        searchString +=  key + " = '" + searchFields[key] + "' AND "
+      } else {
+        searchString +=  key + ' = ' + searchFields[key] + ' AND '
+      }
+    }
+  }
+  searchString = searchString.slice(0, searchString.length - 5) + ';';
+  console.log(searchString);
+  db.query({
+    text: searchString
+  }, 
+  function(err, results) {
+    if (err) {
+      callback(err, null);
+    } else if (results.rowCount > 0) {
+      var sendResults = results.rows.filter(function(item) {
+        return (item.name.indexOf(searchFields.name) > -1);
+      });
+      callback(null, sendResults);
+    } else {
+      callback('no rows', null);
+    }
+  });
+}
+
 //EXAMPLE USAGE:
 
 // exports.createCharity({name: 'Save the Whales', category: 'A', ein: 'gsot23235', donation_url: 'www.eggs.com', city: 'San Francisco',
@@ -99,8 +161,18 @@ exports.getCharityFields = function(charityId, callback) {
 //     console.log('ERROR', err);
 //   });
 
-// exports.createCharity({name: 'Red Cross', category: 'A', ein: 'gsot23235', donation_url: 'www.eggs.com', city: 'San Francisco',
-//   state: 'CA', zip: '94114', mission_statement: 'To eat every egg in the fridge'}, function(err, response) {
+// exports.createCharity({name: 'Save the Poops', category: 'A', ein: 'eggsgsgs', donation_url: 'www.eggs.com', city: 'San Francisco',
+//   state: 'CA', zip: '94114', mission_statement: 'To eat every frog in the fridge'}, function(err, response) {
+//   console.log(response);
+// });
+
+//custom cause
+// exports.createCharity({name: 'My cats paw grooming2', category: 'D', city: 'San Francisco',
+//   state: 'CA', zip: '94114', mission_statement: 'Please help fund my cats pedicures', id_owner: 2, dollar_goal: 500, type:'custom', private:'true'}, function(err, response) {
+//   console.log(response);
+// });
+
+// exports.updateCharity(14, {category: 'F', mission_statement: 'PLS DONATE I NEED TO EAT MICE NOW THX', dollar_goal: 501}, function(response) {
 //   console.log(response);
 // });
 
@@ -110,4 +182,13 @@ exports.getCharityFields = function(charityId, callback) {
 
 // exports.getCharityFields(1, function(error, response) {
 //   console.log(response);
+// });
+
+//search
+// exports.searchCustomCauses({name: 'My cats paw grooming', category: 'D', city: 'San Francisco'}, function(err, results) {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log(results);
+//   }
 // });

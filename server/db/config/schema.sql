@@ -45,8 +45,20 @@ CREATE TABLE charities (
   zip VARCHAR(64) NULL DEFAULT NULL,
   balance_owed REAL NULL DEFAULT NULL,
   total_donated REAL NULL DEFAULT NULL,
-  mission_statement VARCHAR(600) NULL DEFAULT NULL
+  mission_statement VARCHAR(8000) NULL DEFAULT NULL,
+  id_owner INTEGER DEFAULT NULL,
+  dollar_goal REAL NULL DEFAULT NULL,
+  type VARCHAR(64) NULL DEFAULT NULL,
+  private VARCHAR(16) NULL DEFAULT NULL,
+  photo VARCHAR(64) NULL DEFAULT NULL
 );
+
+-- ---
+-- Table 'customCauses'
+-- 
+-- ---
+
+
 
 -- ---
 -- Table 'usersCharities'

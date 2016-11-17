@@ -1,23 +1,21 @@
 import React, { Component } from 'react';
 import { Button, Modal, Table } from 'react-bootstrap';
 import axios from 'axios';
-import debounce from 'es6-promise-debounce';
+import $ from 'jquery';
 
 import CharityModalEntry from './CharityModalEntry';
-
-const debouncedUpdateCharities = debounce( () => {
-    return new Promise ((resolve) => resolve())
-  }, 200)
 
 class CharityModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
       charities: [],
+      updatedCharities: [],
       userEmail: '',
       donationTotal: 0
     }
     this.updateCharities = this.updateCharities.bind(this)
+    this.saveCharities = this.saveCharities.bind(this)
     this.updateTotal = this.updateTotal.bind(this)
     this.close = this.close.bind(this)
   }
@@ -43,28 +41,45 @@ class CharityModal extends Component {
   }
 
   updateTotal (percentage) {
-    let oldTotal = this.state.donationTotal;
-    this.setState( { donationTotal: this.state.donationTotal += Number(percentage) })
+    this.setState( { donationTotal: this.state.donationTotal += percentage })
     console.log('total', this.state.donationTotal)
   }
 
   close() {
     this.props.onHide();
-    this.setState( {donationTotal: 0} )
+    this.setState({ donationTotal: 0 })
   }
 
-  updateCharities (charityId, style, percentage) {
-    console.log('in updateCharities', charityId, style, percentage)
-    axios.post('http://localhost:8080/api/user/updateCharity', { 
-      email: this.state.userEmail,
-      charityId: charityId
-    })
-    .then((res) => {
-      console.log(res)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+  updateCharities (index, charityId, style, percentage) {
+    let remove = style === 'primary' ? true : false
+    console.log(remove)
+    let updates = $.extend(true, [], this.state.charities)
+    if (remove) {
+      updates[index].name = "REMOVE";
+    } else {
+      updates[index].id = charityId;
+      updates[index].percentage = percentage;
+    }
+    this.setState({ updatedCharities: updates });    
+  }
+
+  saveCharities () {
+    console.log(this.state.updatedCharities)
+    this.setState( {charities: this.state.updatedCharities})
+      axios.post('http://localhost:8080/api/user/updateCharity', { 
+        email: this.state.userEmail,
+        charities: this.state.charities
+      })
+      .then((res) => {
+        console.log('response', res)
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      
+    // })
+    // .then(() => this.close())
   }
 
   render() {
@@ -89,9 +104,10 @@ class CharityModal extends Component {
               {this.state.charities.map((charity, i) => 
                 <CharityModalEntry 
                   key={i} 
+                  index={i}
                   charity={charity} 
                   updateTotal={this.updateTotal} 
-                  save={debouncedUpdateCharities().then(()=> this.updateCharities)}/>
+                  save={ this.updateCharities }/>
               )}
             </tbody>
           </Table>
@@ -100,7 +116,7 @@ class CharityModal extends Component {
 
         <Modal.Footer>
           <div className="percentageError">{this.state.donationTotal > 1 ? <div>Donation total cannot be over 100%</div> : null}</div>
-          <Button bsStyle="primary" onClick={this.updateCharities} disabled={this.state.donationTotal > 1} >Save</Button>
+          <Button bsStyle="primary" onClick={this.saveCharities} disabled={this.state.donationTotal > 1} >Save</Button>
           <Button onClick={this.close}>Cancel</Button>
         </Modal.Footer>
       </Modal>

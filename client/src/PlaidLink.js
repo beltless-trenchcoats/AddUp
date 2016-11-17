@@ -22,7 +22,10 @@ class PlaidLinkComponent extends Component {
       {'account_id': this.state.plaidData.account_id,
         'public_token': this.state.public_token,
         'institution_name': this.state.plaidData.institution.name
-      });
+      })
+    .then(() => {
+      this.props.successFunc();
+    });
   }
 
   render() {

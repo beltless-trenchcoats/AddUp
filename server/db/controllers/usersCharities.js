@@ -35,12 +35,32 @@ exports.insert = function(email, charityID, percentage, callback) {
   });
 };
 
-exports.updatePercentage = function(email, charity, percentage, callback) {
-  helpers.getIDs(email, charity, function(idObj) {
+exports.remove = function(email, charityID, callback) {
+  helpers.getIDs(email, '', function(idObj) {
     var id_users = idObj.id_users;
-    var id_charities = idObj.id_charities;
+    var id_charities = charityID;
+    console.log('DELETE FROM usersCharities \
+      WHERE id_users =' + id_users + ' AND id_charities = ' + id_charities + ';');
+    db.query({
+      text: 'DELETE FROM usersCharities \
+      WHERE id_users =' + id_users + ' AND id_charities = ' + id_charities + ';'
+    }, 
+    function(err, rows) {
+      if (err) {
+        callback(err);
+      } else {
+        callback(rows);
+      }
+    });
+  });
+}
+
+exports.updatePercentage = function(email, charityID, percentage, callback) {
+  helpers.getIDs(email, '', function(idObj) {
+    var id_users = idObj.id_users;
+    var id_charities = charityID;
     console.log('SELECT * FROM usersCharities \
-        WHERE id_users = ' + idObj.id_users + ' AND id_charities = ' + idObj.id_charities + ';');
+        WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';');
     db.query({
       text: 'SELECT * FROM usersCharities \
         WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';'
@@ -76,16 +96,16 @@ exports.updatePercentage = function(email, charity, percentage, callback) {
   });
 };
 
-exports.getUserCharityFields = function(email, charity, callback) {
-  helpers.getIDs(email, charity, function(idObj) {
+exports.getUserCharityFields = function(email, charityID, callback) {
+  helpers.getIDs(email, '', function(idObj) {
     var id_users = idObj.id_users;
-    var id_charities = idObj.id_charities;
+    var id_charities = charityID;
     var queryString = '';
-    if (charity === '' && email === '') {
+    if (charityID === null && email === '') {
       queryString += 'SELECT * FROM usersCharities;';
-    } else if (charity !== '' && email === '') {
+    } else if (charityID !== null && email === '') {
       queryString += 'SELECT * FROM usersCharities WHERE id_charities = \'' + id_charities + '\';'
-    } else if (email !== '' && charity === '') {
+    } else if (email !== '' && charityID === null) {
       queryString += 'SELECT * FROM (SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\') AS uc \
       INNER JOIN charities ON charities.id = uc.id_charities;'
       // 'SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\';'
@@ -144,15 +164,19 @@ exports.getUsersCharityDonationsInfo = function(email, callback) {
 
 // exports.getUsersCharityDonationsInfo('test@gmail.com', (err, results) => console.log(results));
 
-exports.insert('test@gmail.com', 14, .5, function(result) {
-  console.log(result);
-});
-
-// exports.updatePercentage('herbert@gmail.com', 'Save the Helgas', .8, function(result) {
+// exports.insert('test@gmail.com', 14, .5, function(result) {
 //   console.log(result);
 // });
 
-// exports.getUserCharityFields('test@gmail.com', '', function(err, charities) {
+// exports.remove('test@gmail.com', 14, function(result) {
+//   console.log(result);
+// });
+
+// exports.updatePercentage('test@gmail.com', 14, .8, function(result) {
+//   console.log(result);
+// });
+
+// exports.getUserCharityFields('test@gmail.com', 14, function(err, charities) {
 //   if (err) {
 //     console.log('ERROR getting users charities', err);
 //   }

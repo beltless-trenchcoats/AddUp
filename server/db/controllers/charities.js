@@ -120,7 +120,7 @@ exports.getCharityFields = function(charityId, callback) {
 };
 
 exports.searchCustomCauses = function(searchFields, callback) {
-  var searchString = 'SELECT * FROM charities WHERE ';
+  var searchString = 'SELECT * FROM charities WHERE type=\'custom\' AND ';
   for (var key in searchFields) {
     if (key !== 'name') {
       if (typeof searchFields[key] === 'string') {
@@ -139,9 +139,13 @@ exports.searchCustomCauses = function(searchFields, callback) {
     if (err) {
       callback(err, null);
     } else if (results.rowCount > 0) {
-      var sendResults = results.rows.filter(function(item) {
-        return (item.name.indexOf(searchFields.name) > -1);
-      });
+      if (searchFields.name) {
+        var sendResults = results.rows.filter(function(item) {
+          return (item.name.indexOf(searchFields.name) > -1);
+        });
+      } else {
+        var sendResults = results.rows;     
+      }
       callback(null, sendResults);
     } else {
       callback('no rows', null);
@@ -167,8 +171,8 @@ exports.searchCustomCauses = function(searchFields, callback) {
 // });
 
 //custom cause
-// exports.createCharity({name: 'My cats paw grooming2', category: 'D', city: 'San Francisco',
-//   state: 'CA', zip: '94114', mission_statement: 'Please help fund my cats pedicures', id_owner: 2, dollar_goal: 500, type:'custom', private:'true'}, function(err, response) {
+// exports.createCharity({name: 'My cats paw grooming6', category: 'D', city: 'San Francisco',
+//   state: 'CA', zip: '94114', mission_statement: 'Please help fund my cats pedicures', id_owner: 2, dollar_goal: 500, type:'custom', private:'false'}, function(err, response) {
 //   console.log(response);
 // });
 
@@ -185,7 +189,7 @@ exports.searchCustomCauses = function(searchFields, callback) {
 // });
 
 //search
-// exports.searchCustomCauses({name: 'My cats paw grooming', category: 'D', city: 'San Francisco'}, function(err, results) {
+// exports.searchCustomCauses({city: 'San Francisco', private: 'false'}, function(err, results) {
 //   if (err) {
 //     console.log(err);
 //   } else {

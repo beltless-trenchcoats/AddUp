@@ -12,7 +12,8 @@ var worker = require('./worker');
 var bcrypt = require('bcrypt');
 var Transactions = require('./db/controllers/transactions');
 var userCharitiesDB = require('./db/controllers/usersCharities');
-var charitiesDB = require('./db/controllers/charities')
+var charitiesDB = require('./db/controllers/charities');
+var helperFunctions = require('./helpers');
 
 var app = express();
 var port = process.env.PORT || 8080;
@@ -208,21 +209,61 @@ app.get('/logout', function(req, res) {
 //   "state": "CA"
 // }
 app.post('/charitySearch', function(req, res) {
+  console.log('I HATE EVERYTHINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG');
   console.log('search terms', req.body);
-  var options = {
-    method: 'post',
-    body: req.body,
-    json: true,
-    url: 'http://data.orghunter.com/v1/charitysearch?user_key=' + apiKeys.orgHunter
-  };
-  request(options, function (err, result, body) {
-    if (err) {
-      console.log(err);
-      res.send(err);
-    } else {
-      res.send(JSON.stringify(body.data));
+  if (req.body.type === 'Custom Cause') {
+    var keyWordMap = {
+      searchTerm: 'name',
+      category: 'category',
+      city: 'city',
+      state: 'state',
+      zipCode: 'zip',
+      id_owner: 'id_owner',
+      private: 'private'
+    };
+    var searchBody = {};
+    for (var key in keyWordMap) {
+      if (req.body[key]) {
+        searchBody[keyWordMap[key]] = req.body[key];
+      }
     }
-  });
+    console.log('custom search terms', searchBody);
+    charitiesDB.searchCustomCauses(searchBody, function(err, results) {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      } else {
+        console.log(results);
+        results.forEach(function(item) {
+          item.charityName = item.name;
+          delete item.name;
+          item.zipCode = item.zip;
+          delete item.zip;
+          item.missionStatement = item.mission_statement;
+          delete item.mission_statement;
+          item.category = helperFunctions.convertCategoryToString(item.category);
+        });
+        console.log(results);
+        res.send(results);
+      };
+    });
+  } else {
+    var options = {
+      method: 'post',
+      body: req.body,
+      json: true,
+      url: 'http://data.orghunter.com/v1/charitysearch?user_key=' + apiKeys.orgHunter
+    };
+    request(options, function (err, result, body) {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      } else {
+        console.log('sending', body.data);
+        res.send(JSON.stringify(body.data));
+      }
+    });   
+  }
 });
 
 app.post('/userCharities', function(req, res) {
@@ -302,13 +343,17 @@ app.post('/api/user/info', function(req, res) {
 })
 
 app.post('/api/user/transactions', function(req, res) {
-  Transactions.getTransactions(req.body.email, function(err, data) {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(data);
-    }
-  });
+  if (req.body.email) {
+    Transactions.getTransactions(req.body.email, function(err, data) {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(data);
+      }
+    });  
+  } else {
+    res.send([]);
+  }
 })
 
 app.post('/api/user/charities/info', function(req, res) {

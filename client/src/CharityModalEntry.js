@@ -6,6 +6,7 @@ class CharityModalEntry extends Component {
     super(props);
     this.state = {
       style: 'primary',
+      charityId: this.props.charity.id,
       name: this.props.charity.name,
       totalDonated: this.props.charity.total_donated,
       percentage: this.props.charity.percentage,
@@ -27,7 +28,6 @@ class CharityModalEntry extends Component {
   handleChange (e) {
     let updatedValue = e.target.value
     let lastValue = this.state.percentage
-    console.log(this.state.firstClick)
     if (this.state.firstClick) {
       this.setState({firstClick : false})
       this.props.updateTotal.call(null, -lastValue)
@@ -36,7 +36,9 @@ class CharityModalEntry extends Component {
       updatedValue <= lastValue ? this.props.updateTotal.call(null, updatedValue-lastValue) : this.props.updateTotal.call(null, updatedValue-lastValue)
     }
     this.setState( { percentage: updatedValue })
-    this.props.save(this.state.style, updatedValue);
+    // console.log('savebutton!! ',this.state.charityId, this.state.style, updatedValue)
+    // e.persist();
+    this.props.save(this.state.charityId, this.state.style, updatedValue);
   }
 
   render() {

@@ -58,7 +58,9 @@ class UserProfile extends Component {
     $('.userBankInfo div button span').html('Add Account');
 
     //This is currently not working...supposed to dim any charities that have reached their goals
-    $('.completed').closest('.userCharity').addClass('dim');
+    $( document ).ready(function() {
+      $('.completed').closest('.userCharity').addClass('dim');
+    });
   }
 
   convertToReadableDate(date_time) {
@@ -109,16 +111,18 @@ class UserProfile extends Component {
                 <div className='userCharities'>
                 {
                   this.state.charities.map(charity => 
-                    <div className='userCharity'>
-                      <div className='title'>{charity.name}</div>
-                      {
-                        (charity.goal_reached === '1') ? 
-                        <div className='completed'>&#10004; Goal Reached</div>
-                        : null
-                      }
-                      <div className='amount'>${charity.user_donation_total}</div>
-                      <div className='since'>{this.convertToReadableDate(charity.initial_date)}</div>
-                    </div>
+                    <a href={'/charity/' + charity.ein}>
+                      <div className='userCharity'>
+                        <div className='title'>{charity.name}</div>
+                        {
+                          (charity.goal_reached === '1') ? 
+                          <div className='completed'>&#10004; Goal Reached</div>
+                          : null
+                        }
+                        <div className='amount'>${charity.user_donation_total}</div>
+                        <div className='since'>{this.convertToReadableDate(charity.initial_date)}</div>
+                      </div>
+                    </a>
                     )
                 }
                 </div>

@@ -126,8 +126,8 @@ app.post('/signup', function(req, res) {
         email: email,
         password: password
       })
-      .then(function() {
-        res.status(200).send('Success!');
+      .then(function(resp) {
+        res.status(201).send(resp.data);
       })
       .catch(function(err) {
         console.log(err);
@@ -171,7 +171,9 @@ app.post('/login', function(req, res) {
           "email": data[0].email, currentUser: currentUser});
         }
       })
-    };
+    } else {
+      res.send();
+    }
   })
 });
 

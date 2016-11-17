@@ -1,159 +1,163 @@
 var expect = require('chai').expect;
+var axios = require('axios');
 
-var worker = require('../server/worker');
-
-var Transactions = require('../server/db/controllers/transactions');
 var Users = require('../server/db/controllers/users');
-var Charities = require('../server/db/controllers/charities');
-var UsersCharities = require('../server/db/controllers/usersCharities');
-var db = require('../server/db/config/db');
 
+describe('Server routes', function() {
 
-describe('Worker functions', function() {
+  describe('/api/session/', function () {
 
-  // An example user based on db schema
-  var users = [
-    {
-      id: 1,
-      // plaid_access_token: 'test_wells',
-      // stripe_bank_account_token: 'btok_9YDoZt3NHiIjun',
-      plaid_account_id: 'nban4wnPKEtnmEpaKzbYFYQvA7D7pnCaeDBMy',
-      pending_balance: 0.3,
-      monthly_total: 24.32,
-      monthly_limit: 25,
-      last_transaction_id: '1vAj1Eja5BIn4R7V6Mp1hBPQgkryZRHryZ0rDY'
-    },
-    {
-      id: 2,
-      // plaid_access_token: 'test_bofa',
-      // stripe_bank_account_token: 'btok_9YEdF4atq1rpif',
-      plaid_account_id: 'nban4wnPKEtnmEpaKzbYFYQvA7D7pnCaeDBMy',
-      pending_balance: 0,
-      monthly_total: 25,
-      monthly_limit: 25,
-      last_transaction_id: 'moPE4dE1yMHJX5pmRzwrcvpQqPdDnZHEKPREYL'
-    }
-  ];
-
-  // Snippets of what actual transaction results looks like
-  var transactions = [
-    {
-      _id: 'KdDjmojBERUKx3JkDdO5IaRJdZeZKNuK4bnKJ1',
-      _account: 'nban4wnPKEtnmEpaKzbYFYQvA7D7pnCaeDBMy',
-      amount: 3.49,
-      date: "2014-06-21",
-      name: "Gregorys Coffee"
-    },
-    {
-      _id: 'DAE3Yo3wXgskjXV1JqBDIrDBVvjMLDCQ4rMQdR',
-      _account: 'pJPM4LMBNQFrOwp0jqEyTwyxJQrQbgU6kq37k',
-      amount: 3.19,
-      date: "2014-06-21",
-      name: "Gregorys Coffee"
-    },
-    {
-      _id: '1vAj1Eja5BIn4R7V6Mp1hBPQgkryZRHryZ0rDY',
-      _account: 'nban4wnPKEtnmEpaKzbYFYQvA7D7pnCaeDBMy',
-      amount: 3.99,
-      date: "2014-06-21",
-      name: "Gregorys Coffee"
-    },
-    {
-      _id: 'moPE4dE1yMHJX5pmRzwrcvpQqPdDnZHEKPREYL',
-      _account: 'nban4wnPKEtnmEpaKzbYFYQvA7D7pnCaeDBMy',
-      amount: 3.99,
-      date: "2014-06-21",
-      name: "Gregorys Coffee"
-    }
-  ];
-
-  describe('finding recent transactions', function() {
-    it('should only return transactions since the last transaction id', function(done) {
-      expect(worker.findRecentTransactions(users[0], transactions).length).to.equal(1);
-      expect(worker.findRecentTransactions(users[1], transactions).length).to.equal(2);
-      done();
-    });
-  });
-
-  describe('rounding up transactions', function() {
-    it('should return rounded-up amount for an amount > 0.50', function(done) {
-      expect(worker.roundUpTransaction(users[0], transactions[0])).to.equal(0.51);
-      done();
-    });
-
-    it('should only return an amount up to their monthly limit', function(done) {
-      expect(worker.roundUpTransaction(users[0], transactions[1])).to.equal(users[0].monthly_limit - users[0].monthly_total);
-      done();
-    });
-
-    it('should return 0 if they are already over their monthly limit', function(done) {
-      expect(worker.roundUpTransaction(users[1], transactions[0])).to.equal(0);
-      done();
-    });
-
-    it('should update a users pending balance if their aggregate balance is still < 0.50', function(done) {
-      expect(worker.roundUpTransaction(users[0], transactions[2])).to.equal(0);
-      //giving time for the inner database call to go through 
-      setTimeout(() => done(), 100);
-    });
-  });
-
-  describe('distributing donations amongst charities', function() {
-
-    before(function() {
-      db.query({
-        text: 'SELECT id FROM users WHERE email=\'test@test.com\';'
-      }, (err, results) => {
-        if (results.rowCount > 0) {
-          var id = results.rows[0].id;
-          db.query({
-            text: 'DELETE FROM transactions WHERE id_users=' + id + ';'
-          }).then(() => {
-            db.query({
-              text: 'DELETE FROM users WHERE id=' + id + ';'
-            })
-          })
-        }
-        Users.createUser('test@test.com', 'test', 'Test', 'Test')
-        .then(() => {
-          Users.updateUser('test@test.com', {plaid_access_token: 'test_wells', stripe_bank_account_token: 'btok_9YDoZt3NHiIjun'}, () => {});
-          Charities.createCharity({name: 'Green Peace', category: 'A', ein: 'gsot23235', donation_url: 'www.eggs.com', city: 'San Francisco',
-            state: 'CA', zip: '94114', mission_statement: 'To eat every egg in the fridge'})
-            .then(() =>{
-              Charities.createCharity({name: 'Sea Shepherd Conservation Society', category: 'A', ein: 'gsot23235', donation_url: 'www.eggs.com', city: 'San Francisco',
-                state: 'CA', zip: '94114', mission_statement: 'To eat every egg in the fridge'})
-              .then(() => {
-                UsersCharities.insert('test@test.com', 'Green Peace', .7, () => {});
-                UsersCharities.insert('test@test.com', 'Sea Shepherd Conservation Society', .3, () => {});
-              })
-            })
-            .catch(err => {
-              console.log('ERROR',err);
-            });
-          });
-      });
-    });
-
-
-    it('should split donation amount based on percentages and save transactions to database upon successful charge', function(done) {
-      Users.getUserFields('test@test.com', function(err, results) {
-        var user = results[0];
-        worker.distributeDonation(user, .80);
-        setTimeout(() => {
-          Transactions.getTransactions(user.email, (err, results) => {
-          if (err) console.log('error getting transactions');
-          expect(results.length).to.equal(2);
+    describe('User login', function() {
+      it('should send response with user data for a user who exists in the db', function(done) {
+        axios.post('http://localhost:8080/login',
+        {
+          email: 'test@test.com',
+          password: 'test'
+        })
+        .then(res => {
+          expect(res.data.first_name).to.equal('Test');
+          expect(res.data.last_name).to.equal('Test');
+          expect(res.data.email).to.equal('test@test.com');
           done();
-          });
-        }, 100);
+        });
+      });
+
+      it('should not send response for user that does not exist in the db', function(done) {
+        axios.post('http://localhost:8080/login',
+        {
+          email: 'notanemail@gmail.com',
+          password: 'test'
+        })
+        .then(res => {
+          expect(res.body).to.be.undefined;
+          done();
+        });
+      });
+
+      //TODO: Update this when we implement real sessions
+      xit('should start a new session on successful login', function(done) {
+        done();
       });
     });
+
+    describe('User signup', function() {
+      it('should log in a user upon successful sign up', function(done) {
+        axios.post('http://localhost:8080/signup',
+        {
+          email: 'notarealemail@test.com',
+          password: 'test',
+          firstname: 'Test',
+          lastname: 'Test',
+        })
+        .then(res => {
+          expect(res.status).to.equal(201);
+          expect(res.data.email).to.equal('notarealemail@test.com');
+          done();
+        });
+      });
+      
+      it('should add a user to the database upon successful sign up', function(done) {
+        Users.getUserFields('notarealemail@test.com', function(err, resp) {
+          expect(resp[0]).to.exist;
+          expect(resp[0].email).to.equal('notarealemail@test.com');
+          done();
+        });
+      });
+
+    });
+
+    xdescribe('User logout', function() {
+      //TODO: Write when real sessions work
+      it('should destroy the session upon logout', function(done) {
+        done();
+      });
+    });
+
+    //TODO: This should be taken out once we get real sessions working
+    describe('Session', function() {
+      it('should return session variables', function(done) {
+        done();
+      });
+    });
+
   });
 
-  xdescribe('linking together worker functions', function() {
-    it('should log transactions in db for recent transactions', function(done) {
-      worker.processDailyTransactions();
-      //TODO: How to test if it has run correctly?? (depends on real plaid data...)
+  describe('/api/plaid/', function () {
+
+    describe('Bank authentication through plaid', function () {
+      it('should update a users tokens and bank data in db upon successful authentication', function(done) {
+        done();
+      });
     });
-  })
+
+    describe('Fetch plaid transactions', function () {
+      it('should return JSON transaction data for a user', function(done) {
+        done();
+      });
+    });
+
+  });
+
+  describe('/api/user/', function () {
+
+    describe('User links a charity to their account', function () {
+      it('should add an entry to userscharities table in db', function(done) {
+        done();
+      });
+    });
+
+    describe('User profile page loads user information', function() {
+      it('should return charities linked with a users account', function(done) {
+        done();
+      });
+
+      it('should return transaction information for a given user', function(done) {
+        done();
+      })
+    })
+
+  });
+
+  describe('/api/charities/', function () {
+
+    describe('Charity search', function() {
+      it('should return JSON data for all charities relevant to search', function(done) {
+        done();
+      });
+    });
+
+  });
+
+  describe('/api/charity/', function() {
+
+    describe('Charity info', function() {
+      it('should return JSON charity data for specified charity', function(done) {
+        done();
+      });
+    });
+
+    describe('Update charity in db', function() {
+      it('should update a charity in db', function(done) {
+        done();
+      });
+    });
+
+  });
+
+  describe('/api/customCause/', function() {
+
+    describe('Add custom cause', function() {
+      it('should add a custom charity to the db', function(done) {
+        done();
+      });
+    });
+
+    describe('Update custom cause', function() {
+      it('should update a custom charity in the db', function(done) {
+        done();
+      });
+    });
+
+  });
+
 });

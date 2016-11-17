@@ -325,16 +325,6 @@ app.post('/charityInfo', function (req, res) {
   });
 });
 
-app.post('/userfield', function(req, res) {
-  db.getUserFields(req.body.email, function(err, data) {
-    if(err) {
-      res.send(err)
-    } else {
-      res.send(data[0]);
-    }
-  });
-})
-
 app.post('/addcharity', function(req, res) {
   var percentage = req.body.percentage || 1;
   userCharitiesDB.insert(req.body.email, req.body.charity, percentage, function(err, response) {

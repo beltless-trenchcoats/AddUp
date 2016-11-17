@@ -264,7 +264,7 @@ app.post('/charitySearch', function(req, res) {
         console.log('sending', body.data);
         res.send(JSON.stringify(body.data));
       }
-    });   
+    });
   }
 });
 
@@ -342,7 +342,7 @@ app.post('/api/user/transactions', function(req, res) {
       } else {
         res.send(data);
       }
-    });  
+    });
   } else {
     res.send([]);
   }
@@ -356,6 +356,23 @@ app.post('/api/user/charities/info', function(req, res) {
       res.send(data);
     }
   })
+})
+
+app.post('/api/user/updateUser', function(req, res) {
+  var email = req.body.email;
+  var newEmail = req.body.newEmail;
+  var newPassword = req.body.newPassword;
+  if(newEmail === undefined) {
+    db.updateUser(email, {password: newPassword}, function(result) {
+      console.log('/api/user/updateUser password result ', result);
+      res.send(result);
+    })
+  } else {
+    db.updateUser(email, {email: newEmail}, function(result) {
+      console.log('/api/user/updateUser email result ', result);
+      res.send(result);
+    })
+  }
 })
 
 //===================CUSTOM CAUSES=====================

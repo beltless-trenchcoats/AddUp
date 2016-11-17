@@ -209,6 +209,7 @@ app.get('/logout', function(req, res) {
 //   "state": "CA"
 // }
 app.post('/charitySearch', function(req, res) {
+  console.log('I HATE EVERYTHINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG');
   console.log('search terms', req.body);
   if (req.body.type === 'Custom Cause') {
     var keyWordMap = {
@@ -216,7 +217,9 @@ app.post('/charitySearch', function(req, res) {
       category: 'category',
       city: 'city',
       state: 'state',
-      zipCode: 'zip'
+      zipCode: 'zip',
+      id_owner: 'id_owner',
+      private: 'private'
     };
     var searchBody = {};
     for (var key in keyWordMap) {
@@ -340,13 +343,17 @@ app.post('/api/user/info', function(req, res) {
 })
 
 app.post('/api/user/transactions', function(req, res) {
-  Transactions.getTransactions(req.body.email, function(err, data) {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(data);
-    }
-  });
+  if (req.body.email) {
+    Transactions.getTransactions(req.body.email, function(err, data) {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(data);
+      }
+    });  
+  } else {
+    res.send([]);
+  }
 })
 
 app.post('/api/user/charities/info', function(req, res) {

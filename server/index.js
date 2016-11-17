@@ -332,6 +332,7 @@ app.post('/userfield', function(req, res) {
   });
 })
 
+
 app.post('/api/user/updateCharity', function(req, res) {
   req.body.charities.forEach(function (charity) {
     console.log('CHARITYCHARITY', charity)

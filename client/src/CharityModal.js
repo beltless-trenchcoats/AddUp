@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import { Button, Modal, Table } from 'react-bootstrap';
 import axios from 'axios';
+import debounce from 'es6-promise-debounce';
 
 import CharityModalEntry from './CharityModalEntry';
+
+const debouncedUpdateCharities = debounce( () => {
+    return new Promise ((resolve) => resolve())
+  }, 200)
 
 class CharityModal extends Component {
   constructor(props) {
@@ -48,9 +53,18 @@ class CharityModal extends Component {
     this.setState( {donationTotal: 0} )
   }
 
-  updateCharities (style, percentage) {
-    console.log('style:', style, 'percentage:', percentage)
-    axios.post()
+  updateCharities (charityId, style, percentage) {
+    console.log('in updateCharities', charityId, style, percentage)
+    axios.post('http://localhost:8080/api/user/updateCharity', { 
+      email: this.state.userEmail,
+      charityId: charityId
+    })
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
   }
 
   render() {
@@ -73,7 +87,11 @@ class CharityModal extends Component {
 
             <tbody>
               {this.state.charities.map((charity, i) => 
-                <CharityModalEntry key={i} charity={charity} updateTotal={this.updateTotal} save={this.updateCharities}/>
+                <CharityModalEntry 
+                  key={i} 
+                  charity={charity} 
+                  updateTotal={this.updateTotal} 
+                  save={debouncedUpdateCharities().then(()=> this.updateCharities)}/>
               )}
             </tbody>
           </Table>

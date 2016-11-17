@@ -15,7 +15,8 @@ class UserProfile extends Component {
       userSession: {},
       hasLinkAccount: false,
       userInfo: {},
-      charities: []
+      charities: [],
+      customCauses: []
     }
   }
 
@@ -36,6 +37,15 @@ class UserProfile extends Component {
           if (this.state.userInfo.bank_name) {
             this.setState({hasLinkAccount: true});
           } 
+          console.log('id ', res.data.id);
+          axios.post('http://localhost:8080/charitySearch', {
+            'id_owner': res.data.id,
+            'type': 'Custom Cause'
+            })
+            .then(response => {
+              this.setState({customCauses: response.data});
+              console.log('CUSTOM CAUSES', response.data);
+            });
         });
 
       axios.post('http://localhost:8080/api/user/transactions', {
@@ -123,6 +133,25 @@ class UserProfile extends Component {
                         <div className='since'>{this.convertToReadableDate(charity.initial_date)}</div>
                       </div>
                     </a>
+                    )
+                }
+                </div>
+              </Col>
+            </Row>
+            <Row >
+              <Col className="userCharitiesContainer" md={11}>
+                <h1>Your Causes</h1>
+                <div className='userCharities'>
+                {
+                  this.state.customCauses.map(cause => 
+                    <div className='userCharity'>
+                      <text className='title'>{cause.charityName}</text>
+                      <div>
+                        <text>Percent Funded: </text><text className='amount'>{Math.floor((cause.total_donated/cause.dollar_goal)*100)}%</text>
+                      </div>
+                      <text>Donated So Far: </text><text className='amount'>${cause.total_donated}</text>
+                      <text>Donation Goal: </text><text className='amount'>${cause.dollar_goal}</text>
+                    </div>
                     )
                 }
                 </div>

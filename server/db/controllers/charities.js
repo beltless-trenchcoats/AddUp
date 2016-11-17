@@ -141,12 +141,10 @@ exports.searchCustomCauses = function(searchFields, callback) {
     } else if (results.rowCount > 0) {
       if (searchFields.name) {
         var sendResults = results.rows.filter(function(item) {
-          return (item.name.indexOf(searchFields.name) > -1 && item.private !== 'true');
+          return (item.name.indexOf(searchFields.name) > -1);
         });
       } else {
-        var sendResults = results.rows.filter(function(item) {
-          return (item.private !== 'true');
-        });      
+        var sendResults = results.rows;     
       }
       callback(null, sendResults);
     } else {
@@ -191,7 +189,7 @@ exports.searchCustomCauses = function(searchFields, callback) {
 // });
 
 //search
-// exports.searchCustomCauses({city: 'San Francisco'}, function(err, results) {
+// exports.searchCustomCauses({city: 'San Francisco', private: 'false'}, function(err, results) {
 //   if (err) {
 //     console.log(err);
 //   } else {

@@ -52,7 +52,8 @@ class SearchPage extends Component {
     this.setState({isLoading: true});
     var searchTerms = {
       eligible: 1,
-      type: this.state.type
+      type: this.state.type,
+      private: 'false'
     };
     var options = ['searchTerm', 'city', 'state', 'zipCode', 'category', 'start'];
     for (var i = 0; i < options.length; i ++) {

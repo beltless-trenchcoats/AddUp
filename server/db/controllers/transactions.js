@@ -23,7 +23,6 @@ exports.insert = function(id_users, id_charities, amount, callback) {
 };
 
 exports.getTransactions = function(email, callback) {
-  console.log('FUCKING EMAIL', email);
   helpers.getIDs(email, '', function(idObj) {
     var id_users = idObj.id_users;
     console.log('SELECT date_time, amount, name FROM (SELECT * FROM transactions WHERE id_users = \'' + id_users + '\') AS t \

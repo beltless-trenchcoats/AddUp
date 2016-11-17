@@ -35,6 +35,26 @@ exports.insert = function(email, charityID, percentage, callback) {
   });
 };
 
+exports.remove = function(email, charityID, callback) {
+  helpers.getIDs(email, '', function(idObj) {
+    var id_users = idObj.id_users;
+    var id_charities = charityID;
+    console.log('DELETE FROM usersCharities \
+      WHERE id_users =' + id_users + ' AND id_charities = ' + id_charities + ';');
+    db.query({
+      text: 'DELETE FROM usersCharities \
+      WHERE id_users =' + id_users + ' AND id_charities = ' + id_charities + ';'
+    }, 
+    function(err, rows) {
+      if (err) {
+        callback(err);
+      } else {
+        callback(rows);
+      }
+    });
+  });
+}
+
 exports.updatePercentage = function(email, charityID, percentage, callback) {
   helpers.getIDs(email, '', function(idObj) {
     var id_users = idObj.id_users;
@@ -145,6 +165,10 @@ exports.getUsersCharityDonationsInfo = function(email, callback) {
 // exports.getUsersCharityDonationsInfo('test@gmail.com', (err, results) => console.log(results));
 
 // exports.insert('test@gmail.com', 14, .5, function(result) {
+//   console.log(result);
+// });
+
+// exports.remove('test@gmail.com', 14, function(result) {
 //   console.log(result);
 // });
 

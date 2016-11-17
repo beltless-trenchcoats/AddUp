@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import PlaidLinkComponent from './PlaidLink';
 import { Col, Row, Grid, Table } from 'react-bootstrap';
@@ -36,7 +37,7 @@ class UserProfile extends Component {
           this.setState({userInfo: res.data});
           if (this.state.userInfo.bank_name) {
             this.setState({hasLinkAccount: true});
-          } 
+          }
           console.log('id ', res.data.id);
           axios.post('http://localhost:8080/charitySearch', {
             'id_owner': res.data.id,
@@ -63,7 +64,7 @@ class UserProfile extends Component {
         });
     })
   }
-  
+
   componentDidMount() {
     $('.userBankInfo div button span').html('Add Account');
 
@@ -90,11 +91,11 @@ class UserProfile extends Component {
     return (
       <Header>
         <div className="profilePage">
-          
+
           <Grid>
-            <Row> 
+            <Row>
             {
-              !this.state.hasLinkAccount ? 
+              !this.state.hasLinkAccount ?
               <Col className="userBankInfo shadowbox" md={5}>
                 <form id="some-id" method="POST" action="/authenticate"></form>
                 <text className='profileHeader'> </text>
@@ -120,12 +121,12 @@ class UserProfile extends Component {
                 <h1>Your Charities</h1>
                 <div className='userCharities'>
                 {
-                  this.state.charities.map(charity => 
+                  this.state.charities.map(charity =>
                     <a href={'/charity/' + charity.ein}>
                       <div className='userCharity'>
                         <div className='title'>{charity.name}</div>
                         {
-                          (charity.goal_reached === '1') ? 
+                          (charity.goal_reached === '1') ?
                           <div className='completed'>&#10004; Goal Reached</div>
                           : null
                         }
@@ -143,7 +144,7 @@ class UserProfile extends Component {
                 <h1>Your Causes</h1>
                 <div className='userCharities'>
                 {
-                  this.state.customCauses.map(cause => 
+                  this.state.customCauses.map(cause =>
                     <div className='userCharity'>
                       <text className='title'>{cause.charityName}</text>
                       <div>
@@ -172,7 +173,7 @@ class UserProfile extends Component {
                     </thead>
 
                     <tbody>
-                      {this.state.transactions.map ((transaction, i) => 
+                      {this.state.transactions.map ((transaction, i) =>
                         <Transaction key={i} transaction={transaction} />
                       )}
                     </tbody>

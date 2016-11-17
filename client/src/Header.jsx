@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Button, Modal, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import { Router, Link, Navigation } from 'react-router';
+import { browserHistory } from 'react-router';
+
 // import { Router, Route, browserHistory } from 'react-router';
 
 import logo from '../assets/images/[AddUp++]Logo.png';
@@ -106,6 +108,8 @@ class Header extends Component {
     });
   }
 
+
+
   loginUser (e) {
     e.preventDefault();
     axios.post('http://localhost:8080/login', {
@@ -113,13 +117,16 @@ class Header extends Component {
       password: this.state.password
     })
     .then((res) => {
-      this.setState({
-        email: res.data.email,
-        firstname: res.data.first_name,
-        lastname: res.data.last_name,
-        loggedIn: true
-      })
-      this.closeLogin();
+      if (res.data) {
+        this.setState({
+          email: res.data.email,
+          firstname: res.data.first_name,
+          lastname: res.data.last_name,
+          loggedIn: true
+        })
+        this.closeLogin();
+        browserHistory.push('/user');
+      }
     })
     .catch((err) => {
       console.log(err);

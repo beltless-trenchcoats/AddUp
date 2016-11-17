@@ -56,6 +56,9 @@ class UserProfile extends Component {
   
   componentDidMount() {
     $('.userBankInfo div button span').html('Add Account');
+
+    //This is currently not working...supposed to dim any charities that have reached their goals
+    $('.completed').closest('.userCharity').addClass('dim');
   }
 
   convertToReadableDate(date_time) {

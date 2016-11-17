@@ -205,6 +205,10 @@ h1 {
   padding: 20px 0 70px 0;
 }
 
+.dim {
+  opacity: 0.5;
+}
+
 .userCharity div {
   margin: 0 20px;
 }

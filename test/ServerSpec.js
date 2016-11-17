@@ -6,6 +6,7 @@ var Transactions = require('../server/db/controllers/transactions');
 var Users = require('../server/db/controllers/users');
 var Charities = require('../server/db/controllers/charities');
 var UsersCharities = require('../server/db/controllers/usersCharities');
+var db = require('../server/db/config/db');
 
 
 describe('Worker functions', function() {
@@ -13,10 +14,9 @@ describe('Worker functions', function() {
   // An example user based on db schema
   var users = [
     {
-      id: 2,
-      email: 'test@gmail.com',
-      plaid_access_token: 'test_wells',
-      stripe_bank_account_token: 'btok_9YDoZt3NHiIjun',
+      id: 1,
+      // plaid_access_token: 'test_wells',
+      // stripe_bank_account_token: 'btok_9YDoZt3NHiIjun',
       plaid_account_id: 'nban4wnPKEtnmEpaKzbYFYQvA7D7pnCaeDBMy',
       pending_balance: 0.3,
       monthly_total: 24.32,
@@ -25,9 +25,8 @@ describe('Worker functions', function() {
     },
     {
       id: 2,
-      email: 'test@gmail.com',
-      plaid_access_token: 'test_bofa',
-      stripe_bank_account_token: 'btok_9YEdF4atq1rpif',
+      // plaid_access_token: 'test_bofa',
+      // stripe_bank_account_token: 'btok_9YEdF4atq1rpif',
       plaid_account_id: 'nban4wnPKEtnmEpaKzbYFYQvA7D7pnCaeDBMy',
       pending_balance: 0,
       monthly_total: 25,
@@ -99,42 +98,45 @@ describe('Worker functions', function() {
     });
   });
 
-  // xdescribe('charging with stripe', function() {
-  //   it('should return without error when charging a user a given amount', function(done) {
-  //     var testCharge = function() {
-  //       worker.charge(users[0], 0.51);
-  //     }
-  //     expect(testCharge).to.not.throw(Error);
-  //     setTimeout(() => done(), 100);
-  //   });
-  // });
+  describe('distributing donations amongst charities', function() {
 
-  xdescribe('distributing donations amongst charities', function() {
+    before(function() {
+      db.query({
+        text: 'SELECT id FROM users WHERE email=\'test@test.com\';'
+      }, (err, results) => {
+        if (results.rowCount > 0) {
+          var id = results.rows[0].id;
+          db.query({
+            text: 'DELETE FROM transactions WHERE id_users=' + id + ';'
+          }).then(() => {
+            db.query({
+              text: 'DELETE FROM users WHERE id=' + id + ';'
+            })
+          })
+        }
+        Users.createUser('test@test.com', 'test', 'Test', 'Test')
+        .then(() => {
+          Users.updateUser('test@test.com', {plaid_access_token: 'test_wells', stripe_bank_account_token: 'btok_9YDoZt3NHiIjun'}, () => {});
+          Charities.createCharity({name: 'Green Peace', category: 'A', ein: 'gsot23235', donation_url: 'www.eggs.com', city: 'San Francisco',
+            state: 'CA', zip: '94114', mission_statement: 'To eat every egg in the fridge'})
+            .then(() =>{
+              Charities.createCharity({name: 'Sea Shepherd Conservation Society', category: 'A', ein: 'gsot23235', donation_url: 'www.eggs.com', city: 'San Francisco',
+                state: 'CA', zip: '94114', mission_statement: 'To eat every egg in the fridge'})
+              .then(() => {
+                UsersCharities.insert('test@test.com', 'Green Peace', .7, () => {});
+                UsersCharities.insert('test@test.com', 'Sea Shepherd Conservation Society', .3, () => {});
+              })
+            })
+            .catch(err => {
+              console.log('ERROR',err);
+            });
+          });
+      });
+    });
 
-    // before(function() {
-    //   Users.createUser('test@gmail.com', 'password', 'Test', 'Test', function(response) {
-    //     console.log(response);
-    //     Users.updateUser('test@gmail.com', {plaid_access_token: 'test_wells', stripe_bank_account_token: 'btok_9YDoZt3NHiIjun'}, () => {});
-    //     Charities.createCharity({name: 'Save the Helgas', category: 'A', ein: 'gsot23235', donation_url: 'www.eggs.com', city: 'San Francisco',
-    //       state: 'CA', zip: '94114', mission_statement: 'To eat every egg in the fridge'})
-    //       .then(function() {
-    //         Charities.createCharity({name: 'Save the Whales', category: 'A', ein: 'gsot23235', donation_url: 'www.eggs.com', city: 'San Francisco',
-    //           state: 'CA', zip: '94114', mission_statement: 'To eat every egg in the fridge'})
-    //       })
-    //       .then(function() {
-    //         UsersCharities.insert('test@gmail.com', 'Save the Helgas', .8, (r) => {console.log(r);});
-    //         UsersCharities.insert('test@gmail.com', 'Save the Whales', .2, (r) => {console.log(r);});
-    //       })
-    //       .catch(function(err) {
-    //         console.log('ERROR',err);
-    //       });  
-    //   });
-    // });
-
-    //NOTE: Need to clear out transactions for test user for this to pass
 
     it('should split donation amount based on percentages and save transactions to database upon successful charge', function(done) {
-      Users.getUserFields('test@gmail.com', function(err, results) {
+      Users.getUserFields('test@test.com', function(err, results) {
         var user = results[0];
         worker.distributeDonation(user, .80);
         setTimeout(() => {
@@ -148,16 +150,10 @@ describe('Worker functions', function() {
     });
   });
 
-  describe('linking together worker functions', function() {
+  xdescribe('linking together worker functions', function() {
     it('should log transactions in db for recent transactions', function(done) {
       worker.processDailyTransactions();
-      setTimeout(() => {
-        Transactions.getTransactions('test@gmail.com', (err, results) => {
-        if (err) console.log('error getting transactions');
-        expect(results.length).to.equal(1);
-        done();
-        });
-      }, 500);
+      //TODO: How to test if it has run correctly?? (depends on real plaid data...)
     });
   })
 });

@@ -198,32 +198,47 @@ h1 {
 }
 
 .userCharity {
-  height: 150px;
+  position: relative;
   width: 480px;
   background-color: #f9f9f9;
   margin: 20px 30px;
-  padding: 5px;
-  position: relative;
+  padding: 20px 0 70px 0;
 }
 
-.userCharity .title{
+.dim {
+  opacity: 0.5;
+}
+
+.userCharity div {
+  margin: 0 20px;
+}
+
+.userCharity .title {
   width: 100%;
-  display: block;
-  margin: 10px 20px;
+  margin-top: 10px;
   font-size: 40px;
+}
+
+.userCharity .completed {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  color: green;
+}
+
+.userCharity .amount, .userCharity .since {
+  position: absolute;
+  bottom: 10px;
 }
 
 .userCharity .amount {
   font-size: 32px;
-  margin: 0 20px;
-  color: coral;
+  color: #ff7f50;
 }
 
 .userCharity .since {
-  position: absolute;
   right: 20px;
-  bottom: 20px;
-  margin: 0 20px;
   font-size: 20px;
   font-style: italic;
   color: #aaa;

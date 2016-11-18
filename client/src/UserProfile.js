@@ -24,6 +24,8 @@ class UserProfile extends Component {
       transactions: [],
       userSession: {},
       hasLinkAccount: false,
+      monthlyLimitSet: true,
+      charitiesSelected: true,
       userInfo: {},
       bankInfo: {},
       charities: [],
@@ -195,7 +197,7 @@ class UserProfile extends Component {
 
     //This is currently not working...supposed to dim any charities that have reached their goals
     $( document ).ready(function() {
-      $('.completed').closest('.userCharity').addClass('dim');
+      $('.goalReached').closest('.userCharity').addClass('dim');
     });
   }
 
@@ -208,6 +210,13 @@ class UserProfile extends Component {
         bank_digits: bank_digits
       }
     });
+  }
+
+  setMontlyLimit(e) {
+    e.preventDefault();
+    console.log('MONTHLY LIMIT IS');
+    // console.log($(e.target).closest('input'));
+    console.log($('.limitInput').value);
   }
 
   convertToReadableDate(date_time) {
@@ -309,8 +318,70 @@ class UserProfile extends Component {
                 </div>
               </Col>
             </Row>
-            {//ADD CAUSE MODAL
-            }
+            <Row className='row'>
+              <Col className='col' md={6}>
+                <div className="userProfile shadowbox">
+                <div className='welcome'>Welcome, {this.state.userSession.firstName} {this.state.userSession.lastName}</div>
+                  <div className='profileField'>
+                    <span className='label'>Email:</span>
+                    <span className='value'> {this.state.userSession.email}</span>
+                    {<Button className="loginButton" bsSize="small" onClick={this.openEmail}>Change</Button>}
+                  </div>
+                  <div className='profileField'>
+                    <span className='label'>Password: </span>
+                    <span className='value'> </span>
+                    {<Button className="loginButton" bsSize="small" onClick={this.openPassword}>Change</Button>}
+                  </div>
+                  <div className='profileField'>
+                    <span className='label'>Monthly Limit: </span>
+                    <span className='value'>$ {this.state.userInfo.monthly_limit}</span>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+            <Row className='row'>
+              <div className='profileOptions'>
+                <Col className='col' md={4}>
+                  <div className='step'>Step 1</div>
+                {
+                  !this.state.hasLinkAccount ?
+                    <div className='stepBox shadowbox'>
+                      <form id="some-id" method="POST" action="/authenticate"></form>
+                      <text className='profileHeader'> </text>
+                      <div className='linkText'>Link your account</div>
+                      <PlaidLinkComponent successFunc={this.displayLinkAccount.bind(this)}/>
+                    </div>
+                  :
+                    <div className="stepBox shadowbox">
+                      <div className='linked'>&#10004;</div>
+                      <div className='stepText'>{this.state.bankInfo.bank_name}</div>
+                      <text className='account'>Account ending in: {this.state.bankInfo.bank_digits}</text>
+                    </div>
+                }
+                </Col>
+                <Col className='col' md={4}>
+                  <div className='step'>Step 2</div>
+                  <div className="stepBox shadowbox">
+                    {
+                      this.state.monthlyLimitSet ? <div className='linked'>&#10004;</div> : null
+                    }
+                    <div className='stepText'>Set A Monthly Limit</div>
+                    <text className='limit'>$ <FormControl id='limitInput' placeholder='e.g. 50' onChange={this.newLimit}></FormControl></text>
+                    <Button onClick={this.setMontlyLimit}>Save</Button>
+                  </div>
+                </Col>
+                <Col className='col' md={4}>
+                  <div className='step'>Step 3</div>
+                  <div className="stepBox shadowbox">
+                    {
+                      this.state.charitiesSelected ? <div className='linked'>&#10004;</div> : null
+                    }
+                    <div className='stepText'>Select Your Charities</div>
+                    <div className='stepText'>&#9662;</div>
+                  </div>
+                </Col>
+              </div>
+            </Row>
             <div>
               <Modal className="modal" show={this.state.showChangeEmailModal} onHide={this.closeEmail}>
                 <Modal.Header closeButton>
@@ -502,7 +573,7 @@ class UserProfile extends Component {
                         <div className='title'>{charity.name}</div>
                         {
                           (charity.goal_reached === '1') ?
-                          <div className='completed'>&#10004; Goal Reached</div>
+                          <div className='goalReached'>&#10004; Goal Reached</div>
                           : null
                         }
                         <div className='amount'>${charity.user_donation_total}</div>

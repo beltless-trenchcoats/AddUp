@@ -31,7 +31,7 @@ class CharityModal extends Component {
           this.props.currentCharity.percentage = 0;
           res.data.push(this.props.currentCharity)
           console.log('currentcharity!', this.props.currentCharity)
-          this.setState({ 
+          this.setState({
             updatedCharities: res.data,
             charities: res.data })
         })
@@ -41,11 +41,12 @@ class CharityModal extends Component {
       })
       .catch((err) => {
         console.log(err);
-      }); 
+      });
   }
 
   updateTotal (percentage) {
-    this.setState( { donationTotal:  this.state.donationTotal += percentage} )
+    var donationTotal = this.state.donationTotal
+    this.setState( { donationTotal:  donationTotal += percentage} )
     console.log('total', this.state.donationTotal)
   }
 
@@ -60,14 +61,14 @@ class CharityModal extends Component {
     updates[index].remove = remove;
     updates[index].id = charityId;
     updates[index].percentage = percentage;
-    this.setState({ updatedCharities: updates });   
-    console.log('withUpdateCharities', updates) 
+    this.setState({ updatedCharities: updates });
+    console.log('withUpdateCharities', updates)
   }
 
   saveCharities () {
     console.log('updated in saveCharities', this.state.updatedCharities)
     this.setState( {charities: this.state.updatedCharities})
-      axios.post('http://localhost:8080/api/user/updateCharity', { 
+      axios.post('http://localhost:8080/api/user/updateCharity', {
         email: this.state.userEmail,
         charities: this.state.updatedCharities
       })
@@ -91,7 +92,7 @@ class CharityModal extends Component {
         <Modal.Body>
           <Table>
             <thead>
-              <tr> 
+              <tr>
                 <th>Charity Name</th>
                 <th>Total Donations</th>
                 <th>Current Percentage Donation</th>
@@ -100,17 +101,17 @@ class CharityModal extends Component {
             </thead>
 
             <tbody>
-              {this.state.charities.map((charity, i) => 
-                <CharityModalEntry 
-                  key={i} 
+              {this.state.charities.map((charity, i) =>
+                <CharityModalEntry
+                  key={i}
                   index={i}
-                  charity={charity} 
-                  updateTotal={this.updateTotal} 
+                  charity={charity}
+                  updateTotal={this.updateTotal}
                   save={ this.updateCharities }/>
               )}
             </tbody>
           </Table>
-          
+
         </Modal.Body>
 
         <Modal.Footer>
@@ -125,4 +126,3 @@ class CharityModal extends Component {
 
 
 export default CharityModal;
-

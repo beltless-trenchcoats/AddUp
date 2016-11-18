@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Button, Modal, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 
 import logo from '../assets/images/[AddUp++]Logo.png';
 import FaUser from 'react-icons/lib/fa/user';

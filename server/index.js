@@ -301,7 +301,6 @@ app.post('/api/user/charities/donationInfo', function(req, res) {
 });
 
 app.post('/charityInfo', function (req, res) {
-  console.log('getitng', req.body);
   if (req.body.type === 'charity') {
     var options = {
       method: 'post',
@@ -327,7 +326,16 @@ app.post('/charityInfo', function (req, res) {
       }
     });   
   } else {
-
+    charitiesDB.getCharityFields(req.body.charityId, function(err, result) {
+      if (err) {
+        console.log(err);
+      } else {
+        var toSend = result[0];
+        toSend.category = helperFunctions.convertCategoryToString(toSend.category);
+        console.log(toSend);
+        res.send(toSend);
+      }
+    });
   }
 });
 

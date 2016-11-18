@@ -148,7 +148,8 @@ exports.searchCustomCauses = function(searchFields, callback) {
       }
       callback(null, sendResults);
     } else {
-      callback('no rows', null);
+      // no results
+      callback(null, null);
     }
   });
 }

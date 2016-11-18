@@ -223,8 +223,6 @@ app.get('/logout', function(req, res) {
 //   "state": "CA"
 // }
 app.post('/charitySearch', function(req, res) {
-  console.log('I HATE EVERYTHINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG');
-  console.log('search terms', req.body);
   if (req.body.type === 'Custom Cause') {
     var keyWordMap = {
       searchTerm: 'name',
@@ -241,11 +239,12 @@ app.post('/charitySearch', function(req, res) {
         searchBody[keyWordMap[key]] = req.body[key];
       }
     }
-    console.log('custom search terms', searchBody);
     charitiesDB.searchCustomCauses(searchBody, function(err, results) {
       if (err) {
         console.log(err);
         res.send(err);
+      } else if (!results) {
+        res.send();
       } else {
         console.log(results);
         results.forEach(function(item) {
@@ -257,7 +256,6 @@ app.post('/charitySearch', function(req, res) {
           delete item.mission_statement;
           item.category = helperFunctions.convertCategoryToString(item.category);
         });
-        console.log(results);
         res.send(results);
       };
     });
@@ -273,7 +271,6 @@ app.post('/charitySearch', function(req, res) {
         console.log(err);
         res.send(err);
       } else {
-        console.log('sending', body.data);
         res.send(JSON.stringify(body.data));
       }
     });
@@ -281,7 +278,6 @@ app.post('/charitySearch', function(req, res) {
 });
 
 app.post('/userCharities', function(req, res) {
-  console.log('BLAHBLHAHLAHSDFHASDF', req.body.email);
   dbHelpers.getIDs(req.body.email, '', function(idObj) {
     var id_users = idObj.id_users;
     console.log('SELECT * FROM (SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\') AS uc \

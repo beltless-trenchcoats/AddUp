@@ -265,6 +265,7 @@ class UserProfile extends Component {
     });
   }
 
+<<<<<<< e3914069028b5dbe6eaa0e24a97536e080b1ba1a
   newLimit(e) {
     this.setState({newMonthlyLimit: e.target.value});
   }
@@ -281,6 +282,13 @@ class UserProfile extends Component {
         monthlyLimitSet: true
       });
     });
+=======
+  setMontlyLimit(e) {
+    e.preventDefault();
+    console.log('MONTHLY LIMIT IS');
+    // console.log($(e.target).closest('input'));
+    console.log($('.limitInput').value);
+>>>>>>> (feat) Redesign UserProfile
   }
 
   convertToReadableDate(date_time) {

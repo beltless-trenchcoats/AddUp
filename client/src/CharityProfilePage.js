@@ -23,7 +23,8 @@ class CharityProfilePage extends Component {
 
   componentWillMount () {
     axios.post('http://localhost:8080/charityInfo', {
-      charityId: this.state.charityId
+      charityId: this.state.charityId,
+      type: this.props.params.type
     })
     .then((res) => {
       this.setState({charity: res.data})
@@ -76,7 +77,7 @@ class CharityProfilePage extends Component {
               <h2 className="charityName">{this.state.charity.name}</h2>
               <div className="charityType">{this.state.charity.nteeType}</div>
               <div className="charityActivities">{this.state.charity.activity1}, {this.state.charity.activity2}, {this.state.charity.activity3}</div>
-              <h3> Total AddUp+ Donations to Date: </h3>
+              <h3> Total AddUp+ Donations to Date: ${this.state.charity.total_donated}</h3>
 
               {this.state.selected ? <Button onClick={this.openModal} className="removeCharity" bsStyle="primary">Remove from My Charities</Button> : <Button onClick={this.openModal} className="addCharity" bsStyle="primary">Add to My Charities</Button>}
             </Row>

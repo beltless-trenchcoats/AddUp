@@ -3,10 +3,10 @@ var Promise = require('bluebird');
 
 exports.createCharity = Promise.promisify(function(values, callback) {
   if (values.id_owner) {
-    var queryText = 'SELECT name FROM charities \
+    var queryText = 'SELECT name, id FROM charities \
       WHERE name = \'' + values.name + '\' AND id_owner = \'' + values.id_owner + '\';'
   } else {
-    var queryText = 'SELECT name FROM charities \
+    var queryText = 'SELECT name, id FROM charities \
       WHERE name = \'' + values.name + '\';'
   }
   console.log(queryText);
@@ -69,6 +69,19 @@ exports.updateCharity = function(charityID, updateFields, callback) {
       callback(err);
     } else {
       callback('success');
+    }
+  });
+};
+
+exports.searchByEIN = function(ein, callback) {
+  db.query({
+    text: 'SELECT * FROM charities WHERE ein = \'' + ein + '\';'
+  },
+  function(err, result) {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, result.rows);
     }
   });
 };
@@ -175,9 +188,9 @@ exports.searchCustomCauses = function(searchFields, callback) {
 //     console.log('ERROR', err);
 //   });
 
-// exports.createCharity({name: 'Save the Poops', category: 'A', ein: 'eggsgsgs', donation_url: 'www.eggs.com', city: 'San Francisco',
+// exports.createCharity({name: 'SAVE THE CHARITY IDS34', category: 'A', ein: 'po3oppoppp', donation_url: 'www.eggs.com', city: 'San Francisco',
 //   state: 'CA', zip: '94114', mission_statement: 'To eat every frog in the fridge'}, function(err, response) {
-//   console.log(response);
+//   console.log('THIS IS GOING TO BE THE RESPONSE ', response);
 // });
 
 //custom cause

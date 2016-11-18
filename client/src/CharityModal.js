@@ -29,6 +29,9 @@ class CharityModal extends Component {
         })
         .then((res) => {
           this.props.currentCharity.percentage = 0;
+          if (res.data === 'NO RECORDS') {
+            res.data = [];
+          }
           res.data.push(this.props.currentCharity)
           console.log('currentcharity!', this.props.currentCharity)
           this.setState({

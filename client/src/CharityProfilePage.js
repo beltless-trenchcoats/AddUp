@@ -14,6 +14,7 @@ class CharityProfilePage extends Component {
       charityId: this.props.params.id,
       charity: {},
       basicCharityInfo: {},
+      databaseCharityInfo: {},
       showModal: false,
       selected: false //TODO: Add flag to change button depending on if charity is already selected
     }
@@ -32,6 +33,7 @@ class CharityProfilePage extends Component {
     .catch((err) => {
       console.log(err)
     })
+
     axios.post('http://localhost:8080/charitySearch', {
       ein: this.state.charityId
     })
@@ -42,6 +44,17 @@ class CharityProfilePage extends Component {
       res.data[0].donation_url = res.data[0].donationUrl;
       res.data[0].mission_statement = res.data[0].missionStatement;
       this.setState({basicCharityInfo: res.data[0]})
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+
+    axios.post('http://localhost:8080/api/charity/savedInfo', {
+      charityId: this.state.charityId
+    })
+    .then((res) => {
+      this.setState({databaseCharityInfo: res.data})
+      console.log(this.state.databaseCharityInfo)
     })
     .catch((err) => {
       console.log(err)

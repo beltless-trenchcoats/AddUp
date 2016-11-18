@@ -7,6 +7,7 @@ class CharityModalEntry extends Component {
     super(props);
     this.state = {
       style: 'primary',
+      remove: false,
       charityId: this.props.charity.id,
       name: this.props.charity.name,
       totalDonated: this.props.charity.total_donated,
@@ -23,22 +24,21 @@ class CharityModalEntry extends Component {
   prepForRemove () {
     var e = {target: {value: 0}}
     this.state.style === 'primary' ? this.setState({ style: 'danger' }) : this.setState({ style: 'primary' })
-    this.handleChange(e)
+    this.setState({ remove: !this.state.remove }, () => this.handleChange(e));
   }
 
   handleChange (e) {
     let updatedValue = Number(e.target.value)
     let lastValue = this.state.percentage
-    console.log('CLICK')
     this.setState({ percentage: updatedValue })
     if (this.state.firstClick) {
       this.setState({firstClick : false})
       this.props.updateTotal.call(null, -lastValue)
       this.props.updateTotal.call(null, updatedValue)
     } else {
-      updatedValue <= lastValue ? this.props.updateTotal.call(null, updatedValue-lastValue) : this.props.updateTotal.call(null, lastValue-updatedValue)
+      updatedValue <= lastValue ? this.props.updateTotal.call(null, updatedValue-lastValue) : this.props.updateTotal.call(null, updatedValue-lastValue)
     }
-    this.props.save(this.props.index, this.state.charityId, (this.state.style==='danger'), updatedValue);
+    this.props.save(this.props.index, this.state.charityId, this.state.remove, updatedValue);
   }
 
   render() {
@@ -47,7 +47,7 @@ class CharityModalEntry extends Component {
         <td>{this.props.charity.name}</td>
         <td>${this.props.charity.total_donated || 0}</td>
         <td>
-          <FormControl componentClass="select" onChange={this.handleChange} disabled={this.state.style==='danger'}>
+          <FormControl componentClass="select" onChange={this.handleChange} disabled={this.state.remove}>
             <option value={this.state.percentage}>{(this.state.percentage*100) + '%'}</option>
             <option value="1">100%</option>
             <option value="0.9">90%</option>

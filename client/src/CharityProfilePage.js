@@ -13,6 +13,7 @@ class CharityProfilePage extends Component {
     this.state = {
       charityId: this.props.params.id,
       charity: {},
+      basicCharityInfo: {},
       showModal: false,
       selected: false //TODO: Add flag to change button depending on if charity is already selected
     }
@@ -26,6 +27,20 @@ class CharityProfilePage extends Component {
     })
     .then((res) => {
       this.setState({charity: res.data})
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    axios.post('http://localhost:8080/charitySearch', {
+      ein: this.state.charityId
+    })
+    .then((res) => {
+      console.log('basic info', res.data[0])
+      res.data[0].name = res.data[0].charityName;
+      res.data[0].zip = res.data[0].zipCode;
+      res.data[0].donation_url = res.data[0].donationUrl;
+      res.data[0].mission_statement = res.data[0].missionStatement;
+      this.setState({basicCharityInfo: res.data[0]})
     })
     .catch((err) => {
       console.log(err)
@@ -107,7 +122,8 @@ class CharityProfilePage extends Component {
         <CharityModal 
           show={this.state.showModal} 
           onHide={this.closeModal} 
-          currentCharity={this.state.charity} 
+          currentCharity={this.state.basicCharityInfo} 
+
         />
 
       </Header>

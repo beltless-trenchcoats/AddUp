@@ -123,4 +123,4 @@ module.exports = {
   distributeDonation: distributeDonation
 };
 
-processDailyTransactions();
+// processDailyTransactions();

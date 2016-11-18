@@ -33,7 +33,9 @@ class UserProfile extends Component {
       newPassword1: undefined,
       newPassword2: undefined,
       newEmail1: undefined,
-      newEmail2: undefined
+      newEmail2: undefined,
+      newEmailMatch: true,
+      newPasswordMatch: true
     }
     this.openEmail = this.openEmail.bind(this);
     this.closeEmail = this.closeEmail.bind(this);
@@ -45,6 +47,7 @@ class UserProfile extends Component {
     this.checkEmail = this.checkEmail.bind(this);
     this.newEmail1 = this.newEmail1.bind(this);
     this.newEmail2 = this.newEmail2.bind(this);
+    this.renderEmailChange = this.renderEmailChange.bind(this);
   }
 
   componentWillMount() {
@@ -172,6 +175,7 @@ class UserProfile extends Component {
   checkPassword (e) {
     e.preventDefault();
     if(this.state.newPassword1 === this.state.newPassword2) {
+      this.setState({ newPasswordMatch: true});
       this.closePassword();
       axios.post('http://localhost:8080/api/user/updateUser', {
         email: this.state.userSession.email,
@@ -179,34 +183,42 @@ class UserProfile extends Component {
         newPassword: this.state.newPassword1
       })
       .then(function(res) {
-        console.log('res ', res);
+        console.log('Response in checkPassword ', res);
       })
       .catch(function(err) {
         console.log('error in checkPassword POST ', err);
       })
     } else {
-      console.log('Passwords dont match!');
+      this.setState({ newPasswordMatch: false });
     }
     this.setState({newPassword1: undefined, newPassword2: undefined});
+  }
+
+  renderEmailChange () {
+    let userSession = this.state.userSession;
+    userSession.email = this.state.newEmail1;
+    this.setState({ userSession: userSession});
   }
 
   checkEmail(e) {
     e.preventDefault();
     if(this.state.newEmail1 === this.state.newEmail2) {
+      this.setState({ newEmailMatch: true });
       this.closeEmail();
+      this.renderEmailChange.call(this);
       axios.post('http://localhost:8080/api/user/updateUser', {
         email: this.state.userSession.email,
         newEmail1: this.state.newEmail1,
         newPassword: this.state.newPassword1
       })
       .then(function(res) {
-        console.log('res ', res);
+        console.log('Response in checkEmail ', res);
       })
       .catch(function(err) {
         console.log('error in checkEmail POST ', err);
       })
     } else {
-      console.log('Emails dont match!');
+      this.setState({ newEmailMatch: false });
     }
     this.setState({newEmail1: undefined, newEmail2: undefined});
   }
@@ -274,6 +286,7 @@ class UserProfile extends Component {
                       onClick={this.checkEmail}
                       >Change Email
                     </Button>
+                    {this.state.newEmailMatch ? null : <div className="emailMatchError">Email's do not match</div>}
                     <Button className="modalButton" onClick={this.closeEmail}>Cancel</Button>
 
                   </form>
@@ -312,6 +325,7 @@ class UserProfile extends Component {
                       onClick={this.checkPassword}
                       >Change Password
                     </Button>
+                    {this.state.newPasswordMatch ? null : <div className="matchError">Password's do not match</div>}
                     <Button className="modalButton" onClick={this.closePassword}>Cancel</Button>
                   </form>
 

@@ -223,10 +223,6 @@ app.get('/logout', function(req, res) {
 //   "state": "CA"
 // }
 app.post('/charitySearch', function(req, res) {
-<<<<<<< e5b79205ba7d8f5d9005af1a957dfa81118e22db
-  console.log('search terms', req.body);
-=======
->>>>>>> Finished setup for modal, now just complete Remove
   if (req.body.type === 'Custom Cause') {
     var keyWordMap = {
       searchTerm: 'name',

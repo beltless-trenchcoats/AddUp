@@ -106,7 +106,8 @@ app.post('/authenticate', function(req, res) {
           bank_digits: bank_digits
         },
           function(result) {
-            res.sendStatus(201);
+            //Send back the bank digits to PlaidLink.js to display on the UserProfile page
+            res.status(201).send(bank_digits);
           })
       })
       .catch(err => console.log('error authenicating bank ', err));

@@ -23,8 +23,8 @@ class PlaidLinkComponent extends Component {
         'public_token': this.state.public_token,
         'institution_name': this.state.plaidData.institution.name
       })
-    .then(() => {
-      this.props.successFunc();
+    .then((resp) => {
+      this.props.successFunc(this.state.plaidData.institution.name, resp.data);
     });
   }
 

@@ -339,6 +339,16 @@ app.post('/charityInfo', function (req, res) {
   }
 });
 
+app.post('/api/charity/savedInfo', function (req, res) {
+  charitiesDB.searchByEIN(req.body.ein, function (err, data) {
+    if (err) {
+      res.send(err)
+    } else {
+      res.send(data[0])
+    }
+  })
+})
+
 app.post('/userfield', function(req, res) {
   db.getUserFields(req.body.email, function(err, data) {
     if(err) {
@@ -362,6 +372,9 @@ app.post('/api/user/updateCharity', function(req, res) {
       })
     } else {
       charity.id = charity.id || null;
+      // charitiesDB.getCharityFields(charity.id, function (err, data) {
+
+      // })
       userCharitiesDB.getUserCharityFields(req.body.email, charity.id, function (err, data) {
         console.log('DATA!@#!@#',data)
         if(err) {

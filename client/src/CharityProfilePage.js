@@ -13,20 +13,34 @@ class CharityProfilePage extends Component {
     this.state = {
       charityId: this.props.params.id,
       charity: {},
-      selected: false,
-      showModal: false
+      basicCharityInfo: {},
+      showModal: false,
+      selected: false //TODO: Add flag to change button depending on if charity is already selected
     }
-    this.updateCharities = this.updateCharities.bind(this)
     this.openModal = this.openModal.bind(this)
     this.closeModal = this.closeModal.bind(this)
   }
 
-  componentDidMount () {
+  componentWillMount () {
     axios.post('http://localhost:8080/charityInfo', {
       charityId: this.state.charityId
     })
     .then((res) => {
       this.setState({charity: res.data})
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    axios.post('http://localhost:8080/charitySearch', {
+      ein: this.state.charityId
+    })
+    .then((res) => {
+      console.log('basic info', res.data[0])
+      res.data[0].name = res.data[0].charityName;
+      res.data[0].zip = res.data[0].zipCode;
+      res.data[0].donation_url = res.data[0].donationUrl;
+      res.data[0].mission_statement = res.data[0].missionStatement;
+      this.setState({basicCharityInfo: res.data[0]})
     })
     .catch((err) => {
       console.log(err)
@@ -38,10 +52,6 @@ class CharityProfilePage extends Component {
   }
   closeModal() {
     this.setState({ showModal: false });
-  }
-
-  updateCharities () {
-
   }
 
   /*
@@ -60,6 +70,7 @@ class CharityProfilePage extends Component {
     return (
       <Header>
         <div className="charityProfilePage">
+
           <Grid>
             <Row>
               <h2 className="charityName">{this.state.charity.name}</h2>
@@ -108,7 +119,12 @@ class CharityProfilePage extends Component {
           </Grid>
         </div>
 
-        <CharityModal show={this.state.showModal} onHide={this.closeModal} currentCharity={this.state.charity} />
+        <CharityModal 
+          show={this.state.showModal} 
+          onHide={this.closeModal} 
+          currentCharity={this.state.basicCharityInfo} 
+
+        />
 
       </Header>
     );

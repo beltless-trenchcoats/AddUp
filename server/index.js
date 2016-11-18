@@ -223,7 +223,10 @@ app.get('/logout', function(req, res) {
 //   "state": "CA"
 // }
 app.post('/charitySearch', function(req, res) {
+<<<<<<< e5b79205ba7d8f5d9005af1a957dfa81118e22db
   console.log('search terms', req.body);
+=======
+>>>>>>> Finished setup for modal, now just complete Remove
   if (req.body.type === 'Custom Cause') {
     var keyWordMap = {
       searchTerm: 'name',
@@ -278,7 +281,7 @@ app.post('/charitySearch', function(req, res) {
   }
 });
 
-app.post('/userCharities', function(req, res) {
+app.post('/api/user/charities/donationInfo', function(req, res) {
   dbHelpers.getIDs(req.body.email, '', function(idObj) {
     var id_users = idObj.id_users;
     console.log('SELECT * FROM (SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\') AS uc \
@@ -292,10 +295,6 @@ app.post('/userCharities', function(req, res) {
         if (err) {
           res.send(err);
         } else if (results.rowCount > 0) {
-          // console.log(results.rows);
-          // var sendResults = results.rows.filter(function(item) {
-          //   return (item.id_users === ''+id_users);
-          // });
           res.send(results.rows);
         } else {
           res.send('NO RECORDS');
@@ -322,15 +321,59 @@ app.post('/charityInfo', function (req, res) {
   });
 });
 
-app.post('/addcharity', function(req, res) {
-  var percentage = req.body.percentage || 1;
-  userCharitiesDB.insert(req.body.email, req.body.charity, percentage, function(err, response) {
+app.post('/userfield', function(req, res) {
+  db.getUserFields(req.body.email, function(err, data) {
     if(err) {
-      res.send(err);
+      res.send(err)
     } else {
-      res.send(200);
+      res.send(data[0]);
+    }
+  });
+})
+
+app.post('/api/user/updateCharity', function(req, res) {
+  req.body.charities.forEach(function (charity) {
+    console.log('CHARITYCHARITY', charity)
+    if (charity.remove) {
+      userCharitiesDB.remove(req.body.email, charity.id, function (err, data) {
+        if (err) {
+          console.log(err)
+        } else {
+          console.log('Charity Removed: ', data)
+        }
+      })
+    } else {
+      charity.id = charity.id || null;
+      userCharitiesDB.getUserCharityFields(req.body.email, charity.id, function (err, data) {
+        console.log('DATA!@#!@#',data)
+        if(err) {
+          console.log(err)
+        } else if (!charity.id) {
+          console.log('null data')
+          charitiesDB.createCharity(charity, function (err, data) {
+            console.log("DATATTATATATATATATATAT", charity)
+            console.log('DATA1', data[0].id)
+            userCharitiesDB.insert(req.body.email, data[0].id, charity.percentage, function (err, data) {
+              if (err) {
+                console.log(err)
+              } else {
+                console.log('Charity Added: ', data)
+              }
+            })
+          })
+        } else {
+          userCharitiesDB.updatePercentage(req.body.email, charity.id, charity.percentage, function (err, data) {
+            if (err) {
+              console.log(err)
+            } else {
+              console.log('Charity Updated: ', data)
+            }
+          })
+        }
+      })
     }
   })
+  res.sendStatus(200)
 })
 
 app.post('/api/user/info', function(req, res) {

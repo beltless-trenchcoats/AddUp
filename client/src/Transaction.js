@@ -4,9 +4,9 @@ import React, { Component } from 'react';
 
 
 class Transaction extends Component {
-  constructor(props) {
-    super(props)
-  }
+  // constructor(props) {
+  //   super(props)
+  // }
 
   convertToReadableDate(date_time) {
     var date = new Date(date_time);

@@ -45,22 +45,22 @@ class App extends Component {
           </div>
 
           <div className="infoSections">
-          
+
             <Col xs={6} md={4} className="infoColumn">
               <Panel header="Find Charities and Causes" bsStyle="primary">
-                <p>Find your perfect charity with over 92357923875 to choose from.</p>
+                <p>With over 1.5 million charities available to search through you can truly find a cause that you are passionate about, or create your own cause.</p>
               </Panel>
             </Col>
 
             <Col xs={6} md={4} className="infoColumn">
               <Panel header="Securely Link your Accounts" bsStyle="primary">
-                <p>We use Plaid and Stripe to securely link your accounts. We never store your account information.</p>
+                <p>Connect the accounts you already use everyday. We use Plaid and Stripe to securely link your accounts. We never store your account information.</p>
               </Panel>
             </Col>
 
             <Col xs={6} md={4} className="infoColumn">
-              <Panel header="Set Monthly Limits" bsStyle="primary">
-                <p>Set monthly donation limits so you don't have to worry about going overboard.</p>
+              <Panel header="Donate Your Change" bsStyle="primary">
+                <p>Use your credit or debit card and we round-up your purchase to the nearest dollar. Set monthly limits so that you can ensure your donations fit your budget. </p>
               </Panel>
             </Col>
 

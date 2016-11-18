@@ -102,34 +102,6 @@ h1 {
   margin-bottom: 10px;
 }
 
-.profileField {
-  width: 100%;
-  position: relative;
-  margin-top: 10px;
-}
-
-.profileField button, .profileField span {
-  display: inline-block;
-}
-
-.profileField span {
-  font-size: 20px;
-  margin-right: 10px;
-  color: #333;
-}
-
-.profileField .label {
-  width: 120px;
-  text-align: left;
-  color: #337AB7;
-}
-
-.profileField button {
-  position: absolute;
-  right: 0px;
-  bottom: 0px;
-}
-
 .profilePage {
   top: 55px;
   position: relative;
@@ -145,35 +117,89 @@ h1 {
   margin-right: 10px;
 }
 
-.userBankInfo, .userProfile {
-  position: relative;
-  height: 35vh;
-  margin: 50px 20px 0px 20px;
-  background-color: #f1f1f1;
-  display: flex;
-  flex-direction: column;
-  justify-content: 'space-around';
+.row {
+  padding: 20px 10px 30px 10px;
 }
 
-.userBankInfo {
+.col {
+  // border: 1px solid red;
+}
+
+.welcome {
+  font-size: 45px;
+  margin-bottom: 30px;
+}
+
+.stepBox, .userProfile {
+  position: relative;
+  background-color: #f1f1f1;
+  padding: 5px 20px 0px 10px;
+}
+
+.userProfile {
+  height: 250px;
+  width: 55vw;
+  border: 1px solid #f1f1f1;
+  padding: 20px;
+  padding-right: 15vw;
+  margin-top: 30px;
+}
+
+.stepBox {
+  height: 210px;
+  padding-top: 20px;
+  padding-left: 20px;
+}
+
+.profileField {
+  width: 100%;
+  height: 40px;
+}
+
+.profileField .label {
+  width: 170px;
+  text-align: left;
+  float: left;
+  color: #337AB7;
+}
+
+.profileField span {
+  font-size: 20px;
+  color: #333;
+}
+
+.profileField button {
+  float: right;
+}
+
+.stepBox {
+  text-align: center;
   background-color: #BDD4E7;
   color: #001328;
 }
 
-.userBankInfo .linked {
+.stepBox .linked {
   color: green;
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  font-size: 20px;
+  float: right;
+  font-size: 30px;
+  line-height: 20px;
 }
 
-.userBankInfo .account {
-  margin-left: 20px;
+.stepBox .linkText {
+  font-size: 40px;
+}
+
+.stepBox .stepText {
+  clear: both;
+  font-size: 40px;
+  margin: auto 0;
+}
+
+.stepBox .account {
   font-size: 24px;
 }
 
-.userBankInfo div button {
+.stepBox div button {
   height: 50px;
   width: 150px;
   position: absolute;
@@ -186,8 +212,22 @@ h1 {
 }
 
 
-.userBankInfo div button span {
+.stepBox div button span {
   font-size: 20px;
+}
+
+.step {
+  font-size: 24px;
+}
+
+.limit {
+  font-size: 20px;
+}
+
+#limitInput {
+  display: inline;
+  margin-right: 5px;
+  width: 200px;
 }
 
 .userCharitiesContainer {
@@ -241,7 +281,7 @@ a:hover .userCharity{
   color: #353F49;
 }
 
-.userCharity .completed {
+.userCharity .goalReached {
   position: absolute;
   top: 10px;
   right: 10px;

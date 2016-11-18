@@ -496,7 +496,7 @@ class UserProfile extends Component {
                 <h1>Your Charities</h1>
                 <div className='userCharities'>
                 {
-                  this.state.charities.sort((a, b) => b.user_donation_total - a.user_donation_total).map(charity =>
+                  this.state.charities.sort((a, b) => b.percentage - a.percentage).map(charity =>
                     <a href={'/charity/' + charity.ein}>
                       <div className='userCharity'>
                         <div className='title'>{charity.name}</div>

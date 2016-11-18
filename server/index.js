@@ -301,20 +301,42 @@ app.post('/api/user/charities/donationInfo', function(req, res) {
 });
 
 app.post('/charityInfo', function (req, res) {
-  var options = {
-    method: 'post',
-    body: req.body,
-    json: true,
-    url: 'http://data.orghunter.com/v1/charitypremium?user_key=' + apiKeys.orgHunter + '&ein=' + req.body.charityId
-  };
-  request(options, function (err, result, body) {
-    if (err) {
-      console.log(err);
-      res.send(err);
-    } else {
-      res.send(JSON.stringify(body.data))
-    }
-  });
+  if (req.body.type === 'charity') {
+    var options = {
+      method: 'post',
+      body: {charityId: req.body.charityId},
+      json: true,
+      url: 'http://data.orghunter.com/v1/charitypremium?user_key=' + apiKeys.orgHunter + '&ein=' + req.body.charityId
+    };
+    request(options, function (err, result, body) {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      } else {
+        charitiesDB.searchByEIN(req.body.charityId, function(err, result) {
+          if (err) {
+            console.log(err);
+          } else {
+            var toSend = body.data;
+            toSend.total_donated = result[0] ? result[0].total_donated : 0;
+            console.log('sending', toSend);
+            res.send(JSON.stringify(toSend));
+          }
+        });
+      }
+    });   
+  } else {
+    charitiesDB.getCharityFields(req.body.charityId, function(err, result) {
+      if (err) {
+        console.log(err);
+      } else {
+        var toSend = result[0];
+        toSend.category = helperFunctions.convertCategoryToString(toSend.category);
+        console.log(toSend);
+        res.send(toSend);
+      }
+    });
+  }
 });
 
 app.post('/userfield', function(req, res) {

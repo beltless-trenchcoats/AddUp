@@ -256,10 +256,9 @@ class UserProfile extends Component {
     if(this.state.newEmail1 === this.state.newEmail2) {
       this.setState({ newEmailMatch: true });
       this.closeEmail();
-      this.renderEmailChange.call(this);
       axios.post('http://localhost:8080/api/user/updateUser', {
         email: this.state.userSession.email,
-        newEmail1: this.state.newEmail1,
+        newEmail: this.state.newEmail1,
         newPassword: this.state.newPassword1
       })
       .then(function(res) {
@@ -271,6 +270,7 @@ class UserProfile extends Component {
     } else {
       this.setState({ newEmailMatch: false });
     }
+    this.renderEmailChange.call(this);
     this.setState({newEmail1: undefined, newEmail2: undefined});
   }
 

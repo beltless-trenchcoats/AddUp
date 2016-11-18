@@ -5,8 +5,8 @@ exports.insert = function(email, charityID, percentage, callback) {
   helpers.getIDs(email, '', function(idObj) {
     var id_users = idObj.id_users;
     var id_charities = charityID;
-    console.log('SELECT * FROM usersCharities \
-        WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';');
+    // console.log('SELECT * FROM usersCharities \
+    //     WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';');
     db.query({
       text: 'SELECT * FROM usersCharities \
         WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';'
@@ -39,8 +39,8 @@ exports.remove = function(email, charityID, callback) {
   helpers.getIDs(email, '', function(idObj) {
     var id_users = idObj.id_users;
     var id_charities = charityID;
-    console.log('DELETE FROM usersCharities \
-      WHERE id_users =' + id_users + ' AND id_charities = ' + id_charities + ';');
+    // console.log('DELETE FROM usersCharities \
+    //   WHERE id_users =' + id_users + ' AND id_charities = ' + id_charities + ';');
     db.query({
       text: 'DELETE FROM usersCharities \
       WHERE id_users =' + id_users + ' AND id_charities = ' + id_charities + ';'
@@ -59,8 +59,8 @@ exports.updatePercentage = function(email, charityID, percentage, callback) {
   helpers.getIDs(email, '', function(idObj) {
     var id_users = idObj.id_users;
     var id_charities = charityID;
-    console.log('SELECT * FROM usersCharities \
-        WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';');
+    // console.log('SELECT * FROM usersCharities \
+    //     WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';');
     db.query({
       text: 'SELECT * FROM usersCharities \
         WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';'

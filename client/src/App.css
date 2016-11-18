@@ -14,9 +14,9 @@ body {
 
 /*
 *  HEADER AND MODALS
-*/ 
+*/
 .App-logo, .name {
-  height: 30px;
+  height: 145%;
   float: left;
 }
 
@@ -51,7 +51,7 @@ body {
 
 .modalButton {
   margin: 0 5px;
-} 
+}
 
 /*
 * HOMEPAGE BODY

@@ -1,0 +1,336 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.App {
+  text-align: center;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
+  color: #333;
+}
+
+
+/*
+*  HEADER AND MODALS
+*/
+.App-logo, .name {
+  height: 145%;
+  float: left;
+}
+
+.App-header {
+  z-index: 1000;
+  width: 100%;
+  background-color: #337AB7;
+  height: 55px;
+  padding: 5px;
+  color: white;
+  position: absolute;
+}
+.logo, .name {
+  font-size: 1.4em;
+  font-weight: 800;
+  color: white;
+}
+
+.userButtons {
+  float: right;
+  height: 55px;
+}
+.loginButton, .signupButton, .logoutButton, .userIcon, .navButton{
+  margin: 5px;
+}
+
+.userProfileLink {
+  font-weight: 800;
+  color: white;
+  position: relative;
+}
+
+.modalButton {
+  margin: 0 5px;
+}
+
+/*
+* HOMEPAGE BODY
+*/
+.imageDiv {
+  height: 400px;
+}
+.homeImage {
+  width: 100%;
+  height: auto;
+  top: 0;
+  opacity: 0.8;
+  filter: blur(6px);
+  -moz-filter: blur(8px);
+  -webkit-filter: blur(8px);
+  -o-filter: blur(8px);
+}
+.jumbotron {
+  top: 20%;
+  border-radius: 8px;
+  background: #eee;
+  word-wrap: break-word;
+  width: 50%;
+  padding: 5px;
+  font-size: 12px;
+  position: absolute;
+  margin-left: 20px;
+}
+
+/*
+* USER PROFILE PAGE
+*/
+
+.shadowbox {
+  border-radius: 4px;
+  box-shadow: 10px 10px 8px -10px rgba(0,0,0,0.4);
+  background-color: white;
+}
+
+h1 {
+  padding: 10px 20px;
+  font-size: 45px;
+  margin-top: 30px;
+}
+
+.error {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.profileField {
+  width: 100%;
+  position: relative;
+  margin-top: 10px;
+}
+
+.profileField button, .profileField span {
+  display: inline-block;
+}
+
+.profileField span {
+  font-size: 20px;
+  margin-right: 10px;
+  color: #333;
+}
+
+.profileField .label {
+  width: 120px;
+  text-align: left;
+  color: #337AB7;
+}
+
+.profileField button {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+}
+
+.profilePage {
+  top: 55px;
+  position: relative;
+}
+
+.userProfileLink, .logoutButton {
+  display: inline-block;
+}
+
+.userProfileLink {
+  color: #fff;
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.userBankInfo, .userProfile {
+  position: relative;
+  height: 35vh;
+  margin: 50px 20px 0px 20px;
+  background-color: #f1f1f1;
+  display: flex;
+  flex-direction: column;
+  justify-content: 'space-around';
+}
+
+.userBankInfo {
+  background-color: #BDD4E7;
+  color: #001328;
+}
+
+.userBankInfo .account {
+  margin-left: 20px;
+  font-size: 24px;
+}
+
+.userBankInfo div button {
+  height: 50px;
+  width: 150px;
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  border-radius: 5px;
+  background-color: #eee;
+  border: 0px;
+  box-shadow: inset -1px -1px 15px 0px rgba(200,200,200,0.75);
+}
+
+
+.userBankInfo div button span {
+  font-size: 20px;
+}
+
+.userCharitiesContainer {
+  border: 2px solid #d5e0ed;
+  width: 90vw;
+  margin-top: 40px;
+}
+
+.userCharitiesContainer h1{
+  margin-top: 20px;
+  font-size: 48px;
+  text-align: center
+}
+
+.userCharities {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.userCharities a:hover {
+  text-decoration: none;
+}
+
+a:hover .userCharity{
+  background-color: #eee;
+}
+
+.userCharity {
+  position: relative;
+  width: 480px;
+  background-color: #f9f9f9;
+  margin: 20px 30px;
+  padding: 20px 0 70px 0;
+}
+
+.dim {
+  opacity: 0.5;
+}
+
+.userCharity div {
+  margin: 0 20px;
+}
+
+.userCharity .title {
+  width: 100%;
+  margin-top: 10px;
+  font-size: 40px;
+  color: #353F49;
+}
+
+.userCharity .completed {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  color: green;
+}
+
+.userCharity .amount, .userCharity .since {
+  position: absolute;
+  bottom: 10px;
+}
+
+.userCharity .amount {
+  font-size: 32px;
+  color: #ff7f50;
+}
+
+.userCharity .since {
+  right: 20px;
+  font-size: 20px;
+  font-style: italic;
+  color: #aaa;
+}
+
+.userTransactionsContainer {
+  width: 90vw;
+  background-color: #eee;
+  padding: 20px;
+  margin-top: 40px;
+}
+
+.transactionHistory {
+  width: 100%;
+  height: 40vh;
+  margin-top: 20px;
+}
+
+/*
+* SEARCH PAGE
+*/
+.searchPage {
+  top: 55px;
+  width: 100%;
+  position: relative;
+}
+
+.charityCard {
+  width: 80%;
+  margin: 10px auto;
+}
+
+.noResults {
+  margin: 30px auto;
+  text-align: center;
+  color: lightgrey;
+}
+/*
+* CHARITY PROFILE PAGE
+*/
+.charityProfilePage {
+  top: 55px;
+  position: relative;
+  padding: 15px;
+  width: 80%;
+}
+
+.addCharity, .removeCharity {
+  float: right;
+  position: fixed;
+  top: 85px;
+  right: 15px;
+}
+
+.addressHeader {
+  font-weight: 800;
+}
+
+.address {
+  font-size: 0.8em;
+  font-style: italic;
+  color: grey;
+}
+
+.charityClassification {
+}
+
+.charityLocation {
+}
+
+.corpInfo {
+  font-size: 0.8em;
+  font-style: italic;
+  color: grey;
+}
+.percentageError {
+  color: red;
+  font-size: 0.8em;
+  font-style: italic;
+  text-align: center;
+}

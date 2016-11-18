@@ -164,11 +164,23 @@ class UserProfile extends Component {
 
   submitCause() {
     var fields = this.state.addCustomCauseFields;
-    fields.private = this.state.causePrivacy;
+    fields.private = '' + this.state.causePrivacy;
     fields.id_owner = Number(this.state.userSession.id);
     fields.type = 'custom';
     fields.dollar_goal = Number(fields.dollar_goal);
     console.log('submitting', fields);
+    axios.post('http://localhost:8080/api/customCause/add', fields)
+      .then(res => {
+        console.log('response', res);
+        axios.post('http://localhost:8080/charitySearch', {
+          'id_owner': fields.id_owner,
+          'type': 'Custom Cause'
+          })
+          .then(response => {
+            this.setState({customCauses: response.data});
+          });
+      });
+    this.closeCause();
   }
 
   toggleModal () {

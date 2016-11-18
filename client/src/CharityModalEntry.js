@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, FormControl } from 'react-bootstrap';
+// import Promise from 'react-promise'
 
 class CharityModalEntry extends Component {
   constructor(props) {
@@ -21,22 +22,23 @@ class CharityModalEntry extends Component {
 
   prepForRemove () {
     var e = {target: {value: 0}}
-    this.handleChange(e)
     this.state.style === 'primary' ? this.setState({ style: 'danger' }) : this.setState({ style: 'primary' })
+    this.handleChange(e)
   }
 
   handleChange (e) {
     let updatedValue = Number(e.target.value)
     let lastValue = this.state.percentage
+    console.log('CLICK')
+    this.setState({ percentage: updatedValue })
     if (this.state.firstClick) {
       this.setState({firstClick : false})
       this.props.updateTotal.call(null, -lastValue)
       this.props.updateTotal.call(null, updatedValue)
     } else {
-      updatedValue <= lastValue ? this.props.updateTotal.call(null, updatedValue-lastValue) : this.props.updateTotal.call(null, updatedValue-lastValue)
+      updatedValue <= lastValue ? this.props.updateTotal.call(null, updatedValue-lastValue) : this.props.updateTotal.call(null, lastValue-updatedValue)
     }
-    this.setState( { percentage: updatedValue })
-    this.props.save(this.props.index, this.state.charityId, this.state.style, updatedValue);
+    this.props.save(this.props.index, this.state.charityId, (this.state.style==='danger'), updatedValue);
   }
 
   render() {

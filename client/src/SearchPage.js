@@ -214,6 +214,7 @@ class SearchPage extends Component {
             : this.state.searchResults.map((charity, i) =>
             <CharitySearchResult key={i} info={charity} />)}
           </div>
+          <div className="pagination">
             <ReactPaginate previousLabel={"previous"}
                nextLabel={"next"}
                breakLabel={<a href="">...</a>}
@@ -224,6 +225,7 @@ class SearchPage extends Component {
                containerClassName={"pagination"}
                subContainerClassName={"pages pagination"}
                activeClassName={"active"} />
+          </div>
         </div>
       </Header>
     );

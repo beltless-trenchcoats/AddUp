@@ -299,35 +299,6 @@ class UserProfile extends Component {
         <div className="profilePage">
 
           <Grid>
-            <Col>
-              <Button className="loginButton" bsSize="small" onClick={this.openCause.bind(this)}>Add a Cause</Button>
-            </Col>
-            <Row>
-            {
-              !this.state.hasLinkAccount ?
-              <Col className="userBankInfo shadowbox" md={5}>
-                <form id="some-id" method="POST" action="/authenticate"></form>
-                <text className='profileHeader'> </text>
-                <h1>Link an account to start donating!</h1>
-                <PlaidLinkComponent successFunc={this.displayLinkAccount.bind(this)}/>
-              </Col>
-              :
-              <Col className="userBankInfo shadowbox" md={5}>
-                <div className='linked'>Bank Account Linked &#10004;</div>
-                <h1>{this.state.bankInfo.bank_name}</h1>
-                <text className='account'>Account ending in: {this.state.bankInfo.bank_digits}</text>
-              </Col>
-            }
-
-              <Col className="userProfile shadowbox"md={6}>
-                <h1>{this.state.userSession.firstName} {this.state.userSession.lastName}</h1>
-                <div className='profileField'><span className='label'>Email:</span><span className='value'> {this.state.userSession.email}</span>
-                  {<Button className="loginButton" bsSize="small" onClick={this.openEmail}>Change</Button>}</div>
-                <div className='profileField'><span className='label'>Password: </span>
-                  {<Button className="loginButton" bsSize="small" onClick={this.openPassword}>Change</Button>}
-                </div>
-              </Col>
-            </Row>
             <Row className='row'>
               <Col className='col' md={6}>
                 <div className="userProfile shadowbox">
@@ -603,7 +574,7 @@ class UserProfile extends Component {
             </Row>
             <Row >
               <Col className="userCharitiesContainer" md={12}>
-                <Button className='addButton'>Add Your Own</Button>
+                <Button className='addButton' onClick={this.openCause.bind(this)}>Add Your Own</Button>
                 <h1>Causes You've Started</h1>
                 <div className='userCharities'>
                 {

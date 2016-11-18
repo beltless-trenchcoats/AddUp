@@ -119,6 +119,7 @@ h1 {
 
 .row {
   padding: 20px 10px 30px 10px;
+  // border: 1px solid brown;
 }
 
 .col {
@@ -138,7 +139,7 @@ h1 {
 
 .userProfile {
   height: 250px;
-  width: 55vw;
+  width: 60vw;
   border: 1px solid #f1f1f1;
   padding: 20px;
   padding-right: 15vw;
@@ -231,15 +232,23 @@ h1 {
 }
 
 .userCharitiesContainer {
+  position: relative;
   border: 2px solid #d5e0ed;
-  width: 90vw;
   margin-top: 40px;
+  padding-top: 30px;
+}
+
+.userCharitiesContainer .addButton {
+  position: absolute;
+  top: 50px;
+  right: 70px;
+  font-size: 25px;
 }
 
 .userCharitiesContainer h1{
   margin-top: 20px;
   font-size: 48px;
-  text-align: center
+  text-align: center;
 }
 
 .userCharities {
@@ -254,52 +263,67 @@ h1 {
   text-decoration: none;
 }
 
-a:hover .userCharity{
-  background-color: #eee;
+.userCharity {
+  width: 480px;
+  margin: 20px 30px;
 }
 
-.userCharity {
+.percentInfo {
+  display: inline-block;
+  width: 30%;
+  font-size: 40px;
+  text-align: center;
+  vertical-align: top;
+  color: #337AB7;
+}
+
+.charityInfo {
+  width: 70%;
+  min-height: 100px;
+  display: inline-block;
   position: relative;
-  width: 480px;
-  background-color: #f9f9f9;
-  margin: 20px 30px;
-  padding: 20px 0 70px 0;
+  padding-bottom: 50px;
+  background-color: #f7f7f7;
+}
+
+a:hover .charityInfo{
+  background-color: #eee;
 }
 
 .dim {
   opacity: 0.5;
 }
 
-.userCharity div {
+.charityInfo div {
   margin: 0 20px;
 }
 
-.userCharity .title {
-  width: 100%;
+.charityInfo .title {
+  // width: 100%;
   margin-top: 10px;
-  font-size: 40px;
+  font-size: 24px;
   color: #353F49;
 }
 
-.userCharity .goalReached {
+.charityInfo .goalReached {
   position: absolute;
   top: 10px;
   right: 10px;
-  font-size: 20px;
+  font-size: 16px;
   color: green;
 }
 
-.userCharity .amount, .userCharity .since {
+.charityInfo .amount, .charityInfo .since {
   position: absolute;
   bottom: 10px;
 }
 
-.userCharity .amount {
+.charityInfo .amount {
   font-size: 32px;
   color: #ff7f50;
 }
 
-.userCharity .since {
+.charityInfo .since {
   right: 20px;
   font-size: 20px;
   font-style: italic;

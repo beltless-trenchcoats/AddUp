@@ -2,10 +2,12 @@ var expect = require('chai').expect;
 var axios = require('axios');
 
 var Users = require('../server/db/controllers/users');
+var db = require('../server/db/config/db');
 
 describe('Server routes', function() {
 
   describe('/api/session/', function () {
+
 
     describe('User login', function() {
       it('should send response with user data for a user who exists in the db', function(done) {
@@ -25,7 +27,7 @@ describe('Server routes', function() {
       it('should not send response for user that does not exist in the db', function(done) {
         axios.post('http://localhost:8080/login',
         {
-          email: 'notanemail@gmail.com',
+          email: 'invalid@gmail.com',
           password: 'test'
         })
         .then(res => {
@@ -41,6 +43,13 @@ describe('Server routes', function() {
     });
 
     describe('User signup', function() {
+
+      before(function() {
+        db.query({
+          text: 'DELETE FROM users WHERE email=\'notarealemail@test.com\';'
+        })
+      });
+      
       it('should log in a user upon successful sign up', function(done) {
         axios.post('http://localhost:8080/signup',
         {

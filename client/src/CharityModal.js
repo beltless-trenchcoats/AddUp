@@ -28,13 +28,9 @@ class CharityModal extends Component {
           email: this.state.userEmail
         })
         .then((res) => {
-          // if (res.data === 'NO RECORDS') {
-          //   this.props.currentCharity.percentage = 0;
-          //   res.data = [this.props.currentCharity]
-          // }
-          // res.data.forEach((charity) => {
-
-          // })
+          this.props.currentCharity.percentage = 0;
+          res.data.push(this.props.currentCharity)
+          console.log('currentcharity!', this.props.currentCharity)
           this.setState({ 
             updatedCharities: res.data,
             charities: res.data })
@@ -49,7 +45,7 @@ class CharityModal extends Component {
   }
 
   updateTotal (percentage) {
-    this.setState( { donationTotal:  this.state.donationTotal += percentage})
+    this.setState( { donationTotal:  this.state.donationTotal += percentage} )
     console.log('total', this.state.donationTotal)
   }
 
@@ -82,6 +78,7 @@ class CharityModal extends Component {
         console.log(err)
       })
     this.close();
+    // this.forceUpdate();
   }
 
   render() {
@@ -111,7 +108,6 @@ class CharityModal extends Component {
                   updateTotal={this.updateTotal} 
                   save={ this.updateCharities }/>
               )}
-              {/*this.props.currentCharity ? <CharityModalEntry charity={this.props.currentCharity} save={ this.updateCharities }/> : null*/ }
             </tbody>
           </Table>
           

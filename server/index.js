@@ -99,9 +99,9 @@ app.post('/authenticate', function(req, res) {
             bank_digits = account.meta.number;
           }
         });
-        db.updateUser(userSession.email, { 
+        db.updateUser(userSession.email, {
           plaid_access_token: access_token,
-          stripe_bank_account_token: stripe_token, 
+          stripe_bank_account_token: stripe_token,
           bank_name: bank_name,
           bank_digits: bank_digits
         },

@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import PlaidLinkComponent from './PlaidLink';
-import { Col, Row, Grid, Table, Button, Modal, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import { Col, Row, Grid, Table, Button, Modal, Checkbox, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import axios from 'axios';
 import $ from "jquery";
 
@@ -35,7 +35,11 @@ class UserProfile extends Component {
       newEmail1: undefined,
       newEmail2: undefined,
       newEmailMatch: true,
-      newPasswordMatch: true
+      newPasswordMatch: true,
+      showCauseModal: false,
+      addCustomCauseFields: {},
+      causePrivacy: true,
+      showCauseModal: false
     }
     this.openEmail = this.openEmail.bind(this);
     this.closeEmail = this.closeEmail.bind(this);
@@ -48,6 +52,8 @@ class UserProfile extends Component {
     this.newEmail1 = this.newEmail1.bind(this);
     this.newEmail2 = this.newEmail2.bind(this);
     this.renderEmailChange = this.renderEmailChange.bind(this);
+    this.openCause = this.openCause.bind(this);
+    this.closeCause = this.closeCause.bind(this);
   }
 
   componentWillMount() {
@@ -73,6 +79,10 @@ class UserProfile extends Component {
           if (this.state.bankInfo.bank_name) {
             this.setState({hasLinkAccount: true});
           }
+          console.log('id ', res.data.id);
+          var userSession = this.state.userSession;
+          userSession.id = res.data.id;
+          this.setState({userSession: userSession});
           axios.post('http://localhost:8080/charitySearch', {
             'id_owner': res.data.id,
             'type': 'Custom Cause'
@@ -130,6 +140,47 @@ class UserProfile extends Component {
 
   newEmail2 (e) {
     this.setState({ newEmail2: e.target.value});
+  }
+
+  openCause () {
+    this.setState({ showCauseModal: true})
+  }
+
+  closeCause () {
+    this.setState({ showCauseModal: false})
+  }
+
+  onFieldChange(type, e) {
+    var fields = this.state.addCustomCauseFields;
+    fields[type] = e.target.value;
+    console.log('fields is now ', fields);
+    this.setState({addCustomCauseFields: fields});
+  }
+
+  toggleCausePrivacy() {
+    console.log('this is getting called privacy');
+    this.setState({causePrivacy: !(this.state.causePrivacy)});
+  }
+
+  submitCause() {
+    var fields = this.state.addCustomCauseFields;
+    fields.private = '' + this.state.causePrivacy;
+    fields.id_owner = Number(this.state.userSession.id);
+    fields.type = 'custom';
+    fields.dollar_goal = Number(fields.dollar_goal);
+    console.log('submitting', fields);
+    axios.post('http://localhost:8080/api/customCause/add', fields)
+      .then(res => {
+        console.log('response', res);
+        axios.post('http://localhost:8080/charitySearch', {
+          'id_owner': fields.id_owner,
+          'type': 'Custom Cause'
+          })
+          .then(response => {
+            this.setState({customCauses: response.data});
+          });
+      });
+    this.closeCause();
   }
 
   toggleModal () {
@@ -229,6 +280,9 @@ class UserProfile extends Component {
         <div className="profilePage">
 
           <Grid>
+            <Col>
+              <Button className="loginButton" bsSize="small" onClick={this.openCause.bind(this)}>Add a Cause</Button>
+            </Col>
             <Row>
             {
               !this.state.hasLinkAccount ?
@@ -254,6 +308,8 @@ class UserProfile extends Component {
                 </div>
               </Col>
             </Row>
+            {//ADD CAUSE MODAL
+            }
             <div>
               <Modal className="modal" show={this.state.showChangeEmailModal} onHide={this.closeEmail}>
                 <Modal.Header closeButton>
@@ -328,10 +384,112 @@ class UserProfile extends Component {
                     {this.state.newPasswordMatch ? null : <div className="matchError">Password's do not match</div>}
                     <Button className="modalButton" onClick={this.closePassword}>Cancel</Button>
                   </form>
+                  </Modal.Body>
+                </Modal>
+              </div>
+            <Modal className="modal" show={this.state.showCauseModal} onHide={this.closeCause.bind(this)}>
+              <Modal.Header closeButton>
+                <Modal.Title>Add a Cause</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <p>Please provide detailed information so users will want to donate to your cause!</p>
+
+              <form onSubmit={this.addCauseUser}>
+                <FieldGroup
+                  id="formControlsCausename"
+                  type="text"
+                  required={true}
+                  label="Cause Name*"
+                  placeholder="Cause Name"
+                  onChange={this.onFieldChange.bind(this, 'name')}
+                />
+                <FormGroup controlId="formControlsSelect">
+                  <ControlLabel>Category</ControlLabel>
+                  <FormControl componentClass="select" onChange={this.onFieldChange.bind(this, 'category')} placeholder="Category">
+                    <option value="">select</option>
+                    <option value="A">Arts, Culture and Humanities</option>
+                    <option value="B">Educational Institutions and Related Activities</option>
+                    <option value="C">Environmental Quality, Protection and Beautification</option>
+                    <option value="D">Animal-Related</option>
+                    <option value="E">Health - General and Rehabilitative</option>
+                    <option value="F">Mental Health, Crisis Intervention</option>
+                    <option value="G">Diseases, Disorders, Medical Disciplines</option>
+                    <option value="H">Medical Research</option>
+                    <option value="I">Crime, Legal-Related</option>
+                    <option value="J">Employment, Job-Related</option>
+                    <option value="K">Food, Agriculture and Nutrition</option>
+                    <option value="L">Housing, Shelter</option>
+                    <option value="M">Public Safety, Disaster Preparedness and Relief</option>
+                    <option value="N">Recreation, Sports, Leisure, Athletics</option>
+                    <option value="O">Youth Development</option>
+                    <option value="P">Human Services - Multipurpose and Other</option>
+                    <option value="Q">International, Foreign Affairs and National Security</option>
+                    <option value="R">Civil Rights, Social Action, Advocacy</option>
+                    <option value="S">Community Improvement, Capacity Building</option>
+                    <option value="T">Philanthropy, Voluntarism and Grantmaking Foundations</option>
+                    <option value="U">Science and Technology Research Institutes, Services</option>
+                    <option value="V">Social Science Research Institutes, Services</option>
+                    <option value="W">Public, Society Benefit - Multipurpose and Other</option>
+                    <option value="X">Religion-Related, Spiritual Development</option>
+                    <option value="Y">Mutual/Membership Benefit Organizations, Other</option>
+                  </FormControl>
+                </FormGroup>
+                <FieldGroup
+                  id="formControlsDescription"
+                  type="text"
+                  required={true}
+                  label="Description*"
+                  placeholder="Description"
+                  onChange={this.onFieldChange.bind(this, 'mission_statement')}
+                />
+                <FieldGroup
+                  id="formControlsGoal"
+                  type="text"
+                  required={true}
+                  label="Fundraising Goal*"
+                  placeholder="100000000"
+                  onChange={this.onFieldChange.bind(this, 'dollar_goal')}
+                />
+                <FieldGroup
+                  id="formControlsCity"
+                  type="text"
+                  required={true}
+                  label="City*"
+                  placeholder="City"
+                  onChange={this.onFieldChange.bind(this, 'city')}
+                />
+                <FieldGroup
+                  id="formControlsState"
+                  type="text"
+                  required={true}
+                  label="State*"
+                  placeholder="State"
+                  onChange={this.onFieldChange.bind(this, 'state')}
+                />
+                <FieldGroup
+                  id="formControlsZip"
+                  type="text"
+                  required={true}
+                  label="Zip Code*"
+                  placeholder="Zip"
+                  onChange={this.onFieldChange.bind(this, 'zip')}
+                />
+                <FormGroup>
+                  <Checkbox onChange={this.toggleCausePrivacy.bind(this)}>
+                    Appear in public search results?
+                  </Checkbox>
+                </FormGroup>
+                <Button
+                  className="modalButton"
+                  bsStyle="primary"
+                  onClick={this.submitCause.bind(this)}
+                  >Save
+                </Button>
+                <Button className="modalButton" onClick={this.closeCause.bind(this)}>Cancel</Button>
+              </form>
 
                 </Modal.Body>
               </Modal>
-            </div>
             <Row >
               <Col className="userCharitiesContainer" md={11}>
                 <h1>Your Charities</h1>

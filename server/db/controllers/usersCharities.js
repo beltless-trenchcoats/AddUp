@@ -164,7 +164,34 @@ exports.getUsersCharityDonationsInfo = function(email, callback) {
 
 // exports.getUsersCharityDonationsInfo('test@gmail.com', (err, results) => console.log(results));
 
-// exports.insert('test@gmail.com', 14, .5, function(result) {
+// exports.insert('test@gmail.com', 14, 0, function(result) {
+//   console.log(result);
+// });
+// exports.insert('test@gmail.com', 13, 0, function(result) {
+//   console.log(result);
+// });
+// exports.insert('test@gmail.com', 12, 0, function(result) {
+//   console.log(result);
+// });
+// exports.insert('test@gmail.com', 11, 0, function(result) {
+//   console.log(result);
+// });
+// exports.insert('test@gmail.com', 2, 0, function(result) {
+//   console.log(result);
+// });
+// exports.insert('test@gmail.com', 3, 0, function(result) {
+//   console.log(result);
+// });
+// exports.insert('test@gmail.com', 4, 0, function(result) {
+//   console.log(result);
+// });
+// exports.insert('test@gmail.com', 5, 0, function(result) {
+//   console.log(result);
+// });
+// exports.insert('test@gmail.com', 8, 0, function(result) {
+//   console.log(result);
+// });
+// exports.insert('test@gmail.com', 9, 0, function(result) {
 //   console.log(result);
 // });
 

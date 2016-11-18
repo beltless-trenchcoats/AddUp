@@ -39,7 +39,7 @@ class App extends Component {
             <Jumbotron className='jumbotron'>
               <h2>Make a Difference</h2>
               <p className="homePageSubtitle">Have a voice. Make a Difference. AddUp.</p>
-              <p>Find a support charitable causes on your budget</p>
+              <p>Find and support charitable causes on your budget</p>
               <p><Link to="/search"><Button bsStyle="primary">Find Charities</Button></Link></p>
             </Jumbotron>
           </div>

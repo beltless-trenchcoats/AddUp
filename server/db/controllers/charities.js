@@ -19,7 +19,7 @@ exports.createCharity = Promise.promisify(function(values, callback) {
     } else {
       if (results.rowCount > 0) {
         console.log('charity already in database: ' + values.name);
-        callback(null, null);
+        callback(null, results.rows);
       } else {
         db.query({
           text: 'INSERT INTO charities(name, category, ein, donation_url, city, state, zip, balance_owed, total_donated, mission_statement, \
@@ -32,7 +32,16 @@ exports.createCharity = Promise.promisify(function(values, callback) {
           if (err) {
             callback(err, null);
           } else {
-            callback(null, 'success');
+            db.query({
+              text: 'SELECT * FROM charities WHERE ein = \'' + values.ein + '\';'
+            },
+            function(err, result) {
+              if (err) {
+                callback(err, null);
+              } else {
+                callback(null, result.rows);
+              }
+            });
           }
         });
       }

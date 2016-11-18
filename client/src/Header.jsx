@@ -25,7 +25,8 @@ class Header extends Component {
       loggedIn: false,
       validationError: false,
       email: '',
-      password: '',
+      password1: '',
+      password2: '',
       firstname: '',
       lastname: ''
     }
@@ -40,7 +41,8 @@ class Header extends Component {
     this.signupUser = this.signupUser.bind(this)
     this.loginUser = this.loginUser.bind(this)
     this.logoutUser = this.logoutUser.bind(this)
-    this.onPasswordChange = this.onPasswordChange.bind(this)
+    this.onPassword1Change = this.onPassword1Change.bind(this)
+    this.onPassword2Change = this.onPassword2Change.bind(this)
     this.onEmailChange = this.onEmailChange.bind(this)
     this.onFirstnameChange = this.onFirstnameChange.bind(this)
     this.onLastnameChange = this.onLastnameChange.bind(this)
@@ -89,28 +91,33 @@ class Header extends Component {
 
   signupUser (e) {
     e.preventDefault();
-    axios.post('http://localhost:8080/signup', {
-      email: this.state.email,
-      password: this.state.password,
-      firstname: this.state.firstname,
-      lastname: this.state.lastname,
-    })
-    .then((res) => {
-      if (res.data) { 
-        this.setState({
-          loggedIn: true
-        });
-        this.closeSignup();
-        browserHistory.push('/user');
-      } else {
-        this.setState({
-          validationError: true
-        });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    if(this.state.password1 === this.state.password2) {
+      axios.post('http://localhost:8080/signup', {
+        email: this.state.email,
+        password: this.state.password1,
+        firstname: this.state.firstname,
+        lastname: this.state.lastname,
+      })
+      .then((res) => {
+        if (res.data) {
+          this.setState({
+            loggedIn: true
+          });
+          this.closeSignup();
+          browserHistory.push('/user');
+        } else {
+          this.setState({
+            validationError: true
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+    else {
+      this.setState({ validationError: true});
+    }
   }
 
 
@@ -119,7 +126,7 @@ class Header extends Component {
     e.preventDefault();
     axios.post('http://localhost:8080/login', {
       email: this.state.email,
-      password: this.state.password
+      password: this.state.password1
     })
     .then((res) => {
       if (res.data) {
@@ -149,7 +156,8 @@ class Header extends Component {
       this.setState({
         loggedIn: false,
         email: '',
-        password: '',
+        password1: '',
+        password2: '',
         firstname: '',
         lastname: ''
       });
@@ -160,8 +168,12 @@ class Header extends Component {
     });
   }
 
-  onPasswordChange (e) {
-    this.setState({password: e.target.value})
+  onPassword1Change (e) {
+    this.setState({password1: e.target.value})
+  }
+
+  onPassword2Change (e) {
+    this.setState({password2: e.target.value})
   }
 
   onEmailChange (e) {
@@ -190,7 +202,7 @@ class Header extends Component {
             <Button className="navButton" bsSize="small" href="/search"><div className="searchLink">Search</div></Button>
             {this.state.loggedIn ? <Button className="logoutButton" bsSize="small" onClick={this.openLogout}>Logout</Button> : null}
             {this.state.loggedIn ? null : <Button className="loginButton" bsSize="small" onClick={this.openLogin}>Login</Button>}
-            {this.state.loggedIn ? null : <Button className="signupButton" bsSize="small" onClick={this.openSignup}>Sign Up</Button>} 
+            {this.state.loggedIn ? null : <Button className="signupButton" bsSize="small" onClick={this.openSignup}>Sign Up</Button>}
           </div>
 
         </div>
@@ -234,7 +246,15 @@ class Header extends Component {
                 required={true}
                 label="Password*"
                 placeholder="Password*"
-                onChange={this.onPasswordChange}
+                onChange={this.onPassword1Change}
+              />
+              <FieldGroup
+                id="formControlsPassword"
+                type="password"
+                required={true}
+                label="Confirm Password*"
+                placeholder="Confirm Password*"
+                onChange={this.onPassword2Change}
               />
               {
                 this.state.validationError ? <div className='error'>Email already registered</div> : null
@@ -274,7 +294,7 @@ class Header extends Component {
                 label="Password"
                 type="password"
                 placeholder="Password"
-                onChange={this.onPasswordChange}
+                onChange={this.onPassword1Change}
               />
               {
                 this.state.validationError ? <div className='error'>Email/password combination invalid</div> : null

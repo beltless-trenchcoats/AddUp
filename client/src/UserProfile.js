@@ -15,6 +15,7 @@ class UserProfile extends Component {
       userSession: {},
       hasLinkAccount: false,
       userInfo: {},
+      bankInfo: {},
       charities: [],
       customCauses: []
     }
@@ -33,8 +34,14 @@ class UserProfile extends Component {
         'email': email
         })
         .then(res => {
-          this.setState({userInfo: res.data});
-          if (this.state.userInfo.bank_name) {
+          this.setState({
+            userInfo: res.data,
+            bankInfo: {
+              bank_name: res.data.bank_name,
+              bank_digits: res.data.bank_digits
+            }
+          });
+          if (this.state.bankInfo.bank_name) {
             this.setState({hasLinkAccount: true});
           } 
           console.log('id ', res.data.id);
@@ -73,11 +80,14 @@ class UserProfile extends Component {
     });
   }
 
-  displayLinkAccount() {
-    //TODO: Need to reset userInfo state with the new bank information
-    //maybe add new states for bank info?
+  //This is called in PlaidLink.js when a user successfully links a bank account
+  displayLinkAccount(bank_name, bank_digits) {
     this.setState({
-      hasLinkAccount: true
+      hasLinkAccount: true,
+      bankInfo: {
+        bank_name: bank_name,
+        bank_digits: bank_digits
+      }
     });
   }
 
@@ -111,8 +121,8 @@ class UserProfile extends Component {
               </Col>
               :
               <Col className="userBankInfo shadowbox" md={5}>
-                <h1>{this.state.userInfo.bank_name}</h1>
-                <text className='account'>Account ending in: {this.state.userInfo.bank_digits}</text>
+                <h1>{this.state.bankInfo.bank_name}</h1>
+                <text className='account'>Account ending in: {this.state.bankInfo.bank_digits}</text>
               </Col>
             }
 

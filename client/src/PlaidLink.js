@@ -7,21 +7,25 @@ class PlaidLinkComponent extends Component {
     super(props, context);
     this.state = {
       plaidData: [],
-      account_id: '',
       public_token: ''
     }
     this.handleOnSuccess = this.handleOnSuccess.bind(this)
   }
 
   handleOnSuccess(token, metadata) {
-    this.setState({plaidData: metadata, account_id: metadata.account_id, public_token: token,
-    institution_name: metadata.institution.name});
+    this.setState({
+      plaidData: metadata, 
+      public_token: token
+    });
 
     axios.post('http://localhost:8080/authenticate',
-      {'account_id': this.state.account_id,
+      {'account_id': this.state.plaidData.account_id,
         'public_token': this.state.public_token,
-        institution_name: this.state.institution_name
-      });
+        'institution_name': this.state.plaidData.institution.name
+      })
+    .then((resp) => {
+      this.props.successFunc(this.state.plaidData.institution.name, resp.data);
+    });
   }
 
   render() {

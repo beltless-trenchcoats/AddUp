@@ -78,6 +78,8 @@ var plaidClient = new plaid.Client(client_id, secret, plaid.environments.tartan)
 app.post('/authenticate', function(req, res) {
   var public_token = req.body.public_token;
   var account_id = req.body.account_id;
+  var bank_name = req.body.institution_name;
+  var bank_digits = '';
   // Exchange a public_token for a Plaid access_token
   plaidClient.exchangeToken(public_token, account_id, function(err, exchangeTokenRes) {
     if (err != null) {
@@ -92,10 +94,20 @@ app.post('/authenticate', function(req, res) {
         access_token: access_token
       })
       .then(resp => {
-        db.updateUser(userSession.email, { plaid_access_token: access_token,
-          stripe_bank_account_token: stripe_token, bank_digits: resp.data.accounts[0].meta.number },
+        resp.data.accounts.forEach(account => {
+          if (account._id === account_id) {
+            bank_digits = account.meta.number;
+          }
+        });
+        db.updateUser(userSession.email, { 
+          plaid_access_token: access_token,
+          stripe_bank_account_token: stripe_token, 
+          bank_name: bank_name,
+          bank_digits: bank_digits
+        },
           function(result) {
-            res.sendStatus(201);
+            //Send back the bank digits to PlaidLink.js to display on the UserProfile page
+            res.status(201).send(bank_digits);
           })
       })
       .catch(err => console.log('error authenicating bank ', err));

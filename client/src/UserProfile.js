@@ -15,6 +15,7 @@ class UserProfile extends Component {
       userSession: {},
       hasLinkAccount: false,
       userInfo: {},
+      bankInfo: {},
       charities: [],
       customCauses: []
     }
@@ -33,8 +34,14 @@ class UserProfile extends Component {
         'email': email
         })
         .then(res => {
-          this.setState({userInfo: res.data});
-          if (this.state.userInfo.bank_name) {
+          this.setState({
+            userInfo: res.data,
+            bankInfo: {
+              bank_name: res.data.bank_name,
+              bank_digits: res.data.bank_digits
+            }
+          });
+          if (this.state.bankInfo.bank_name) {
             this.setState({hasLinkAccount: true});
           } 
           console.log('id ', res.data.id);
@@ -73,6 +80,17 @@ class UserProfile extends Component {
     });
   }
 
+  //This is called in PlaidLink.js when a user successfully links a bank account
+  displayLinkAccount(bank_name, bank_digits) {
+    this.setState({
+      hasLinkAccount: true,
+      bankInfo: {
+        bank_name: bank_name,
+        bank_digits: bank_digits
+      }
+    });
+  }
+
   convertToReadableDate(date_time) {
     var date = new Date(date_time);
     if (date.getFullYear() < 2015) { //if the user hasn't donated yet, it returns default date from 1960s (don't want to display)
@@ -99,12 +117,12 @@ class UserProfile extends Component {
                 <form id="some-id" method="POST" action="/authenticate"></form>
                 <text className='profileHeader'> </text>
                 <h1>Link an account to start donating!</h1>
-                <PlaidLinkComponent className='plaidLinkButton'/>
+                <PlaidLinkComponent successFunc={this.displayLinkAccount.bind(this)}/>
               </Col>
               :
               <Col className="userBankInfo shadowbox" md={5}>
-                <h1>{this.state.userInfo.bank_name}</h1>
-                <text className='account'>Account ending in: {this.state.userInfo.bank_digits}</text>
+                <h1>{this.state.bankInfo.bank_name}</h1>
+                <text className='account'>Account ending in: {this.state.bankInfo.bank_digits}</text>
               </Col>
             }
 

@@ -73,14 +73,14 @@ class UserProfile extends Component {
           if (this.state.bankInfo.bank_name) {
             this.setState({hasLinkAccount: true});
           }
-          console.log('id ', res.data.id);
           axios.post('http://localhost:8080/charitySearch', {
             'id_owner': res.data.id,
             'type': 'Custom Cause'
             })
             .then(response => {
-              this.setState({customCauses: response.data});
-              console.log('CUSTOM CAUSES', response.data);
+              if (response.data) {
+                this.setState({customCauses: response.data});
+              }
             });
         });
 

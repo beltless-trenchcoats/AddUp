@@ -27,6 +27,8 @@ class UserProfile extends Component {
       monthlyLimitSet: true,
       charitiesSelected: true,
       userInfo: {},
+      monthlyLimit: '',
+      newMonthlyLimit: 0,
       bankInfo: {},
       charities: [],
       customCauses: [],
@@ -76,7 +78,8 @@ class UserProfile extends Component {
             bankInfo: {
               bank_name: res.data.bank_name,
               bank_digits: res.data.bank_digits
-            }
+            },
+            monthlyLimit: res.data.monthly_limit
           });
           if (this.state.bankInfo.bank_name) {
             this.setState({hasLinkAccount: true});
@@ -212,11 +215,18 @@ class UserProfile extends Component {
     });
   }
 
+  newLimit(e) {
+    this.setState({newMonthlyLimit: e.target.value});
+  }
+
   setMontlyLimit(e) {
     e.preventDefault();
-    console.log('MONTHLY LIMIT IS');
-    // console.log($(e.target).closest('input'));
-    console.log($('.limitInput').value);
+    axios.post('http://localhost:8080/api/user/update/limit', {
+      email: this.state.userSession.email,
+      limit: this.state.newMonthlyLimit
+    }).then(() => {
+      this.setState({monthlyLimit: this.state.newMonthlyLimit});
+    });
   }
 
   convertToReadableDate(date_time) {
@@ -334,7 +344,7 @@ class UserProfile extends Component {
                   </div>
                   <div className='profileField'>
                     <span className='label'>Monthly Limit: </span>
-                    <span className='value'>$ {this.state.userInfo.monthly_limit}</span>
+                    <span className='value'>$ {this.state.monthlyLimit}</span>
                   </div>
                 </div>
               </Col>
@@ -366,8 +376,8 @@ class UserProfile extends Component {
                       this.state.monthlyLimitSet ? <div className='linked'>&#10004;</div> : null
                     }
                     <div className='stepText'>Set A Monthly Limit</div>
-                    <text className='limit'>$ <FormControl id='limitInput' placeholder='e.g. 50' onChange={this.newLimit}></FormControl></text>
-                    <Button onClick={this.setMontlyLimit}>Save</Button>
+                    <text className='limit'>$ <FormControl id='limitInput' placeholder='e.g. 50' onChange={this.newLimit.bind(this)}></FormControl></text>
+                    <Button onClick={this.setMontlyLimit.bind(this)}>Save</Button>
                   </div>
                 </Col>
                 <Col className='col' md={4}>

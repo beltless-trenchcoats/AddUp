@@ -223,6 +223,7 @@ app.get('/logout', function(req, res) {
 //   "state": "CA"
 // }
 app.post('/charitySearch', function(req, res) {
+  console.log('search terms', req.body);
   if (req.body.type === 'Custom Cause') {
     var keyWordMap = {
       searchTerm: 'name',

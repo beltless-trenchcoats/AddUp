@@ -12,7 +12,7 @@ ReactDOM.render (
 		<Route path="/" component={App}/>
 	    <Route path="/user" component={UserProfile} />
 	   	<Route path="/search" component={SearchPage} />
-	   	<Route path="/charity/:id" component={CharityProfilePage} />
+	   	<Route path="/charity/:type/:id" component={CharityProfilePage} />
 	</Router>,
   document.getElementById('root')
 );

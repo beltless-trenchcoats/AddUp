@@ -7,7 +7,8 @@ class CharitySearchResult extends Component {
     super(props);
     this.state = {
       selected: false,
-      charityId: this.props.info.ein
+      charityId: this.props.info.ein || Number(this.props.info.id),
+      type: this.props.info.type || 'charity'
     }
   }
 
@@ -20,7 +21,7 @@ class CharitySearchResult extends Component {
         <p className="missionStatement"><span className="missionStatementTitle">Mission Statement: </span>{this.props.info.missionStatement}</p>
         <p className="location">{this.props.info.city}, {this.props.info.state}</p>
         <p className="website">{this.props.info.website}</p>
-        <a href={"/charity/" + this.state.charityId}><Button bsStyle="primary">Learn More and Donate</Button></a>
+        <a href={"/charity/" + this.state.type + '/' + this.state.charityId}><Button bsStyle="primary">Learn More and Donate</Button></a>
       </Panel>
      </div>
     );

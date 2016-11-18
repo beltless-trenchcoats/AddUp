@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Button, Modal, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import { Link, browserHistory } from 'react-router';
 
-import logo from '../assets/images/[AddUp++]Logo.png';
+import logo from '../assets/images/addUpLogoUpdatedWhite.png';
 import FaUser from 'react-icons/lib/fa/user';
 
 const FieldGroup = ({ id, label, ...props }) => {
@@ -194,7 +194,6 @@ class Header extends Component {
         <div className="App-header">
           <Link to="/" className="logo">
             <img src={logo} className="App-logo" alt="logo" />
-            <div className="name">AddUp+</div>
           </Link>
 
           <div className="userButtons">

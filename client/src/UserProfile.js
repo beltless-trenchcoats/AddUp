@@ -563,21 +563,27 @@ class UserProfile extends Component {
                 </Modal.Body>
               </Modal>
             <Row >
-              <Col className="userCharitiesContainer" md={11}>
-                <h1>Your Charities</h1>
+              <Col className="userCharitiesContainer" md={12}>
+                <Button className='addButton'>Edit</Button>
+                <h1>Send My Donations To...</h1>
                 <div className='userCharities'>
                 {
                   this.state.charities.sort((a, b) => b.percentage - a.percentage).map(charity =>
                     <a href={'/charity/' + charity.ein}>
                       <div className='userCharity'>
-                        <div className='title'>{charity.name}</div>
-                        {
-                          (charity.goal_reached === '1') ?
-                          <div className='goalReached'>&#10004; Goal Reached</div>
-                          : null
-                        }
-                        <div className='amount'>${charity.user_donation_total}</div>
-                        <div className='since'>{this.convertToReadableDate(charity.initial_date)}</div>
+                        <div className='percentInfo'>
+                          {charity.percentage*100} %
+                        </div>
+                        <div className='charityInfo'>
+                          <div className='title'>{charity.name}</div>
+                          {
+                            (charity.goal_reached === '1') ?
+                            <div className='goalReached'>&#10004; Goal Reached</div>
+                            : null
+                          }
+                          <div className='amount'>${charity.user_donation_total}</div>
+                          <div className='since'>{this.convertToReadableDate(charity.initial_date)}</div>
+                        </div>
                       </div>
                     </a>
                     )
@@ -586,8 +592,9 @@ class UserProfile extends Component {
               </Col>
             </Row>
             <Row >
-              <Col className="userCharitiesContainer" md={11}>
-                <h1>Your Causes</h1>
+              <Col className="userCharitiesContainer" md={12}>
+                <Button className='addButton'>Add Your Own</Button>
+                <h1>Causes You've Started</h1>
                 <div className='userCharities'>
                 {
                   this.state.customCauses.map(cause =>

@@ -160,6 +160,14 @@ h1 {
   color: #001328;
 }
 
+.userBankInfo .linked {
+  color: green;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 20px;
+}
+
 .userBankInfo .account {
   margin-left: 20px;
   font-size: 24px;

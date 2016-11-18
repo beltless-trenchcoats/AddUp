@@ -294,6 +294,7 @@ class UserProfile extends Component {
               </Col>
               :
               <Col className="userBankInfo shadowbox" md={5}>
+                <div className='linked'>Bank Account Linked &#10004;</div>
                 <h1>{this.state.bankInfo.bank_name}</h1>
                 <text className='account'>Account ending in: {this.state.bankInfo.bank_digits}</text>
               </Col>

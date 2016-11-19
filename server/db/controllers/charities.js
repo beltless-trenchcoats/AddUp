@@ -26,7 +26,7 @@ exports.createCharity = Promise.promisify(function(values, callback) {
             id_owner, dollar_goal, type, private, photo) \
             VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)',
           values: [values.name, values.category, values.ein || null, values.donation_url || null, values.city, 
-              values.state, values.zip, 0, 0, values.mission_statement, values.id_owner || null, values.dollar_goal || null, values.type || null, values.private || null, values.photo || null]
+              values.state, values.zip, 0, 0, values.mission_statement, values.id_owner || null, values.dollar_goal || null, values.type || 'charity', values.private || null, values.photo || null]
         },
         function(err, result) {
           if (err) {
@@ -188,10 +188,10 @@ exports.searchCustomCauses = function(searchFields, callback) {
 //     console.log('ERROR', err);
 //   });
 
-// exports.createCharity({name: 'SAVE THE CHARITY IDS34', category: 'A', ein: 'po3oppoppp', donation_url: 'www.eggs.com', city: 'San Francisco',
-//   state: 'CA', zip: '94114', mission_statement: 'To eat every frog in the fridge'}, function(err, response) {
-//   console.log('THIS IS GOING TO BE THE RESPONSE ', response);
-// });
+exports.createCharity({name: 'WORK PLEASEEEE', category: 'A', ein: 'po3oppoppp', donation_url: 'www.eggs.com', city: 'San Francisco',
+  state: 'CA', zip: '94114', mission_statement: 'To eat every frog in the fridge'}, function(err, response) {
+  console.log('THIS IS GOING TO BE THE RESPONSE ', response);
+});
 
 //custom cause
 // exports.createCharity({name: 'My cats paw grooming6', category: 'D', city: 'San Francisco',

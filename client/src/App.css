@@ -471,3 +471,21 @@ a:hover .charityInfo{
   font-style: italic;
   text-align: center;
 }
+
+/*
+About Us Page
+*/
+
+.aboutUsSection {
+  position: absolute;
+  top: 20%;
+}
+
+/*
+Contact Us Page
+*/
+
+.contactUsSection {
+  position: absolute;
+  top: 20%;
+}

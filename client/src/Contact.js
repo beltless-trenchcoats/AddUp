@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { Button, Jumbotron, Col, Panel } from 'react-bootstrap';
 import Header from './Header';
-
+import './App.css';
 
 class Contact extends Component {
   constructor(props) {
@@ -14,7 +15,14 @@ class Contact extends Component {
     return (
       <Header>
         <div>
-          <p>hello world</p>
+          <div className="contactUsSection">
+
+            <Col xs={6} md={4} className="infoColumn">
+              <Panel header="Contact Us" bsStyle="primary">
+                <p>Email: support@addUp.com</p>
+              </Panel>
+            </Col>
+          </div>
         </div>
       </Header>
     )

@@ -60,7 +60,6 @@ class CharityModal extends Component {
     newTotal = Math.round(newTotal * 100) / 100;
     console.log('NEW TOTAL', newTotal);
     this.setState( { donationTotal:  newTotal} )
-    // console.log('total', this.state.donationTotal)
   }
 
   close() {
@@ -86,7 +85,6 @@ class CharityModal extends Component {
       charities: this.state.updatedCharities
     })
     .then((res) => {
-      // console.log('response', res)
       if (this.props.updateProfile) {
         this.props.updateProfile(this.state.updatedCharities);
       }

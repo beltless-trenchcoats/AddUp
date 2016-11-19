@@ -290,7 +290,7 @@ class UserProfile extends Component {
     if(this.state.newPassword1 === this.state.newPassword2) {
       this.setState({ newPasswordMatch: true});
       this.closePassword();
-      axios.post('http://localhost:8080/api/user/updateUser', {
+      axios.post('http://localhost:8080/api/user/update', {
         email: this.state.userSession.email,
         newEmail1: this.state.newEmail1,
         newPassword: this.state.newPassword1
@@ -318,7 +318,7 @@ class UserProfile extends Component {
     if(this.state.newEmail1 === this.state.newEmail2) {
       this.setState({ newEmailMatch: true });
       this.closeEmail();
-      axios.post('http://localhost:8080/api/user/updateUser', {
+      axios.post('http://localhost:8080/api/user/update', {
         email: this.state.userSession.email,
         newEmail: this.state.newEmail1,
         newPassword: this.state.newPassword1
@@ -384,7 +384,7 @@ class UserProfile extends Component {
                 {
                   !this.state.hasLinkAccount ?
                     <div id='step1' className='stepBox shadowbox'>
-                      <form id="some-id" method="POST" action="/authenticate"></form>
+                      <form id="some-id" method="POST" action="/api/plaid/authenticate"></form>
                       <text className='profileHeader'> </text>
                       <div className='linkText'>Link a bank account</div>
                       <PlaidLinkComponent successFunc={this.displayLinkAccount.bind(this)}/>

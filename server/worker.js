@@ -12,7 +12,7 @@ var processDailyTransactions = function() {
   Users.getUserFields('', function(err, users) {
     users.forEach(user => {
       if (user.plaid_access_token) { //If the user has linked a bank account through plaid
-        axios.post('http://localhost:8080/transactions', {
+        axios.post('http://localhost:8080/api/plaid/transactions', {
             'access_token': user.plaid_access_token
           })
           .then(resp => {
@@ -109,7 +109,7 @@ var distributeDonation = function(user, amount) {
           UsersCharities.updatePercentage(user.email, userCharity.name, 0, function(response) {
             console.log(response);
           });
-        };     
+        };
       });
     });
   });

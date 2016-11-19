@@ -33,7 +33,6 @@ class CharityModal extends Component {
             res.data = [this.props.currentCharity];
           } else {
             ((res.data.filter((charity) => charity.ein === this.props.currentCharity.ein)).length > 0) ? null : res.data.push(this.props.currentCharity)
-            // res.data.push(this.props.currentCharity)
           }
           console.log('currentcharity!', this.props.currentCharity)
           this.setState({

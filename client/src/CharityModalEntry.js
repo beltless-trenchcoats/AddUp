@@ -27,11 +27,11 @@ class CharityModalEntry extends Component {
   }
 
   handleChange (e) {
-    let newPercent = Number(e.target.value)
-    let oldPercent = this.state.percentage
-    this.setState({ percentage: newPercent })
-      this.props.updateTotal.call(null, parseFloat(oldPercent) * -1);
-      this.props.updateTotal.call(null, parseFloat(newPercent));
+    let newPercent = Number(e.target.value);
+    let oldPercent = this.state.percentage;
+    this.setState({ percentage: newPercent });
+    this.props.updateTotal.call(null, parseFloat(oldPercent) * -1);
+    this.props.updateTotal.call(null, parseFloat(newPercent));
     this.props.updateCharities(this.props.index, this.state.charityId, this.state.remove, newPercent);
   }
 

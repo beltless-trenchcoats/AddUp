@@ -150,7 +150,7 @@ class Header extends Component {
   }
 
   logoutUser () {
-    axios.get('http://localhost:8080/logout')
+    axios.get('http://localhost:8080/api/session/logout')
     .then((res) => {
       console.log(res);
       this.setState({

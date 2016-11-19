@@ -1,7 +1,8 @@
 var db = require('../config/db');
 var helpers = require('./helpers');
+var Promise = require('bluebird');
 
-exports.insert = function(email, charityID, percentage, callback) {
+exports.insert = Promise.promisify(function(email, charityID, percentage, callback) {
   helpers.getIDs(email, '', function(idObj) {
     var id_users = idObj.id_users;
     var id_charities = charityID;
@@ -13,9 +14,9 @@ exports.insert = function(email, charityID, percentage, callback) {
     }, 
     function(err, rows) {
       if (err) {
-        callback(err);
+        callback(err, null);
       } else if (rows.rowCount > 0) {
-        callback('email and charity are already in database');
+        callback(null, 'email and charity are already in database');
       } else {
         console.log('INSERT INTO usersCharities(percentage, id_users, id_charities) VALUES(...)');
         db.query({
@@ -25,15 +26,15 @@ exports.insert = function(email, charityID, percentage, callback) {
         },
         function(err, result) {
           if (err) {
-            callback(err);
+            callback(err, null);
           } else {
-            callback('success');
+            callback(null, 'success');
           }
         });
       }
     });
   });
-};
+});
 
 exports.remove = function(email, charityID, callback) {
   helpers.getIDs(email, '', function(idObj) {
@@ -55,7 +56,7 @@ exports.remove = function(email, charityID, callback) {
   });
 }
 
-exports.updatePercentage = function(email, charityID, percentage, callback) {
+exports.updatePercentage = Promise.promisify(function(email, charityID, percentage, callback) {
   helpers.getIDs(email, '', function(idObj) {
     var id_users = idObj.id_users;
     var id_charities = charityID;
@@ -67,7 +68,7 @@ exports.updatePercentage = function(email, charityID, percentage, callback) {
     }, 
     function(err, rows) {
       if (err) {
-        callback(err);
+        callback(err, null);
       } else if (rows.rowCount > 0) {
         db.query({
           text: 'UPDATE usersCharities SET percentage = ' + percentage + ' \
@@ -75,7 +76,7 @@ exports.updatePercentage = function(email, charityID, percentage, callback) {
         }, 
         function(err, rows) {
           if (err) {
-            callback(err);
+            callback(err, null);
           } else {
             db.query({
               text: 'SELECT * FROM usersCharities \
@@ -83,18 +84,18 @@ exports.updatePercentage = function(email, charityID, percentage, callback) {
             }, 
             function(err, rows) {
               if (err) {
-                callback(err);
+                callback(err, null);
               }
             });
-            callback('success');
+            callback(null, 'success');
           }
         });
       } else {
-        callback('charity and user not in database');
+        callback(null, 'charity and user not in database');
       }
     });
   });
-};
+});
 
 exports.getUserCharityFields = function(email, charityID, callback) {
   helpers.getIDs(email, '', function(idObj) {
@@ -164,9 +165,9 @@ exports.getUsersCharityDonationsInfo = function(email, callback) {
 
 // exports.getUsersCharityDonationsInfo('test@gmail.com', (err, results) => console.log(results));
 
-// exports.insert('test@gmail.com', 14, 0, function(result) {
-//   console.log(result);
-// });
+// exports.insert('j@j.com', 3, 0)
+// .then(() => exports.insert('j@j.com', 5, 0));
+
 // exports.insert('test@gmail.com', 13, 0, function(result) {
 //   console.log(result);
 // });
@@ -199,9 +200,8 @@ exports.getUsersCharityDonationsInfo = function(email, callback) {
 //   console.log(result);
 // });
 
-// exports.updatePercentage('test@gmail.com', 14, .8, function(result) {
-//   console.log(result);
-// });
+// exports.updatePercentage('j@j.com', 3, .8)
+// .then(() => exports.updatePercentage('j@j.com', 5, .2));
 
 // exports.getUserCharityFields('test@gmail.com', 14, function(err, charities) {
 //   if (err) {

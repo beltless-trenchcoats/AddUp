@@ -653,14 +653,17 @@ class UserProfile extends Component {
                 <div className='customCauses'>
                 {
                   this.state.customCauses.map(cause =>
-                    <div className='customCause'>
-                      <div className='title'>{cause.charityName}</div>
-                      <div className='contributors'>Number of Contributors:</div>
-                      <div className='percentage'>{Math.floor((cause.total_donated/cause.dollar_goal)*100)}%</div>
-                      <div className='amount'>$ {cause.total_donated} / {cause.dollar_goal}</div>
-                    </div>
+                      <div className='customCause'>
+                        <div className='title'>
+                          <a href={'/myCause/edit/' + cause.id} className='title'>{cause.charityName}</a>
+                        </div>
+                        <div className='contributors'>Number of Contributors:</div>
+                        <div className='percentage'>{Math.floor((cause.total_donated/cause.dollar_goal)*100)}%</div>
+                        <div className='amount'>$ {cause.total_donated} / {cause.dollar_goal}</div>
+                      </div>
                     )
                 }
+
                 </div>
               </div>
               : null

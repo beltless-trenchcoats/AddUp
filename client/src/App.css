@@ -299,6 +299,10 @@ h1 {
   text-decoration: none;
 }
 
+.customCauses a:hover {
+  text-decoration: none;
+}
+
 .userCharity {
   width: 480px;
   margin: 20px 30px;
@@ -337,6 +341,10 @@ a:hover .charityInfo{
 .charityInfo .title {
   margin-top: 10px;
   font-size: 24px;
+  color: #353F49;
+}
+
+.title a {
   color: #353F49;
 }
 

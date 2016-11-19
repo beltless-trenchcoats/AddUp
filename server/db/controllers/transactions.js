@@ -41,14 +41,42 @@ exports.getTransactions = function(email, callback) {
   });
 };
 
+exports.getTransactionsForCharity = function(id_charities, callback) {
+  // console.log('SELECT users_id, date_time, amount, name, email, first_name, last_name FROM (SELECT date_time, amount, users_id, name FROM (SELECT * FROM transactions WHERE id_charities = \'' + id_charities + '\') AS t \
+  //   INNER JOIN charities ON charities.id = t.id_charities) as c INNER JOIN users ON c.users_id = users.id;');
+  // console.log('SELECT date_time, amount, name FROM (SELECT * FROM transactions WHERE id_charities = \'' + id_charities + '\') AS t \
+  //   INNER JOIN charities ON charities.id = t.id_charities;');
+  console.log('SELECT date_time, amount, name, id_charities, id_users, id_owner, first_name, last_name, email FROM (SELECT date_time, amount, name, id_charities, id_users, id_owner FROM (SELECT * FROM transactions WHERE id_charities = \'' + id_charities + '\') AS t \
+     INNER JOIN charities ON charities.id = t.id_charities) as c INNER JOIN users ON c.id_users = users.users_id;');
+  db.query({
+    text: 'SELECT date_time, amount, name, id_charities, id_users, id_owner, first_name, last_name, email FROM (SELECT date_time, amount, name, id_charities, id_users, id_owner FROM (SELECT * FROM transactions WHERE id_charities = \'' + id_charities + '\') AS t \
+     INNER JOIN charities ON charities.id = t.id_charities) as c INNER JOIN users ON c.id_users = users.id;'
+  },
+  function(err, results) {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, results.rows);
+    }
+  });
+};
+
 //EXAMPLE USAGE
-// exports.insert(4, 1, 90, function(response) {
+// exports.insert(51, 14, 90, function(response) {
 //   console.log(response);
 // })
 
 // exports.getTransactions('test@gmail.com', function(err, result) {
 //   console.log(err, result);
 // });
+
+// exports.getTransactionsForCharity(14, function(err, results) {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log(results);
+//   }
+// })
 
 
 

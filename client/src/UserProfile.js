@@ -290,7 +290,7 @@ class UserProfile extends Component {
       email: this.state.userInfo.email
     })
     .then((res) => {
-      this.setState({ 
+      this.setState({
         bankInfo: {},
         hasLinkAccount: false
       });
@@ -388,7 +388,7 @@ class UserProfile extends Component {
                     <div className='stepText'>Set A Monthly Limit</div>
                     <text className='limit'>$ <FormControl id='limitInput' placeholder='e.g. 50' onChange={this.newLimit}></FormControl></text>
                     <Button onClick={this.setMonthlyLimit}>Save</Button>
-                  </div>  
+                  </div>
                 </Col>
                 <Col md={4} xs={4}>
                   <div className='step'>Step 3</div>

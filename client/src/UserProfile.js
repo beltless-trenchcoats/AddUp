@@ -24,8 +24,8 @@ class UserProfile extends Component {
       transactions: [],
       userSession: {},
       hasLinkAccount: false,
-      monthlyLimitSet: true,
-      charitiesSelected: true,
+      monthlyLimitSet: false,
+      charitiesSelected: false,
       userInfo: {},
       monthlyLimit: '',
       newMonthlyLimit: 0,
@@ -81,6 +81,9 @@ class UserProfile extends Component {
             },
             monthlyLimit: res.data.monthly_limit
           });
+          if (this.state.monthlyLimit) {
+            this.setState({monthlyLimitSet: true});
+          }
           if (this.state.bankInfo.bank_name) {
             this.setState({hasLinkAccount: true});
           }
@@ -111,6 +114,9 @@ class UserProfile extends Component {
         })
         .then(res => {
           this.setState({charities: res.data});
+          if (this.state.charities.length) {
+            this.setState({charitiesSelected: true});
+          }
         });
     })
   }
@@ -225,7 +231,11 @@ class UserProfile extends Component {
       email: this.state.userSession.email,
       limit: this.state.newMonthlyLimit
     }).then(() => {
-      this.setState({monthlyLimit: this.state.newMonthlyLimit});
+      this.setState({
+        monthlyLimit: this.state.newMonthlyLimit,
+        monthlyLimitSet: true
+      });
+
     });
   }
 

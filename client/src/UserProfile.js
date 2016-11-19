@@ -63,7 +63,7 @@ class UserProfile extends Component {
   }
 
   componentWillMount() {
-    axios.get('http://localhost:8080/userSession')
+    axios.get('http://localhost:8080/api/session')
     .then(res => {
       this.setState({
         userSession: res.data
@@ -99,7 +99,7 @@ class UserProfile extends Component {
           var userSession = this.state.userSession;
           userSession.id = res.data.id;
           this.setState({userSession: userSession});
-          axios.post('http://localhost:8080/api/charity/search', {
+          axios.post('http://localhost:8080/api/charities/search', {
             'id_owner': res.data.id,
             'type': 'Custom Cause'
             })
@@ -194,7 +194,7 @@ class UserProfile extends Component {
     axios.post('http://localhost:8080/api/customCause/add', fields)
       .then(res => {
         console.log('response', res);
-        axios.post('http://localhost:8080/api/charity/search', {
+        axios.post('http://localhost:8080/api/charities/search', {
           'id_owner': fields.id_owner,
           'type': 'Custom Cause'
           })

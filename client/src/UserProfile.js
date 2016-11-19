@@ -24,9 +24,9 @@ class UserProfile extends Component {
     this.state = {
       transactions: [],
       userSession: {},
-      hasLinkAccount: null,
-      monthlyLimitSet: null,
-      charitiesSelected: null,
+      hasLinkAccount: false,
+      monthlyLimitSet: false,
+      charitiesSelected: false,
       userInfo: {},
       monthlyLimit: '--',
       newMonthlyLimit: 0,
@@ -122,7 +122,6 @@ class UserProfile extends Component {
         })
         .then(res => {
           this.setState({charities: res.data});
-          console.log('CHARITIES', res.data);
           if (this.state.charities.length) {
             this.state.charitiesSelected = true;
             $('#step3').removeClass('incomplete');
@@ -221,14 +220,20 @@ class UserProfile extends Component {
 
     if (!this.state.hasLinkAccount) {
       $('#step1').addClass('incomplete');
+    } else {
+      $('#step1').removeClass('incomplete');
     }
 
     if (!this.state.monthlyLimitSet) {
       $('#step2').addClass('incomplete');
+    } else {
+      $('#step2').removeClass('incomplete');
     }
 
     if (!this.state.charitiesSelected) {
       $('#step3').addClass('incomplete');
+    } else {
+      $('#step3').removeClass('incomplete');
     }
 
     //This is currently not working...supposed to dim any charities that have reached their goals
@@ -239,6 +244,7 @@ class UserProfile extends Component {
 
   //This is called in PlaidLink.js when a user successfully links a bank account
   displayLinkAccount(bank_name, bank_digits) {
+    $('#step1').removeClass('incomplete');
     this.setState({
       hasLinkAccount: true,
       bankInfo: {
@@ -246,7 +252,6 @@ class UserProfile extends Component {
         bank_digits: bank_digits
       }
     });
-    $('#step1').removeClass('incomplete');
   }
 
   newLimit(e) {
@@ -259,11 +264,11 @@ class UserProfile extends Component {
       email: this.state.userSession.email,
       limit: this.state.newMonthlyLimit
     }).then(() => {
+      $('#step2').removeClass('incomplete');
       this.setState({
         monthlyLimit: this.state.newMonthlyLimit,
         monthlyLimitSet: true
       });
-      $('#step2').removeClass('incomplete');
     });
   }
 
@@ -338,6 +343,12 @@ class UserProfile extends Component {
     this.setState({ showEditCharitiesModal: false });
   }
 
+  scrollDown() {
+    $('html,body').animate({
+        scrollTop: $('#charities').offset().top
+      }, 'slow');
+  }
+
   render() {
     return (
       <Header>
@@ -404,7 +415,7 @@ class UserProfile extends Component {
                       this.state.charitiesSelected ? <div className='linked'>&#10004;</div> : null
                     }
                     <div className='stepText'>Select Your Charities</div>
-                    <div className='stepText'>&#9662;</div>
+                    <button onClick={this.scrollDown.bind(this)} className='scrollButton stepText'>&#9662;</button>
                   </div>
                 </Col>
               </div>
@@ -591,7 +602,7 @@ class UserProfile extends Component {
                 </Modal.Body>
               </Modal>
 
-            <Row >
+            <Row id='charities'>
               {
                 this.state.charities.length ?
               <div className="userCharitiesContainer">

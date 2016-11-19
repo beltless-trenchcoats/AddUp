@@ -49,7 +49,7 @@ class Header extends Component {
   }
 
   componentWillMount() {
-    axios.get('http://localhost:8080/userSession')
+    axios.get('http://localhost:8080/api/session')
     .then((res) => {
       this.setState({
         email: res.data.email || '',

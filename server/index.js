@@ -193,7 +193,7 @@ app.post('/api/session/login', function(req, res) {
 });
 
 
-app.get('/userSession', function(req, res) {
+app.get('/api/session', function(req, res) {
   req.session.reload(function(err) {
     res.send(JSON.stringify(userSession));
     // session updated
@@ -222,7 +222,7 @@ app.get('/api/session/logout', function(req, res) {
 //   "city": "Santa Rosa",
 //   "state": "CA"
 // }
-app.post('/api/charity/search', function(req, res) {
+app.post('/api/charities/search', function(req, res) {
   if (req.body.type === 'Custom Cause') {
     var keyWordMap = {
       searchTerm: 'name',
@@ -277,7 +277,7 @@ app.post('/api/charity/search', function(req, res) {
   }
 });
 
-app.post('/api/charity/info', function (req, res) {
+app.post('/api/charity/id', function (req, res) {
   if (req.body.type === 'charity') {
     var options = {
       method: 'post',

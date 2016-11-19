@@ -17,7 +17,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    axios.get('http://localhost:8080/userSession')
+    axios.get('http://localhost:8080/api/session')
     .then((res) => {
       console.log('userSession', res.data);
       this.setState({

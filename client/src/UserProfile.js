@@ -35,6 +35,7 @@ class UserProfile extends Component {
       customCauses: [],
       showChangePasswordModal: false,
       showChangeEmailModal: false,
+      showEditCharitiesModal: false,
       newPassword1: undefined,
       newPassword2: undefined,
       newEmail1: undefined,
@@ -330,6 +331,13 @@ class UserProfile extends Component {
     this.setState({newEmail1: undefined, newEmail2: undefined});
   }
 
+  openEditCharitiesModal() {
+    this.setState({ showEditCharitiesModal: true });
+  }
+  closeEditCharitiesModal() {
+    this.setState({ showEditCharitiesModal: false });
+  }
+
   render() {
     return (
       <Header>
@@ -587,7 +595,7 @@ class UserProfile extends Component {
               {
                 this.state.charities.length ?
               <div className="userCharitiesContainer">
-                <Button className='editButton'>Edit</Button>
+                <Button className='editButton' onClick={this.openEditCharitiesModal.bind(this)} >Edit</Button>
                 <h1>Your Donation Breakdown</h1>
                 <div className='userCharities'>
                 {
@@ -679,9 +687,9 @@ class UserProfile extends Component {
         </div>
 
         <CharityModal 
-          show={this.state.showModal} 
-          onHide={this.closeModal} 
-          currentCharity={this.state.basicCharityInfo} 
+          show={this.state.showEditCharitiesModal} 
+          onHide={this.closeEditCharitiesModal.bind(this)} 
+          currentCharity={{}} 
 
         />
       </Header>

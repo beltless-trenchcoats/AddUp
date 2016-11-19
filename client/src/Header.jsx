@@ -256,7 +256,7 @@ class Header extends Component {
                 onChange={this.onPassword2Change}
               />
               {
-                this.state.validationError ? <div className='error'>Email already registered</div> : null
+                this.state.validationError ? <div className='error'>Email already registered/Password's dont match</div> : null
               }
               <Button
                 className="modalButton"

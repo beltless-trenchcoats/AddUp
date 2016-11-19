@@ -12,9 +12,8 @@ body {
 }
 
 
-/*
-*  HEADER AND MODALS
-*/
+/*************** HEADER AND MODALS ******************/
+
 .App-logo, .name {
   height: 145%;
   float: left;
@@ -53,9 +52,8 @@ body {
   margin: 0 5px;
 }
 
-/*
-* HOMEPAGE BODY
-*/
+/*************** HOMEPAGE BODY ******************/
+
 .imageDiv {
   height: 400px;
 }
@@ -81,9 +79,7 @@ body {
   margin-left: 20px;
 }
 
-/*
-* USER PROFILE PAGE
-*/
+/*************** USER PROFILE PAGE ******************/
 
 .shadowbox {
   border-radius: 4px;
@@ -129,11 +125,7 @@ h1 {
   margin-bottom: 30px;
 }
 
-.stepBox, .userProfile {
-  position: relative;
-  background-color: #f1f1f1;
-  padding: 5px 20px 0px 10px;
-}
+/*========== User Profile Box ============*/
 
 .userProfile {
   height: 250px;
@@ -143,7 +135,6 @@ h1 {
   padding-right: 15vw;
   margin-top: 30px;
 }
-
 
 .profileField {
   width: 100%;
@@ -165,6 +156,14 @@ h1 {
 .profileField button {
   float: right;
 }
+
+.stepBox, .userProfile {
+  position: relative;
+  background-color: #f1f1f1;
+  padding: 5px 20px 0px 10px;
+}
+
+/*========== Step Box ============*/
 
 .stepBox {
   width: 320px;
@@ -222,11 +221,33 @@ h1 {
   font-size: 18px;
 }
 
+/*========== User Charities Banners ============*/
+
+.charitiesBanner {
+  width: 100%;
+  padding: 40px 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #eee;
+  font-size: 40px;
+}
+
+.charitiesBanner .startButton {
+  margin-top: 20px;
+  max-width: 200px;
+  font-size: 25px;
+}
+
+/*========== User Charities ============*/
+
 .userCharitiesContainer {
   position: relative;
 }
 
-.userCharitiesContainer .addButton {
+.userCharitiesContainer .editButton {
   position: absolute;
   top: 0px;
   right: 150px;
@@ -287,7 +308,6 @@ a:hover .charityInfo{
 }
 
 .charityInfo .title {
-  // width: 100%;
   margin-top: 10px;
   font-size: 24px;
   color: #353F49;
@@ -318,40 +338,56 @@ a:hover .charityInfo{
   color: #aaa;
 }
 
-.charitiesHeader {
-  width: 100%;
-  padding: 40px 0;
-  text-align: center;
+/*========== User Custom Causes ============*/
+
+.customCauses {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
   align-items: center;
-  background-color: #eee;
-  font-size: 40px;
 }
 
-.charitiesHeader .startButton {
-  margin-top: 20px;
-  max-width: 200px;
-  font-size: 25px;
+.customCause {
+  width: 80%;
+  margin: 10px;
+  background-color: #f7f7f7;
+  padding: 20px;
 }
+
+.customCause .title {
+  font-size: 32px;
+}
+
+.customCause .contributors {
+  font-size: 20px;
+  padding: 10px 0 0 30px;
+  float: left;
+}
+
+.customCause .amount{
+  font-size: 24px;
+  padding: 10px 0 0 30px;
+  float: right;
+}
+
+.customCause .percentage {
+  font-size: 36px;
+  float: right;
+}
+
+/*========== User Transactions ============*/
 
 .userTransactionsContainer {
-  width: 90vw;
   background-color: #eee;
-  padding: 20px;
+  padding: 40px;
   margin-top: 40px;
 }
 
 .transactionHistory {
   width: 100%;
-  height: 40vh;
   margin-top: 20px;
 }
 
-/*
-* SEARCH PAGE
-*/
+/*************** SEARCH PAGE ******************/
 .searchPage {
   top: 55px;
   width: 100%;
@@ -368,9 +404,9 @@ a:hover .charityInfo{
   text-align: center;
   color: lightgrey;
 }
-/*
-* CHARITY PROFILE PAGE
-*/
+
+/*************** CHARITY PROFILE PAGE ******************/
+
 .charityProfilePage {
   top: 55px;
   position: relative;

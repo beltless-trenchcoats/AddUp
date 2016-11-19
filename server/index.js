@@ -87,8 +87,6 @@ app.post('/api/plaid/authenticate', function(req, res) {
     } else {
       var access_token = exchangeTokenRes.access_token;
       var stripe_token = exchangeTokenRes.stripe_bank_account_token;
-      console.log('access token', access_token);
-      console.log('stripe token', stripe_token);
       //save access tokens to the local db
       axios.post('http://localhost:8080/api/plaid/transactions', {
         access_token: access_token
@@ -246,7 +244,6 @@ app.post('/api/charities/search', function(req, res) {
       } else if (!results) {
         res.send();
       } else {
-        // console.log(results);
         results.forEach(function(item) {
           item.charityName = item.name;
           delete item.name;
@@ -296,7 +293,6 @@ app.post('/api/charity', function (req, res) {
           } else {
             var toSend = body.data;
             toSend.total_donated = result[0] ? result[0].total_donated : 0;
-            console.log('sending', toSend);
             res.send(JSON.stringify(toSend));
           }
         });
@@ -309,7 +305,6 @@ app.post('/api/charity', function (req, res) {
       } else {
         var toSend = result[0];
         toSend.category = helperFunctions.convertCategoryToString(toSend.category);
-        // console.log(toSend);
         res.send(toSend);
       }
     });
@@ -333,9 +328,10 @@ app.post('/api/user/charities/update', function(req, res) {
     // Remove any charities that the user has marked to remove
     if (charity.remove) {
       userCharitiesDB.remove(userEmail, charity.id, function (err, charityRemoved) {
-        err ? console.log(err) : console.log('Charity Removed: ', charityRemoved);
+        err ? console.log(err) : null;
       });
     } else { // Check if the current charity has already been saved to the database
+      console.log('SEARCHING FOR', charity.ein);
       charitiesDB.searchByEIN(charity.ein, function (err, results) {
         // If it is not in db, add and also add entry to userscharities to link user to charity
         if (results.length === 0) {
@@ -343,6 +339,7 @@ app.post('/api/user/charities/update', function(req, res) {
             if (err) {
               console.log(err);
             } else {
+              // console.log('new charity', charityAdded);
               promises.push(userCharitiesDB.insert(userEmail, charityAdded[0].id, charity.percentage));
             }
           })
@@ -401,15 +398,12 @@ app.post('/api/user/update', function(req, res) {
   var email = req.body.email;
   var newEmail = req.body.newEmail;
   var newPassword = req.body.newPassword;
-  console.log('email ', email, 'newEmail ', newEmail, 'newPassword ', newPassword);
   if(newEmail === undefined) {
     db.updateUser(email, {password: newPassword}, function(result) {
-      console.log('/api/user/update password result ', result);
       res.send(result);
     })
   } else {
     db.updateUser(email, {email: newEmail}, function(result) {
-      console.log('/api/user/update email result ', result);
       res.send(result);
     })
   }
@@ -466,13 +460,11 @@ app.post('/charityInfo', function (req, res) {
 
 //===================CUSTOM CAUSES=====================
 app.post('/api/customCause/add', function(req, res) {
-  // console.log('body', req.body);
   charitiesDB.createCharity(req.body, function(err, result) {
     if (err) {
       console.log(err);
       res.send(err);
     } else {
-      // console.log(result);
       res.send(result);
     }
   })
@@ -480,13 +472,11 @@ app.post('/api/customCause/add', function(req, res) {
 
 
 app.post('/api/customCause/search', function(req, res) {
-  console.log('body', req.body);
   charitiesDB.searchCustomCauses(req.body, function(err, result) {
     if (err) {
       console.log(err);
       res.send(err);
     } else {
-      // console.log(result);
       res.send(result);
     }
   })
@@ -504,7 +494,6 @@ app.post('/api/customCause/transactions', function(req, res) {
 });
 
 app.post('/api/charity/update', function(req, res) {
-  // console.log('body', req.body);
   charitiesDB.updateCharity(req.body.charityID, req.body.updateFields, function(result) {
     res.send(result);
   });

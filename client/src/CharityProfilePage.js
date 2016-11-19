@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Grid, Col, Row } from 'react-bootstrap';
 import { Gmaps, Marker } from 'react-gmaps';
 import axios from 'axios';
+import _ from 'lodash';
 
 import apiKeys from '../../server/config/API_Keys';
 import Header from './Header';
@@ -14,7 +15,6 @@ class CharityProfilePage extends Component {
       charityId: this.props.params.id,
       charity: {},
       basicCharityInfo: {},
-      databaseCharityInfo: {},
       showModal: false,
       selected: false //TODO: Add flag to change button depending on if charity is already selected
     }
@@ -28,35 +28,23 @@ class CharityProfilePage extends Component {
       type: this.props.params.type
     })
     .then((res) => {
-      this.setState({charity: res.data})
+      res.data.name = res.data.name.split(' ').map(word => _.capitalize(word)).join(' ');
+      this.setState({
+        charity: res.data,
+        basicCharityInfo: {
+          name: res.data.name,
+          ein: res.data.ein,
+          city: res.data.city,
+          state: res.data.state,
+          zip: res.data.zipCode || res.data.zip,
+          donation_url: res.data.donationUrl || res.data.donation_url,
+          mission_statement: res.data.missionStatement || res.data.mission_statement
+        }
+      })
     })
     .catch((err) => {
       console.log(err)
-    })
-
-    axios.post('http://localhost:8080/api/charities/search', {
-      ein: this.state.charityId
-    })
-    .then((res) => {
-      res.data[0].name = res.data[0].charityName;
-      res.data[0].zip = res.data[0].zipCode;
-      res.data[0].donation_url = res.data[0].donationUrl;
-      res.data[0].mission_statement = res.data[0].missionStatement;
-      this.setState({basicCharityInfo: res.data[0]})
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-
-    axios.post('http://localhost:8080/api/charity/savedInfo', {
-      ein: this.state.charityId
-    })
-    .then((res) => {
-      this.setState({databaseCharityInfo: res.data})
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+    });
   }
 
   openModal() {
@@ -133,13 +121,15 @@ class CharityProfilePage extends Component {
             </Row>
           </Grid>
         </div>
-
-        <CharityModal
-          show={this.state.showModal}
-          onHide={this.closeModal}
-          currentCharity={this.state.basicCharityInfo}
-
-        />
+        {
+          this.state.showModal ? 
+          <CharityModal
+            show={this.state.showModal}
+            onHide={this.closeModal}
+            currentCharity={this.state.basicCharityInfo}
+          />
+          : null
+        }
 
       </Header>
     );

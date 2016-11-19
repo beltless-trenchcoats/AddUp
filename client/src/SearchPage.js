@@ -214,18 +214,21 @@ class SearchPage extends Component {
             : this.state.searchResults.map((charity, i) =>
             <CharitySearchResult key={i} info={charity} />)}
           </div>
-          <div className="pagination">
-            <ReactPaginate previousLabel={"previous"}
-               nextLabel={"next"}
-               breakLabel={<a href="">...</a>}
-               breakClassName={"break-me"}
-               marginPagesDisplayed={2}
-               pageRangeDisplayed={5}
-               clickCallback={this.pageSelect.bind(this)}
-               containerClassName={"pagination"}
-               subContainerClassName={"pages pagination"}
-               activeClassName={"active"} />
-          </div>
+          {(this.state.searchResults.length === 0) ?
+            <div className="pagination">
+              <ReactPaginate previousLabel={"previous"}
+                 nextLabel={"next"}
+                 breakLabel={<a href="">...</a>}
+                 breakClassName={"break-me"}
+                 marginPagesDisplayed={2}
+                 pageRangeDisplayed={5}
+                 clickCallback={this.pageSelect.bind(this)}
+                 containerClassName={"pagination"}
+                 subContainerClassName={"pages pagination"}
+                 activeClassName={"active"} />
+            </div>
+            : null
+          }
         </div>
       </Header>
     );

@@ -119,11 +119,9 @@ h1 {
 
 .row {
   padding: 20px 10px 30px 10px;
-  // border: 1px solid brown;
 }
 
 .col {
-  // border: 1px solid red;
 }
 
 .welcome {
@@ -146,11 +144,6 @@ h1 {
   margin-top: 30px;
 }
 
-.stepBox {
-  height: 210px;
-  padding-top: 20px;
-  padding-left: 20px;
-}
 
 .profileField {
   width: 100%;
@@ -174,9 +167,15 @@ h1 {
 }
 
 .stepBox {
+  width: 320px;
+  height: 210px;
   text-align: center;
   background-color: #BDD4E7;
   color: #001328;
+  font-size: 36px;
+  padding: 20px 30px 30px 0;
+  padding-right: 30px;
+  padding-left: 30px;
 }
 
 .stepBox .linked {
@@ -187,13 +186,11 @@ h1 {
 }
 
 .stepBox .linkText {
-  font-size: 40px;
+  /*font-size: 40px;*/
 }
 
 .stepBox .stepText {
   clear: both;
-  font-size: 40px;
-  margin: auto 0;
 }
 
 .stepBox .account {
@@ -201,20 +198,13 @@ h1 {
 }
 
 .stepBox div button {
+  margin-top: 15px;
   height: 50px;
   width: 150px;
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-  border-radius: 5px;
-  background-color: #eee;
-  border: 0px;
-  box-shadow: inset -1px -1px 15px 0px rgba(200,200,200,0.75);
 }
 
-
 .stepBox div button span {
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .step {
@@ -228,25 +218,23 @@ h1 {
 #limitInput {
   display: inline;
   margin-right: 5px;
-  width: 200px;
+  width: 150px;
+  font-size: 18px;
 }
 
 .userCharitiesContainer {
   position: relative;
-  border: 2px solid #d5e0ed;
-  margin-top: 40px;
-  padding-top: 30px;
 }
 
 .userCharitiesContainer .addButton {
   position: absolute;
-  top: 50px;
-  right: 70px;
+  top: 0px;
+  right: 150px;
   font-size: 25px;
 }
 
+
 .userCharitiesContainer h1{
-  margin-top: 20px;
   font-size: 48px;
   text-align: center;
 }
@@ -328,6 +316,24 @@ a:hover .charityInfo{
   font-size: 20px;
   font-style: italic;
   color: #aaa;
+}
+
+.charitiesHeader {
+  width: 100%;
+  padding: 40px 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #eee;
+  font-size: 40px;
+}
+
+.charitiesHeader .startButton {
+  margin-top: 20px;
+  max-width: 200px;
+  font-size: 25px;
 }
 
 .userTransactionsContainer {

@@ -117,15 +117,14 @@ h1 {
   padding: 20px 10px 30px 10px;
 }
 
-.col {
-}
+/*========== User Profile Box ============*/
 
 .welcome {
   font-size: 45px;
   margin-bottom: 30px;
+  padding-top: 10px;
+  padding-left: 20px;
 }
-
-/*========== User Profile Box ============*/
 
 .userProfile {
   height: 250px;
@@ -134,6 +133,10 @@ h1 {
   padding: 20px;
   padding-right: 15vw;
   margin-top: 30px;
+}
+
+.userProfile .loginButton {
+  margin-right: 160px;
 }
 
 .profileField {
@@ -221,11 +224,15 @@ h1 {
   font-size: 18px;
 }
 
+.incomplete {
+  border: 1px solid red;
+}
+
 /*========== User Charities Banners ============*/
 
 .charitiesBanner {
   width: 100%;
-  padding: 40px 0;
+  padding: 40px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -380,6 +387,10 @@ a:hover .charityInfo{
   background-color: #eee;
   padding: 40px;
   margin-top: 40px;
+}
+
+.userTransactionsContainer h1 {
+  margin-top: 10px;
 }
 
 .transactionHistory {

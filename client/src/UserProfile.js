@@ -81,11 +81,13 @@ class UserProfile extends Component {
             },
             monthlyLimit: res.data.monthly_limit || '--'
           });
-          if (this.state.monthlyLimit) {
+          if (this.state.monthlyLimit && this.state.monthlyLimit !== '--') {
             this.setState({monthlyLimitSet: true});
+            $('#step2').removeClass('incomplete');
           }
           if (this.state.bankInfo.bank_name) {
             this.setState({hasLinkAccount: true});
+            $('#step1').removeClass('incomplete');
           }
           console.log('id ', res.data.id);
           var userSession = this.state.userSession;
@@ -116,6 +118,7 @@ class UserProfile extends Component {
           this.setState({charities: res.data});
           if (this.state.charities.length) {
             this.setState({charitiesSelected: true});
+            $('#step3').removeClass('incomplete');
           }
         });
     })
@@ -202,9 +205,22 @@ class UserProfile extends Component {
   }
 
   componentDidMount() {
+    //Style pre-styled Plaid Link Button
     $('.stepBox div button span').html('Add Account');
     $('.stepBox div button').addClass('btn');
     $('.stepBox div button').addClass('btn-default');
+
+    if (!this.state.hasLinkAccount) {
+      $('#step1').addClass('incomplete');
+    }
+
+    if (!this.state.monthlyLimitSet) {
+      $('#step2').addClass('incomplete');
+    }
+
+    if (!this.state.charitiesSelected) {
+      $('#step3').addClass('incomplete');
+    }
 
     //This is currently not working...supposed to dim any charities that have reached their goals
     $( document ).ready(function() {
@@ -221,6 +237,7 @@ class UserProfile extends Component {
         bank_digits: bank_digits
       }
     });
+    $('#step1').removeClass('incomplete');
   }
 
   newLimit(e) {
@@ -237,7 +254,7 @@ class UserProfile extends Component {
         monthlyLimit: this.state.newMonthlyLimit,
         monthlyLimitSet: true
       });
-
+      $('#step2').removeClass('incomplete');
     });
   }
 
@@ -313,7 +330,7 @@ class UserProfile extends Component {
           <Grid>
             <Row>
               <Col md={6}>
-                <div className="userProfile shadowbox">
+                <div className="userProfile">
                 <div className='welcome'>Welcome, {this.state.userSession.firstName} {this.state.userSession.lastName}</div>
                   <div className='profileField'>
                     <span className='label'>Email:</span>
@@ -339,14 +356,14 @@ class UserProfile extends Component {
                   <div className='step'>Step 1</div>
                 {
                   !this.state.hasLinkAccount ?
-                    <div className='stepBox shadowbox'>
+                    <div id='step1' className='stepBox shadowbox'>
                       <form id="some-id" method="POST" action="/authenticate"></form>
                       <text className='profileHeader'> </text>
                       <div className='linkText'>Link a bank account</div>
                       <PlaidLinkComponent successFunc={this.displayLinkAccount.bind(this)}/>
                     </div>
                   :
-                    <div className="stepBox shadowbox">
+                    <div id='step1' className="stepBox shadowbox">
                       <div className='linked'>&#10004;</div>
                       <div className='stepText'>{this.state.bankInfo.bank_name}</div>
                       <text className='account'>Account ending in: {this.state.bankInfo.bank_digits}</text>
@@ -355,7 +372,7 @@ class UserProfile extends Component {
                 </Col>
                 <Col md={4}>
                   <div className='step'>Step 2</div>
-                  <div className="stepBox shadowbox">
+                  <div id='step2' className="stepBox shadowbox">
                     {
                       this.state.monthlyLimitSet ? <div className='linked'>&#10004;</div> : null
                     }
@@ -366,7 +383,7 @@ class UserProfile extends Component {
                 </Col>
                 <Col md={4}>
                   <div className='step'>Step 3</div>
-                  <div className="stepBox shadowbox">
+                  <div id='step3' className="stepBox shadowbox">
                     {
                       this.state.charitiesSelected ? <div className='linked'>&#10004;</div> : null
                     }
@@ -563,7 +580,7 @@ class UserProfile extends Component {
                 this.state.charities.length ?
               <div className="userCharitiesContainer" md={12}>
                 <Button className='editButton'>Edit</Button>
-                <h1>Send My Donations To...</h1>
+                <h1>Your Donation Breakdown</h1>
                 <div className='userCharities'>
                 {
                   this.state.charities.sort((a, b) => b.percentage - a.percentage).map(charity =>
@@ -627,7 +644,7 @@ class UserProfile extends Component {
           <Grid>
             <Row >
               <Col className="userTransactionsContainer">
-                <h2>Transaction History</h2>
+                <h1>Your Donation History</h1>
                 <div className="transactionHistory">
 
                   <Table responsive striped hover>

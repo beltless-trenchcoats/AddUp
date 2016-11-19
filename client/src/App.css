@@ -478,7 +478,8 @@ About Us Page
 
 .aboutUsSection {
   position: absolute;
-  top: 20%;
+  top: 30%;
+  font-size: 16pt;
 }
 
 /*
@@ -488,4 +489,6 @@ Contact Us Page
 .contactUsSection {
   position: absolute;
   top: 20%;
+  left: 32%;
+  font-size: 20pt;
 }

@@ -610,6 +610,7 @@ class UserProfile extends Component {
               {
                 this.state.charities.length ?
               <div className="userCharitiesContainer">
+                <Button className='searchButton' href="/search" >Add</Button>
                 <Button className='editButton' onClick={this.openEditCharitiesModal.bind(this)} >Edit</Button>
                 <h1>Your Donation Breakdown</h1>
                 <div className='userCharities'>

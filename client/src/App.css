@@ -274,6 +274,13 @@ h1 {
   position: relative;
 }
 
+.userCharitiesContainer .searchButton {
+  position: absolute;
+  top: 0px;
+  right: 225px;
+  font-size: 25px;
+}
+
 .userCharitiesContainer .editButton {
   position: absolute;
   top: 0px;

@@ -62,7 +62,7 @@ class SearchPage extends Component {
     }
 
     console.log('search terms', searchTerms);
-    axios.post('http://localhost:8080/charitySearch', searchTerms)
+    axios.post('http://localhost:8080/api/charity/search', searchTerms)
     .then((res) => {
       console.log('search response', res.data);
       this.setState({

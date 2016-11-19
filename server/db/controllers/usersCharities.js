@@ -18,7 +18,7 @@ exports.insert = Promise.promisify(function(email, charityID, percentage, callba
       } else if (rows.rowCount > 0) {
         callback(null, 'email and charity are already in database');
       } else {
-        console.log('INSERT INTO usersCharities(percentage, id_users, id_charities) VALUES(...)');
+        // console.log('INSERT INTO usersCharities(percentage, id_users, id_charities) VALUES(...)');
         db.query({
           text: 'INSERT INTO usersCharities(percentage, id_users, id_charities) \
             VALUES($1, $2, $3)',
@@ -113,7 +113,7 @@ exports.getUserCharityFields = function(email, charityID, callback) {
     } else {
       queryString += 'SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\' AND id_charities = \'' + id_charities + '\';'
     }
-    console.log(queryString);
+    // console.log(queryString);
     db.query({
       text: queryString
     }, 

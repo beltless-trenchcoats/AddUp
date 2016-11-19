@@ -21,7 +21,7 @@ class CharityModal extends Component {
     this.close = this.close.bind(this)
   }
 
-  componentWillMount () {
+  componentDidMount () {
     axios.get('http://localhost:8080/api/session')
       .then((res) => {
         this.setState({ userEmail: res.data.email || '' });
@@ -30,8 +30,8 @@ class CharityModal extends Component {
         })
         .then((res) => {
           var usersCharities = res.data;
+          // If there is a current charity (if not, on user profile page)
           if (Object.keys(this.props.currentCharity).length) {
-            this.props.currentCharity.name = this.props.currentCharity.name.split(' ').map(word => _.capitalize(word)).join(' ');
             this.props.currentCharity.percentage = 0;
             if (!usersCharities) {
               usersCharities = [this.props.currentCharity];
@@ -40,7 +40,7 @@ class CharityModal extends Component {
               ((usersCharities.filter((charity) => charity.ein === this.props.currentCharity.ein)).length > 0) ? null : usersCharities.push(this.props.currentCharity)
             }
           }
-          console.log('currentcharity!', this.props.currentCharity)
+          
           this.setState({
             updatedCharities: usersCharities,
             charities: usersCharities
@@ -58,7 +58,6 @@ class CharityModal extends Component {
   updateTotal (percentage) {
     var newTotal = (this.state.donationTotal += percentage);
     newTotal = Math.round(newTotal * 100) / 100;
-    console.log('NEW TOTAL', newTotal);
     this.setState( { donationTotal:  newTotal} )
   }
 
@@ -68,17 +67,14 @@ class CharityModal extends Component {
   }
 
   updateCharities (index, charityId, remove, percentage) {
-    console.log('REMOVE', remove)
     let updates = $.extend(true, [], this.state.updatedCharities)
     updates[index].remove = remove;
     updates[index].id = charityId;
     updates[index].percentage = percentage;
     this.setState({ updatedCharities: updates });
-    console.log('withUpdateCharities', updates)
   }
 
   saveCharities () {
-    console.log('updated in saveCharities', this.state.updatedCharities)
     this.setState( {charities: this.state.updatedCharities})
     axios.post('http://localhost:8080/api/user/charities/update', {
       email: this.state.userEmail,

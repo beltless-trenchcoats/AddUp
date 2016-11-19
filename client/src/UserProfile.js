@@ -27,7 +27,7 @@ class UserProfile extends Component {
       monthlyLimitSet: false,
       charitiesSelected: false,
       userInfo: {},
-      monthlyLimit: '',
+      monthlyLimit: '--',
       newMonthlyLimit: 0,
       bankInfo: {},
       charities: [],
@@ -79,7 +79,7 @@ class UserProfile extends Component {
               bank_name: res.data.bank_name,
               bank_digits: res.data.bank_digits
             },
-            monthlyLimit: res.data.monthly_limit
+            monthlyLimit: res.data.monthly_limit || '--'
           });
           if (this.state.monthlyLimit) {
             this.setState({monthlyLimitSet: true});
@@ -202,7 +202,9 @@ class UserProfile extends Component {
   }
 
   componentDidMount() {
-    $('.userBankInfo div button span').html('Add Account');
+    $('.stepBox div button span').html('Add Account');
+    $('.stepBox div button').addClass('btn');
+    $('.stepBox div button').addClass('btn-default');
 
     //This is currently not working...supposed to dim any charities that have reached their goals
     $( document ).ready(function() {
@@ -309,8 +311,8 @@ class UserProfile extends Component {
         <div className="profilePage">
 
           <Grid>
-            <Row className='row'>
-              <Col className='col' md={6}>
+            <Row>
+              <Col md={6}>
                 <div className="userProfile shadowbox">
                 <div className='welcome'>Welcome, {this.state.userSession.firstName} {this.state.userSession.lastName}</div>
                   <div className='profileField'>
@@ -325,21 +327,22 @@ class UserProfile extends Component {
                   </div>
                   <div className='profileField'>
                     <span className='label'>Monthly Limit: </span>
+                    {this.state.monthlyLimit ? $ : null}
                     <span className='value'>$ {this.state.monthlyLimit}</span>
                   </div>
                 </div>
               </Col>
             </Row>
-            <Row className='row'>
+            <Row>
               <div className='profileOptions'>
-                <Col className='col' md={4}>
+                <Col md={4}>
                   <div className='step'>Step 1</div>
                 {
                   !this.state.hasLinkAccount ?
                     <div className='stepBox shadowbox'>
                       <form id="some-id" method="POST" action="/authenticate"></form>
                       <text className='profileHeader'> </text>
-                      <div className='linkText'>Link your account</div>
+                      <div className='linkText'>Link a bank account</div>
                       <PlaidLinkComponent successFunc={this.displayLinkAccount.bind(this)}/>
                     </div>
                   :
@@ -350,7 +353,7 @@ class UserProfile extends Component {
                     </div>
                 }
                 </Col>
-                <Col className='col' md={4}>
+                <Col md={4}>
                   <div className='step'>Step 2</div>
                   <div className="stepBox shadowbox">
                     {
@@ -361,7 +364,7 @@ class UserProfile extends Component {
                     <Button onClick={this.setMontlyLimit.bind(this)}>Save</Button>
                   </div>
                 </Col>
-                <Col className='col' md={4}>
+                <Col md={4}>
                   <div className='step'>Step 3</div>
                   <div className="stepBox shadowbox">
                     {
@@ -373,6 +376,7 @@ class UserProfile extends Component {
                 </Col>
               </div>
             </Row>
+          </Grid>
             <div>
               <Modal className="modal" show={this.state.showChangeEmailModal} onHide={this.closeEmail}>
                 <Modal.Header closeButton>
@@ -553,8 +557,11 @@ class UserProfile extends Component {
 
                 </Modal.Body>
               </Modal>
+
             <Row >
-              <Col className="userCharitiesContainer" md={12}>
+              {
+                this.state.charities.length ?
+              <div className="userCharitiesContainer" md={12}>
                 <Button className='addButton'>Edit</Button>
                 <h1>Send My Donations To...</h1>
                 <div className='userCharities'>
@@ -580,9 +587,23 @@ class UserProfile extends Component {
                     )
                 }
                 </div>
-              </Col>
+              </div>
+              : 
+              <div className='charitiesHeader'>
+                <div>Add a charity to start donating!</div>
+                <Button className='startButton'>Search</Button>
+              </div>
+              }
             </Row>
-            <Row >
+            <Row>
+              <div className='charitiesHeader'>
+                <div>Doing some fundraising of your own? Add a custom cause and invite friends to help you meet your goal!</div>
+                <Button className='startButton' onClick={this.openCause.bind(this)}>Get Started</Button>
+              </div>
+            </Row>
+            <Row>
+            {
+              this.state.customCauses.length ? 
               <Col className="userCharitiesContainer" md={12}>
                 <Button className='addButton' onClick={this.openCause.bind(this)}>Add Your Own</Button>
                 <h1>Causes You've Started</h1>
@@ -601,6 +622,8 @@ class UserProfile extends Component {
                 }
                 </div>
               </Col>
+              : null
+            } 
             </Row>
             <Row >
               <Col className="userTransactionsContainer">
@@ -625,7 +648,6 @@ class UserProfile extends Component {
                 </div>
               </Col>
             </Row>
-          </Grid>
 
         </div>
       </Header>

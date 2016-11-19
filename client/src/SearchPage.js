@@ -5,7 +5,6 @@ import axios from 'axios';
 
 import Header from './Header';
 import CharitySearchResult from './CharitySearchResult';
-import './searchPage.css';
 
 class SearchPage extends Component {
   constructor(props) {
@@ -214,8 +213,8 @@ class SearchPage extends Component {
             : this.state.searchResults.map((charity, i) =>
             <CharitySearchResult key={i} info={charity} />)}
           </div>
-          {(this.state.searchResults.length === 0) ?
-            <div className="pagination">
+          <div className="pagination">
+            {(this.state.searchResults.length === 0) ?
               <ReactPaginate previousLabel={"previous"}
                  nextLabel={"next"}
                  breakLabel={<a href="">...</a>}
@@ -226,9 +225,9 @@ class SearchPage extends Component {
                  containerClassName={"pagination"}
                  subContainerClassName={"pages pagination"}
                  activeClassName={"active"} />
-            </div>
-            : null
-          }
+              : null
+            }
+          </div>
         </div>
       </Header>
     );

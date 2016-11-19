@@ -12,11 +12,8 @@ body {
 }
 
 
-/*************** HEADER AND MODALS ******************/
+/*************** HEADER AND MODALS ***************/
 
-/*
-*  HEADER AND MODALS
-*/
 .App-logo {
   position:relative;
   height: 145%;
@@ -48,7 +45,7 @@ body {
 }
 
 .userProfileLink {
-  font-weight: 800;
+  font-weight: 200;
   color: white;
   position: relative;
 }
@@ -57,7 +54,7 @@ body {
   margin: 0 5px;
 }
 
-/*************** HOMEPAGE BODY ******************/
+/*************** HOMEPAGE BODY ***************/
 
 .imageDiv {
   height: 400px;
@@ -91,7 +88,7 @@ body {
   margin-left: 20px;
 }
 
-/*************** USER PROFILE PAGE ******************/
+/*************** USER PROFILE PAGE ***************/
 
 .shadowbox {
   border-radius: 4px;
@@ -129,7 +126,7 @@ h1 {
   padding: 20px 10px 30px 10px;
 }
 
-/*========== User Profile Box ============*/
+/*************** User Profile Box ***************/
 
 .welcome {
   font-size: 45px;
@@ -178,7 +175,7 @@ h1 {
   padding: 5px 20px 0px 10px;
 }
 
-/*========== Step Box ============*/
+/*************** Step Box ***************/
 
 .stepBox {
   width: 320px;
@@ -240,7 +237,7 @@ h1 {
   border: 1px solid red;
 }
 
-/*========== User Charities Banners ============*/
+/*************** User Charities Banners ***************/
 
 .charitiesBanner {
   width: 100%;
@@ -260,7 +257,7 @@ h1 {
   font-size: 25px;
 }
 
-/*========== User Charities ============*/
+/*************** User Charities ***************/
 
 .userCharitiesContainer {
   position: relative;
@@ -357,7 +354,7 @@ a:hover .charityInfo{
   color: #aaa;
 }
 
-/*========== User Custom Causes ============*/
+/*************** User Custom Causes ***************/
 
 .customCauses {
   display: flex;
@@ -393,7 +390,11 @@ a:hover .charityInfo{
   float: right;
 }
 
-/*========== User Transactions ============*/
+.percentage {
+  margin-left: 15px;
+}
+
+/*************** User Transactions ***************/
 
 .userTransactionsContainer {
   background-color: #eee;
@@ -410,7 +411,7 @@ a:hover .charityInfo{
   margin-top: 20px;
 }
 
-/*************** SEARCH PAGE ******************/
+/*************** SEARCH PAGE ***************/
 .searchPage {
   top: 55px;
   width: 100%;
@@ -428,7 +429,17 @@ a:hover .charityInfo{
   color: lightgrey;
 }
 
-/*************** CHARITY PROFILE PAGE ******************/
+.dropdownCat {
+  height: auto;
+  width: auto
+}
+
+.pagination {
+  position: relative;
+  left: 26%;
+}
+
+/*************** CHARITY PROFILE PAGE ***************/
 
 .charityProfilePage {
   top: 55px;
@@ -472,9 +483,7 @@ a:hover .charityInfo{
   text-align: center;
 }
 
-/*
-About Us Page
-*/
+/*************** About Us Page ***************/
 
 .aboutUsSection {
   position: absolute;
@@ -482,9 +491,7 @@ About Us Page
   font-size: 16pt;
 }
 
-/*
-Contact Us Page
-*/
+/*************** Contact Us Page ***************/
 
 .contactUsSection {
   position: absolute;

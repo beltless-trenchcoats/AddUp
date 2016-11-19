@@ -214,7 +214,7 @@ class SearchPage extends Component {
             <CharitySearchResult key={i} info={charity} />)}
           </div>
           <div className="pagination">
-            {(this.state.searchResults.length === 0) ?
+            {(this.state.searchResults.length !== 0) ?
               <ReactPaginate previousLabel={"previous"}
                  nextLabel={"next"}
                  breakLabel={<a href="">...</a>}

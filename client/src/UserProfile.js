@@ -23,9 +23,9 @@ class UserProfile extends Component {
     this.state = {
       transactions: [],
       userSession: {},
-      hasLinkAccount: false,
-      monthlyLimitSet: false,
-      charitiesSelected: false,
+      hasLinkAccount: null,
+      monthlyLimitSet: null,
+      charitiesSelected: null,
       userInfo: {},
       monthlyLimit: '--',
       newMonthlyLimit: 0,
@@ -82,12 +82,16 @@ class UserProfile extends Component {
             monthlyLimit: res.data.monthly_limit || '--'
           });
           if (this.state.monthlyLimit && this.state.monthlyLimit !== '--') {
-            this.setState({monthlyLimitSet: true});
+            this.state.monthlyLimitSet = true;
             $('#step2').removeClass('incomplete');
+          } else {
+            $('#step2').addClass('incomplete');
           }
           if (this.state.bankInfo.bank_name) {
-            this.setState({hasLinkAccount: true});
+            this.state.hasLinkAccount = true;
             $('#step1').removeClass('incomplete');
+          } else{
+            $('#step1').addClass('incomplete');
           }
           console.log('id ', res.data.id);
           var userSession = this.state.userSession;
@@ -117,8 +121,10 @@ class UserProfile extends Component {
         .then(res => {
           this.setState({charities: res.data});
           if (this.state.charities.length) {
-            this.setState({charitiesSelected: true});
+            this.state.charitiesSelected = true;
             $('#step3').removeClass('incomplete');
+          } else {
+            $('#step3').addClass('incomplete');
           }
         });
     })

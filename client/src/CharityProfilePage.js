@@ -23,7 +23,7 @@ class CharityProfilePage extends Component {
   }
 
   componentWillMount () {
-    axios.post('http://localhost:8080/charityInfo', {
+    axios.post('http://localhost:8080/api/charity/info', {
       charityId: this.state.charityId,
       type: this.props.params.type
     })

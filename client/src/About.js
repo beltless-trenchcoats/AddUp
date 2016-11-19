@@ -12,9 +12,11 @@ class About extends Component {
 
   render () {
     return (
-      <div>
-        <p>hello world</p>
-      </div>
+      <Header>
+        <div>
+          <p>hello world</p>
+        </div>
+      </Header>
     )
   }
 }

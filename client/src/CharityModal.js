@@ -30,9 +30,11 @@ class CharityModal extends Component {
         .then((res) => {
           this.props.currentCharity.percentage = 0;
           if (res.data === 'NO RECORDS') {
-            res.data = [];
+            res.data = [this.props.currentCharity];
+          } else {
+            ((res.data.filter((charity) => charity.ein === this.props.currentCharity.ein)).length > 0) ? null : res.data.push(this.props.currentCharity)
+            // res.data.push(this.props.currentCharity)
           }
-          res.data.push(this.props.currentCharity)
           console.log('currentcharity!', this.props.currentCharity)
           this.setState({
             updatedCharities: res.data,
@@ -47,10 +49,10 @@ class CharityModal extends Component {
       });
   }
 
-  updateTotal (percentage) {
-    var donationTotal = this.state.donationTotal
-    this.setState( { donationTotal:  donationTotal += percentage} )
-    console.log('total', this.state.donationTotal)
+  updateTotal (percentage) {  
+    var newTotal = this.state.donationTotal + percentage
+    console.log(newTotal )
+    this.setState( { donationTotal:  newTotal }, () => console.log('total', this.state.donationTotal) )
   }
 
   close() {
@@ -82,7 +84,6 @@ class CharityModal extends Component {
         console.log(err)
       })
     this.close();
-    // this.forceUpdate();
   }
 
   render() {

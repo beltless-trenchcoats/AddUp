@@ -17,9 +17,12 @@ class Contact extends Component {
         <div>
           <div className="contactUsSection">
 
-            <Col xs={6} md={4} className="infoColumn">
+            <Col xs={12} md={6} className="infoColumn">
               <Panel header="Contact Us" bsStyle="primary">
-                <p>Email: support@addUp.com</p>
+                <p>Email: support@AddUp.com
+                   Phone: 510-555-5555
+                   Address: 944 Market St. San Francisco, CA 94102
+                </p>
               </Panel>
             </Col>
           </div>

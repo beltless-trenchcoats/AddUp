@@ -87,6 +87,9 @@ class CharityModal extends Component {
     })
     .then((res) => {
       // console.log('response', res)
+      if (this.props.updateProfile) {
+        this.props.updateProfile(this.state.updatedCharities);
+      }
     })
     .catch((err) => {
       console.log(err)

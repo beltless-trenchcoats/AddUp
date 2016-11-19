@@ -9,7 +9,7 @@ exports.createCharity = Promise.promisify(function(values, callback) {
     var queryText = 'SELECT name, id FROM charities \
       WHERE name = \'' + values.name + '\';'
   }
-  console.log(queryText);
+  // console.log(queryText);
   db.query({
     text: queryText
   }, 
@@ -33,7 +33,7 @@ exports.createCharity = Promise.promisify(function(values, callback) {
             callback(err, null);
           } else {
             db.query({
-              text: 'SELECT * FROM charities WHERE ein = \'' + values.ein + '\';'
+              text: 'SELECT id FROM charities WHERE ein = \'' + values.ein + '\';'
             },
             function(err, result) {
               if (err) {

@@ -7,6 +7,7 @@ import $ from "jquery";
 
 import Header from './Header';
 import Transaction from './Transaction';
+import CharityModal from './CharityModal';
 
 const FieldGroup = ({ id, label, ...props }) => {
   return (
@@ -120,6 +121,7 @@ class UserProfile extends Component {
         })
         .then(res => {
           this.setState({charities: res.data});
+          console.log('CHARITIES', res.data);
           if (this.state.charities.length) {
             this.state.charitiesSelected = true;
             $('#step3').removeClass('incomplete');
@@ -584,13 +586,13 @@ class UserProfile extends Component {
             <Row >
               {
                 this.state.charities.length ?
-              <div className="userCharitiesContainer" md={12}>
+              <div className="userCharitiesContainer">
                 <Button className='editButton'>Edit</Button>
                 <h1>Your Donation Breakdown</h1>
                 <div className='userCharities'>
                 {
                   this.state.charities.sort((a, b) => b.percentage - a.percentage).map(charity =>
-                    <a href={'/charity/' + charity.ein}>
+                    <a href={'/' + charity.type + '/' + (charity.ein || charity.id)}>
                       <div className='userCharity'>
                         <div className='percentInfo'>
                           {charity.percentage*100} %
@@ -614,7 +616,7 @@ class UserProfile extends Component {
               : 
               <div className='charitiesBanner'>
                 <div>Add a charity to start donating!</div>
-                <Button className='startButton'>Search</Button>
+                <Button className='startButton' href="/search">Search</Button>
               </div>
               }
             </Row>
@@ -627,7 +629,7 @@ class UserProfile extends Component {
             <Row>
             {
               this.state.customCauses.length ? 
-              <Col className="userCharitiesContainer" md={12}>
+              <div className="userCharitiesContainer">
                 <h1>Causes You've Started</h1>
                 <div className='customCauses'>
                 {
@@ -641,7 +643,7 @@ class UserProfile extends Component {
                     )
                 }
                 </div>
-              </Col>
+              </div>
               : null
             } 
             </Row>
@@ -675,6 +677,13 @@ class UserProfile extends Component {
           : null
           }
         </div>
+
+        <CharityModal 
+          show={this.state.showModal} 
+          onHide={this.closeModal} 
+          currentCharity={this.state.basicCharityInfo} 
+
+        />
       </Header>
     );
   }

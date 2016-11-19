@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Button, Grid, Col, Row, Table } from 'react-bootstrap';
+import { Col, Row, Grid, Table, Button, Modal, Checkbox, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import { Gmaps, Marker } from 'react-gmaps';
 import axios from 'axios';
 
 import apiKeys from '../../server/config/API_Keys';
 import Header from './Header';
-import CharityModal from './CharityModal';
+// import CharityModal from './CharityModal';
 import Donation from './Donation';
+import EditCauseModal from './EditCauseModal';
 
 class CustomCauseProfilePage extends Component {
   constructor(props) {
@@ -14,22 +15,23 @@ class CustomCauseProfilePage extends Component {
     this.state = {
       charityId: this.props.params.id,
       charity: {},
-      donations: []
+      donations: [],
+      showCauseModal: false,
+      editCustomCauseFields: {},
+      userSession: {},
+      causePrivacy: true
     }
   }
 
   componentWillMount () {
-    axios.post('http://localhost:8080/charityInfo', {
-      charityId: this.state.charityId,
-      type: 'custom'
-    })
-    .then((res) => {
-      console.log('cause info', res.data);
-      this.setState({charity: res.data})
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+    axios.get('http://localhost:8080/userSession')
+    .then(res => {
+      this.setState({
+        userSession: res.data
+      });
+    });
+    this.getCharityInfo();
+
     axios.post('http://localhost:8080/api/customCause/transactions', {
       charityID: this.state.charityId
     })
@@ -42,6 +44,28 @@ class CustomCauseProfilePage extends Component {
     })
   }
 
+  openCause () {
+    this.setState({ showCauseModal: true})
+  }
+
+  getCharityInfo () {
+    axios.post('http://localhost:8080/charityInfo', {
+      charityId: this.state.charityId,
+      type: 'custom'
+    })
+    .then((res) => {
+      console.log('cause info', res.data);
+      this.setState({charity: res.data})
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }
+
+  closeCause () {
+    this.setState({ showCauseModal: false})
+  }
+
   render() {
     return (
       <Header>
@@ -49,6 +73,9 @@ class CustomCauseProfilePage extends Component {
 
         <Grid>
           <Row>
+            <Col>
+              <Button className="loginButton" bsSize="small" onClick={this.openCause.bind(this)}>Edit Cause</Button>
+            </Col>
             <h3>{this.state.charity.name}</h3>
             <div className="charityType">{this.state.charity.mission_statement}</div>
             <h3> ${this.state.charity.total_donated * 100 / this.state.charity.dollar_goal ? Math.floor(this.state.charity.total_donated * 100 / this.state.charity.dollar_goal) : 0}% Funded!</h3>
@@ -78,7 +105,12 @@ class CustomCauseProfilePage extends Component {
               </div>
             </Col>
           </Row>
+          <div>
+            <EditCauseModal getCharityInfo={this.getCharityInfo.bind(this)} userSession={this.state.userSession} charity={this.state.charity} showCauseModal={this.state.showCauseModal} closeCause={this.closeCause.bind(this)}/>
+          </div>
+         
         </Grid>
+ 
       </div>
     </Header>
     );

@@ -344,8 +344,8 @@ class UserProfile extends Component {
                     {<Button className="loginButton" bsSize="small" onClick={this.openEmail}>Change</Button>}
                   </div>
                   <div className='profileField'>
-                    <span className='label'>Password: </span>
-                    <span className='value'> </span>
+                    <span className='label'>Password:</span>
+                    <span className='value'>*******</span>
                     {<Button className="loginButton" bsSize="small" onClick={this.openPassword}>Change</Button>}
                   </div>
                   <div className='profileField'>

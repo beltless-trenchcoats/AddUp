@@ -222,7 +222,7 @@ app.get('/logout', function(req, res) {
 //   "city": "Santa Rosa",
 //   "state": "CA"
 // }
-app.post('/charitySearch', function(req, res) {
+app.post('/api/charity/search', function(req, res) {
   if (req.body.type === 'Custom Cause') {
     var keyWordMap = {
       searchTerm: 'name',
@@ -301,7 +301,7 @@ app.post('/charityInfo', function (req, res) {
           }
         });
       }
-    });   
+    });
   } else {
     charitiesDB.getCharityFields(req.body.charityId, function(err, result) {
       if (err) {

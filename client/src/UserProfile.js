@@ -99,7 +99,7 @@ class UserProfile extends Component {
           var userSession = this.state.userSession;
           userSession.id = res.data.id;
           this.setState({userSession: userSession});
-          axios.post('http://localhost:8080/charitySearch', {
+          axios.post('http://localhost:8080/api/charity/search', {
             'id_owner': res.data.id,
             'type': 'Custom Cause'
             })
@@ -194,7 +194,7 @@ class UserProfile extends Component {
     axios.post('http://localhost:8080/api/customCause/add', fields)
       .then(res => {
         console.log('response', res);
-        axios.post('http://localhost:8080/charitySearch', {
+        axios.post('http://localhost:8080/api/charity/search', {
           'id_owner': fields.id_owner,
           'type': 'Custom Cause'
           })
@@ -632,7 +632,7 @@ class UserProfile extends Component {
                 }
                 </div>
               </div>
-              : 
+              :
               <div className='charitiesBanner'>
                 <div>Add a charity to start donating!</div>
                 <Button className='startButton' href="/search">Search</Button>
@@ -647,7 +647,7 @@ class UserProfile extends Component {
             </Row>
             <Row>
             {
-              this.state.customCauses.length ? 
+              this.state.customCauses.length ?
               <div className="userCharitiesContainer">
                 <h1>Causes You've Started</h1>
                 <div className='customCauses'>
@@ -664,10 +664,10 @@ class UserProfile extends Component {
                 </div>
               </div>
               : null
-            } 
+            }
             </Row>
           {
-            this.state.transactions.length ? 
+            this.state.transactions.length ?
           <Grid>
             <Row >
               <Col className="userTransactionsContainer">
@@ -697,10 +697,10 @@ class UserProfile extends Component {
           }
         </div>
 
-        <CharityModal 
-          show={this.state.showEditCharitiesModal} 
-          onHide={this.closeEditCharitiesModal.bind(this)} 
-          currentCharity={{}} 
+        <CharityModal
+          show={this.state.showEditCharitiesModal}
+          onHide={this.closeEditCharitiesModal.bind(this)}
+          currentCharity={{}}
 
         />
       </Header>

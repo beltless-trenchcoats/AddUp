@@ -34,7 +34,7 @@ class CharityProfilePage extends Component {
       console.log(err)
     })
 
-    axios.post('http://localhost:8080/charitySearch', {
+    axios.post('http://localhost:8080/api/charity/search', {
       ein: this.state.charityId
     })
     .then((res) => {
@@ -103,7 +103,7 @@ class CharityProfilePage extends Component {
                   {this.props.params.type!=='custom' ? <div className="corpInfo">Section {this.state.charity.subsection} {this.state.charity.deductibility}</div> : null }
                   {this.props.params.type!=='custom' ? <div className="corpInfo">Reported Revenue: ${this.state.charity.totrevenue}</div> : null }
                   <div className="corpInfo">{this.state.charity.foundation}</div>
-                  <div className="corpInfo">{this.state.charity.affiliation}</div> 
+                  <div className="corpInfo">{this.state.charity.affiliation}</div>
                 </Col>}
 
               <Col md={6} mdPull={6} className="charityLocation">
@@ -134,10 +134,10 @@ class CharityProfilePage extends Component {
           </Grid>
         </div>
 
-        <CharityModal 
-          show={this.state.showModal} 
-          onHide={this.closeModal} 
-          currentCharity={this.state.basicCharityInfo} 
+        <CharityModal
+          show={this.state.showModal}
+          onHide={this.closeModal}
+          currentCharity={this.state.basicCharityInfo}
 
         />
 
@@ -147,4 +147,3 @@ class CharityProfilePage extends Component {
 }
 
 export default CharityProfilePage;
-

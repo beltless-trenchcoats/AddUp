@@ -64,7 +64,13 @@ class App extends Component {
               </Panel>
             </Col>
 
+            <div className="footer">
+              <p><Link to="/about"><Button bsStyle="primary">About Us</Button></Link></p>
+              <p><Link to="/contact"><Button bsStyle="primary">Contact Us</Button></Link></p>
+            </div>
+
           </div>
+
 
         </div>
       </Header>

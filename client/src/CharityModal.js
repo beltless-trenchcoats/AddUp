@@ -50,9 +50,8 @@ class CharityModal extends Component {
   }
 
   updateTotal (percentage) {  
-    var newTotal = this.state.donationTotal + percentage
-    console.log(newTotal )
-    this.setState( { donationTotal:  newTotal }, () => console.log('total', this.state.donationTotal) )
+    this.setState( { donationTotal:  this.state.donationTotal += percentage } )
+    console.log('total', this.state.donationTotal)
   }
 
   close() {

@@ -103,7 +103,7 @@ class CharityModal extends Component {
             <thead>
               <tr>
                 <th>Charity Name</th>
-                <th>Total Donations</th>
+                <th>Your Donations</th>
                 <th>Current Percentage Donation</th>
                 <th>Remove Charity</th>
               </tr>

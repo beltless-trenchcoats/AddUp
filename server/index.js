@@ -246,7 +246,7 @@ app.post('/api/charities/search', function(req, res) {
       } else if (!results) {
         res.send();
       } else {
-        console.log(results);
+        // console.log(results);
         results.forEach(function(item) {
           item.charityName = item.name;
           delete item.name;
@@ -309,7 +309,7 @@ app.post('/api/charity', function (req, res) {
       } else {
         var toSend = result[0];
         toSend.category = helperFunctions.convertCategoryToString(toSend.category);
-        console.log(toSend);
+        // console.log(toSend);
         res.send(toSend);
       }
     });
@@ -326,58 +326,48 @@ app.post('/api/charity/savedInfo', function (req, res) {
   })
 })
 
-app.post('/api/user/updateCharity', function(req, res) {
+app.post('/api/user/charities/update', function(req, res) {
+  var userEmail = req.body.email;
   req.body.charities.forEach(function (charity) {
+    // Remove any charities that the user has marked to remove
     if (charity.remove) {
-      userCharitiesDB.remove(req.body.email, charity.id, function (err, data) {
-        if (err) {
-          console.log(err)
-        } else {
-          console.log('Charity Removed: ', data)
-        }
-      })
-    } else {
-      charitiesDB.searchByEIN(charity.ein, function (err, data) {
-        if(data.length === 0) {
-          charitiesDB.createCharity(charity, function (err, data) {
+      userCharitiesDB.remove(userEmail, charity.id, function (err, charityRemoved) {
+        err ? console.log(err) : console.log('Charity Removed: ', charityRemoved);
+      });
+    } else { // Check if the current charity has already been saved to the database
+      charitiesDB.searchByEIN(charity.ein, function (err, results) {
+        // If it is not in db, add and also add entry to userscharities to link user to charity
+        if (results.length === 0) {
+          charitiesDB.createCharity(charity, function (err, charityAdded) {
             if (err) {
-              console.log(err)
+              console.log(err);
             } else {
-              userCharitiesDB.insert(req.body.email, data[0].id, charity.percentage, function (err, data) {
-                if (err) {
-                  console.log(err)
-                } else {
-                  console.log('Charity Added: ', data)
-                }
-              })
+              userCharitiesDB.insert(userEmail, charityAdded[0].id, charity.percentage, function (err, result) {
+                err ? console.log(err) : console.log('Charity Added and linked to user: ', charityAdded);
+                // res.sendStatus(200);
+              });
             }
           })
-        } else {
-          var charityID = data[0].id
-          userCharitiesDB.getUserCharityFields(req.body.email, charityID, function (err, data) {
-            if (data === null) {
-              userCharitiesDB.insert(req.body.email, charityID, charity.percentage, function (err, data) {
-                if (err) {
-                  console.log(err)
-                } else {
-                  console.log('Charity Added: ', data)
-                }
+        } else { // If the charity is already in the db, check if the user is already linked to it
+          var charityId = results[0].id;
+          userCharitiesDB.getUserCharityFields(userEmail, charityId, function (err, results) {
+            if (results === null) {
+              // If the user is not linked to the charity, add entry to db
+              userCharitiesDB.insert(userEmail, charityId, charity.percentage, function (err, result) {
+                err ? console.log(err) : console.log('Charity linked to user: ', result);
+                // res.sendStatus(200);
               })
-            } else {
-              userCharitiesDB.updatePercentage(req.body.email, charityID, charity.percentage, function (err, data) {
-                if (err) {
-                  console.log(err)
-                } else {
-                  console.log('Charity Updated: ', data)
-                }
+            } else { //If they are already linked, just update the percentage
+              userCharitiesDB.updatePercentage(userEmail, charityId, charity.percentage, function (err, result) {
+                err ? console.log(err) : console.log('Charity updated: ', result);
+                // res.sendStatus(200);
               })
             }
-          })
+          });
         }
-      })
+      });
     }
-  })
-  res.sendStatus(200)
+  });
 })
 
 app.post('/api/user/info', function(req, res) {
@@ -443,13 +433,13 @@ app.post('/api/user/update/limit', function(req, res) {
 
 //===================CUSTOM CAUSES=====================
 app.post('/api/customCause/add', function(req, res) {
-  console.log('body', req.body);
+  // console.log('body', req.body);
   charitiesDB.createCharity(req.body, function(err, result) {
     if (err) {
       console.log(err);
       res.send(err);
     } else {
-      console.log(result);
+      // console.log(result);
       res.send(result);
     }
   })
@@ -463,14 +453,14 @@ app.post('/api/customCause/search', function(req, res) {
       console.log(err);
       res.send(err);
     } else {
-      console.log(result);
+      // console.log(result);
       res.send(result);
     }
   })
 });
 
 app.post('/api/charity/update', function(req, res) {
-  console.log('body', req.body);
+  // console.log('body', req.body);
   charitiesDB.updateCharity(req.body.charityID, req.body.updateFields, function(result) {
     res.send(result);
   });

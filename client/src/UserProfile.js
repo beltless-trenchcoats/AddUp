@@ -562,7 +562,7 @@ class UserProfile extends Component {
               {
                 this.state.charities.length ?
               <div className="userCharitiesContainer" md={12}>
-                <Button className='addButton'>Edit</Button>
+                <Button className='editButton'>Edit</Button>
                 <h1>Send My Donations To...</h1>
                 <div className='userCharities'>
                 {
@@ -589,14 +589,14 @@ class UserProfile extends Component {
                 </div>
               </div>
               : 
-              <div className='charitiesHeader'>
+              <div className='charitiesBanner'>
                 <div>Add a charity to start donating!</div>
                 <Button className='startButton'>Search</Button>
               </div>
               }
             </Row>
             <Row>
-              <div className='charitiesHeader'>
+              <div className='charitiesBanner'>
                 <div>Doing some fundraising of your own? Add a custom cause and invite friends to help you meet your goal!</div>
                 <Button className='startButton' onClick={this.openCause.bind(this)}>Get Started</Button>
               </div>
@@ -605,18 +605,15 @@ class UserProfile extends Component {
             {
               this.state.customCauses.length ? 
               <Col className="userCharitiesContainer" md={12}>
-                <Button className='addButton' onClick={this.openCause.bind(this)}>Add Your Own</Button>
                 <h1>Causes You've Started</h1>
-                <div className='userCharities'>
+                <div className='customCauses'>
                 {
                   this.state.customCauses.map(cause =>
-                    <div className='userCharity'>
-                      <text className='title'>{cause.charityName}</text>
-                      <div>
-                        <text>Percent Funded: </text><text className='amount'>{Math.floor((cause.total_donated/cause.dollar_goal)*100)}%</text>
-                      </div>
-                      <text>Donated So Far: </text><text className='amount'>${cause.total_donated}</text>
-                      <text>Donation Goal: </text><text className='amount'>${cause.dollar_goal}</text>
+                    <div className='customCause'>
+                      <div className='title'>{cause.charityName}</div>
+                      <div className='contributors'>Number of Contributors:</div>
+                      <div className='percentage'>{Math.floor((cause.total_donated/cause.dollar_goal)*100)}%</div>
+                      <div className='amount'>$ {cause.total_donated} / {cause.dollar_goal}</div>
                     </div>
                     )
                 }
@@ -625,6 +622,9 @@ class UserProfile extends Component {
               : null
             } 
             </Row>
+          {
+            this.state.transactions.length ? 
+          <Grid>
             <Row >
               <Col className="userTransactionsContainer">
                 <h2>Transaction History</h2>
@@ -648,7 +648,9 @@ class UserProfile extends Component {
                 </div>
               </Col>
             </Row>
-
+          </Grid>
+          : null
+          }
         </div>
       </Header>
     );

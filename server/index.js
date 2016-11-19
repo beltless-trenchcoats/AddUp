@@ -128,7 +128,7 @@ app.post('/transactions', function(req, res) {
 });
 
 //signup new users to our local db
-app.post('/signup', function(req, res) {
+app.post('/api/session/signup', function(req, res) {
   var email = req.body.email;
   var password = req.body.password;
   var firstName = req.body.firstname;
@@ -136,7 +136,7 @@ app.post('/signup', function(req, res) {
   db.createUser(email, password, firstName, lastName)
     .then(function(success) {
       if (success) {
-        axios.post('http://localhost:8080/login', {
+        axios.post('http://localhost:8080/api/session/login', {
           email: email,
           password: password
         })
@@ -153,7 +153,7 @@ app.post('/signup', function(req, res) {
 });
 
 //login users
-app.post('/login', function(req, res) {
+app.post('/api/session/login', function(req, res) {
   var email = req.body.email;
   var password = req.body.password;
   db.loginUser(email, password, function(response) {
@@ -324,16 +324,6 @@ app.post('/api/charity/savedInfo', function (req, res) {
       res.send(data[0])
     }
   })
-})
-
-app.post('/userfield', function(req, res) {
-  db.getUserFields(req.body.email, function(err, data) {
-    if(err) {
-      res.send(err)
-    } else {
-      res.send(data[0]);
-    }
-  });
 })
 
 app.post('/api/user/updateCharity', function(req, res) {

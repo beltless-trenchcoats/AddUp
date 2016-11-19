@@ -62,7 +62,7 @@ exports.getTransactionsForCharity = function(id_charities, callback) {
 };
 
 //EXAMPLE USAGE
-// exports.insert(4, 1, 90, function(response) {
+// exports.insert(51, 14, 90, function(response) {
 //   console.log(response);
 // })
 

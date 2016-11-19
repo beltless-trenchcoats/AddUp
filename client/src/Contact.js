@@ -5,6 +5,7 @@ class Contact extends Component {
   render () {
     return (
       <Header>
+<<<<<<< HEAD
         <div className="contactUsSection">
           <div className='contact'>
             <p>Email: support@AddUp.com</p>

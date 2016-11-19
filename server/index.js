@@ -469,6 +469,17 @@ app.post('/api/customCause/search', function(req, res) {
   })
 });
 
+app.post('/api/customCause/transactions', function(req, res) {
+  console.log('body', req.body);
+  Transactions.getTransactionsForCharity(req.body.charityID, function(err, response) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(response);
+    }
+  });
+});
+
 app.post('/api/charity/update', function(req, res) {
   console.log('body', req.body);
   charitiesDB.updateCharity(req.body.charityID, req.body.updateFields, function(result) {

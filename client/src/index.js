@@ -8,6 +8,7 @@ import SearchPage from './SearchPage';
 import CharityProfilePage from "./CharityProfilePage";
 import About from "./About";
 import Contact from "./Contact";
+import CustomCauseProfilePage from "./CustomCauseProfile";
 
 ReactDOM.render (
 	<Router history={browserHistory}>
@@ -17,6 +18,7 @@ ReactDOM.render (
 			<Route path="/about" component={About} />
 			<Route path="/contact" component={Contact} />
 	   	<Route path="/:type/:id" component={CharityProfilePage} />
+      <Route path="/myCause/:id" component={CustomCauseProfilePage} />
 	</Router>,
   document.getElementById('root')
 );

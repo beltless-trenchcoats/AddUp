@@ -47,7 +47,7 @@ exports.getTransactionsForCharity = function(id_charities, callback) {
   // console.log('SELECT date_time, amount, name FROM (SELECT * FROM transactions WHERE id_charities = \'' + id_charities + '\') AS t \
   //   INNER JOIN charities ON charities.id = t.id_charities;');
   console.log('SELECT date_time, amount, name, id_charities, id_users, id_owner, first_name, last_name, email FROM (SELECT date_time, amount, name, id_charities, id_users, id_owner FROM (SELECT * FROM transactions WHERE id_charities = \'' + id_charities + '\') AS t \
-     INNER JOIN charities ON charities.id = t.id_charities) as c INNER JOIN users ON c.users_id = users.users_id;');
+     INNER JOIN charities ON charities.id = t.id_charities) as c INNER JOIN users ON c.id_users = users.users_id;');
   db.query({
     text: 'SELECT date_time, amount, name, id_charities, id_users, id_owner, first_name, last_name, email FROM (SELECT date_time, amount, name, id_charities, id_users, id_owner FROM (SELECT * FROM transactions WHERE id_charities = \'' + id_charities + '\') AS t \
      INNER JOIN charities ON charities.id = t.id_charities) as c INNER JOIN users ON c.id_users = users.id;'
@@ -70,13 +70,13 @@ exports.getTransactionsForCharity = function(id_charities, callback) {
 //   console.log(err, result);
 // });
 
-exports.getTransactionsForCharity(14, function(err, results) {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(results);
-  }
-})
+// exports.getTransactionsForCharity(14, function(err, results) {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log(results);
+//   }
+// })
 
 
 

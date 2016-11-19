@@ -22,7 +22,7 @@ class CharityModal extends Component {
   }
 
   componentWillMount () {
-    axios.get('http://localhost:8080/userSession')
+    axios.get('http://localhost:8080/api/session')
       .then((res) => {
         this.setState({ userEmail: res.data.email || '' });
         axios.post('http://localhost:8080/api/user/charities/info', {
@@ -43,7 +43,7 @@ class CharityModal extends Component {
           console.log('currentcharity!', this.props.currentCharity)
           this.setState({
             updatedCharities: usersCharities,
-            charities: usersCharities 
+            charities: usersCharities
           });
         })
         .catch((err) => {
@@ -55,7 +55,7 @@ class CharityModal extends Component {
       });
   }
 
-  updateTotal (percentage) {  
+  updateTotal (percentage) {
     this.setState( { donationTotal:  this.state.donationTotal += percentage } )
     console.log('total', this.state.donationTotal)
   }

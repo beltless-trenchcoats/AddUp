@@ -23,8 +23,12 @@ class UserProfile extends Component {
     this.state = {
       transactions: [],
       userSession: {},
-      hasLinkAccount: false,
+      hasLinkAccount: null,
+      monthlyLimitSet: null,
+      charitiesSelected: null,
       userInfo: {},
+      monthlyLimit: '--',
+      newMonthlyLimit: 0,
       bankInfo: {},
       charities: [],
       customCauses: [],
@@ -74,10 +78,20 @@ class UserProfile extends Component {
             bankInfo: {
               bank_name: res.data.bank_name,
               bank_digits: res.data.bank_digits
-            }
+            },
+            monthlyLimit: res.data.monthly_limit || '--'
           });
+          if (this.state.monthlyLimit && this.state.monthlyLimit !== '--') {
+            this.state.monthlyLimitSet = true;
+            $('#step2').removeClass('incomplete');
+          } else {
+            $('#step2').addClass('incomplete');
+          }
           if (this.state.bankInfo.bank_name) {
-            this.setState({hasLinkAccount: true});
+            this.state.hasLinkAccount = true;
+            $('#step1').removeClass('incomplete');
+          } else{
+            $('#step1').addClass('incomplete');
           }
           console.log('id ', res.data.id);
           var userSession = this.state.userSession;
@@ -106,6 +120,12 @@ class UserProfile extends Component {
         })
         .then(res => {
           this.setState({charities: res.data});
+          if (this.state.charities.length) {
+            this.state.charitiesSelected = true;
+            $('#step3').removeClass('incomplete');
+          } else {
+            $('#step3').addClass('incomplete');
+          }
         });
     })
   }
@@ -191,11 +211,26 @@ class UserProfile extends Component {
   }
 
   componentDidMount() {
-    $('.userBankInfo div button span').html('Add Account');
+    //Style pre-styled Plaid Link Button
+    $('.stepBox div button span').html('Add Account');
+    $('.stepBox div button').addClass('btn');
+    $('.stepBox div button').addClass('btn-default');
+
+    if (!this.state.hasLinkAccount) {
+      $('#step1').addClass('incomplete');
+    }
+
+    if (!this.state.monthlyLimitSet) {
+      $('#step2').addClass('incomplete');
+    }
+
+    if (!this.state.charitiesSelected) {
+      $('#step3').addClass('incomplete');
+    }
 
     //This is currently not working...supposed to dim any charities that have reached their goals
     $( document ).ready(function() {
-      $('.completed').closest('.userCharity').addClass('dim');
+      $('.goalReached').closest('.userCharity').addClass('dim');
     });
   }
 
@@ -207,6 +242,25 @@ class UserProfile extends Component {
         bank_name: bank_name,
         bank_digits: bank_digits
       }
+    });
+    $('#step1').removeClass('incomplete');
+  }
+
+  newLimit(e) {
+    this.setState({newMonthlyLimit: e.target.value});
+  }
+
+  setMontlyLimit(e) {
+    e.preventDefault();
+    axios.post('http://localhost:8080/api/user/update/limit', {
+      email: this.state.userSession.email,
+      limit: this.state.newMonthlyLimit
+    }).then(() => {
+      this.setState({
+        monthlyLimit: this.state.newMonthlyLimit,
+        monthlyLimitSet: true
+      });
+      $('#step2').removeClass('incomplete');
     });
   }
 
@@ -280,36 +334,72 @@ class UserProfile extends Component {
         <div className="profilePage">
 
           <Grid>
-            <Col>
-              <Button className="loginButton" bsSize="small" onClick={this.openCause.bind(this)}>Add a Cause</Button>
-            </Col>
             <Row>
-            {
-              !this.state.hasLinkAccount ?
-              <Col className="userBankInfo shadowbox" md={5}>
-                <form id="some-id" method="POST" action="/authenticate"></form>
-                <text className='profileHeader'> </text>
-                <h1>Link an account to start donating!</h1>
-                <PlaidLinkComponent successFunc={this.displayLinkAccount.bind(this)}/>
-              </Col>
-              :
-              <Col className="userBankInfo shadowbox" md={5}>
-                <h1>{this.state.bankInfo.bank_name}</h1>
-                <text className='account'>Account ending in: {this.state.bankInfo.bank_digits}</text>
-              </Col>
-            }
-
-              <Col className="userProfile shadowbox"md={6}>
-                <h1>{this.state.userSession.firstName} {this.state.userSession.lastName}</h1>
-                <div className='profileField'><span className='label'>Email:</span><span className='value'> {this.state.userSession.email}</span>
-                  {<Button className="loginButton" bsSize="small" onClick={this.openEmail}>Change</Button>}</div>
-                <div className='profileField'><span className='label'>Password: </span>
-                  {<Button className="loginButton" bsSize="small" onClick={this.openPassword}>Change</Button>}
+              <Col md={6}>
+                <div className="userProfile">
+                <div className='welcome'>Welcome, {this.state.userSession.firstName} {this.state.userSession.lastName}</div>
+                  <div className='profileField'>
+                    <span className='label'>Email:</span>
+                    <span className='value'> {this.state.userSession.email}</span>
+                    {<Button className="loginButton" bsSize="small" onClick={this.openEmail}>Change</Button>}
+                  </div>
+                  <div className='profileField'>
+                    <span className='label'>Password: </span>
+                    <span className='value'> </span>
+                    {<Button className="loginButton" bsSize="small" onClick={this.openPassword}>Change</Button>}
+                  </div>
+                  <div className='profileField'>
+                    <span className='label'>Monthly Limit: </span>
+                    {this.state.monthlyLimit ? $ : null}
+                    <span className='value'>$ {this.state.monthlyLimit}</span>
+                  </div>
                 </div>
               </Col>
             </Row>
-            {//ADD CAUSE MODAL
-            }
+            <Row>
+              <div className='profileOptions'>
+                <Col md={4}>
+                  <div className='step'>Step 1</div>
+                {
+                  !this.state.hasLinkAccount ?
+                    <div id='step1' className='stepBox shadowbox'>
+                      <form id="some-id" method="POST" action="/authenticate"></form>
+                      <text className='profileHeader'> </text>
+                      <div className='linkText'>Link a bank account</div>
+                      <PlaidLinkComponent successFunc={this.displayLinkAccount.bind(this)}/>
+                    </div>
+                  :
+                    <div id='step1' className="stepBox shadowbox">
+                      <div className='linked'>&#10004;</div>
+                      <div className='stepText'>{this.state.bankInfo.bank_name}</div>
+                      <text className='account'>Account ending in: {this.state.bankInfo.bank_digits}</text>
+                    </div>
+                }
+                </Col>
+                <Col md={4}>
+                  <div className='step'>Step 2</div>
+                  <div id='step2' className="stepBox shadowbox">
+                    {
+                      this.state.monthlyLimitSet ? <div className='linked'>&#10004;</div> : null
+                    }
+                    <div className='stepText'>Set A Monthly Limit</div>
+                    <text className='limit'>$ <FormControl id='limitInput' placeholder='e.g. 50' onChange={this.newLimit.bind(this)}></FormControl></text>
+                    <Button onClick={this.setMontlyLimit.bind(this)}>Save</Button>
+                  </div>
+                </Col>
+                <Col md={4}>
+                  <div className='step'>Step 3</div>
+                  <div id='step3' className="stepBox shadowbox">
+                    {
+                      this.state.charitiesSelected ? <div className='linked'>&#10004;</div> : null
+                    }
+                    <div className='stepText'>Select Your Charities</div>
+                    <div className='stepText'>&#9662;</div>
+                  </div>
+                </Col>
+              </div>
+            </Row>
+          </Grid>
             <div>
               <Modal className="modal" show={this.state.showChangeEmailModal} onHide={this.closeEmail}>
                 <Modal.Header closeButton>
@@ -490,51 +580,77 @@ class UserProfile extends Component {
 
                 </Modal.Body>
               </Modal>
+
             <Row >
-              <Col className="userCharitiesContainer" md={11}>
-                <h1>Your Charities</h1>
+              {
+                this.state.charities.length ?
+              <div className="userCharitiesContainer" md={12}>
+                <Button className='editButton'>Edit</Button>
+                <h1>Your Donation Breakdown</h1>
                 <div className='userCharities'>
                 {
-                  this.state.charities.map(charity =>
+                  this.state.charities.sort((a, b) => b.percentage - a.percentage).map(charity =>
                     <a href={'/charity/' + charity.ein}>
                       <div className='userCharity'>
-                        <div className='title'>{charity.name}</div>
-                        {
-                          (charity.goal_reached === '1') ?
-                          <div className='completed'>&#10004; Goal Reached</div>
-                          : null
-                        }
-                        <div className='amount'>${charity.user_donation_total}</div>
-                        <div className='since'>{this.convertToReadableDate(charity.initial_date)}</div>
+                        <div className='percentInfo'>
+                          {charity.percentage*100} %
+                        </div>
+                        <div className='charityInfo'>
+                          <div className='title'>{charity.name}</div>
+                          {
+                            (charity.goal_reached === '1') ?
+                            <div className='goalReached'>&#10004; Goal Reached</div>
+                            : null
+                          }
+                          <div className='amount'>${charity.user_donation_total}</div>
+                          <div className='since'>{this.convertToReadableDate(charity.initial_date)}</div>
+                        </div>
                       </div>
                     </a>
                     )
                 }
                 </div>
-              </Col>
+              </div>
+              : 
+              <div className='charitiesBanner'>
+                <div>Add a charity to start donating!</div>
+                <Button className='startButton'>Search</Button>
+              </div>
+              }
             </Row>
-            <Row >
-              <Col className="userCharitiesContainer" md={11}>
-                <h1>Your Causes</h1>
-                <div className='userCharities'>
+            <Row>
+              <div className='charitiesBanner'>
+                <div>Doing some fundraising of your own? Add a custom cause and invite friends to help you meet your goal!</div>
+                <Button className='startButton' onClick={this.openCause.bind(this)}>Get Started</Button>
+              </div>
+            </Row>
+            <Row>
+            {
+              this.state.customCauses.length ? 
+              <Col className="userCharitiesContainer" md={12}>
+                <h1>Causes You've Started</h1>
+                <div className='customCauses'>
                 {
                   this.state.customCauses.map(cause =>
-                    <div className='userCharity'>
-                      <text className='title'>{cause.charityName}</text>
-                      <div>
-                        <text>Percent Funded: </text><text className='amount'>{Math.floor((cause.total_donated/cause.dollar_goal)*100)}%</text>
-                      </div>
-                      <text>Donated So Far: </text><text className='amount'>${cause.total_donated}</text>
-                      <text>Donation Goal: </text><text className='amount'>${cause.dollar_goal}</text>
+                    <div className='customCause'>
+                      <div className='title'>{cause.charityName}</div>
+                      <div className='contributors'>Number of Contributors:</div>
+                      <div className='percentage'>{Math.floor((cause.total_donated/cause.dollar_goal)*100)}%</div>
+                      <div className='amount'>$ {cause.total_donated} / {cause.dollar_goal}</div>
                     </div>
                     )
                 }
                 </div>
               </Col>
+              : null
+            } 
             </Row>
+          {
+            this.state.transactions.length ? 
+          <Grid>
             <Row >
               <Col className="userTransactionsContainer">
-                <h2>Transaction History</h2>
+                <h1>Your Donation History</h1>
                 <div className="transactionHistory">
 
                   <Table responsive striped hover>
@@ -556,7 +672,8 @@ class UserProfile extends Component {
               </Col>
             </Row>
           </Grid>
-
+          : null
+          }
         </div>
       </Header>
     );

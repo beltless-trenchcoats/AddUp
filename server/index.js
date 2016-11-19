@@ -465,6 +465,15 @@ app.post('/api/user/updateUser', function(req, res) {
   }
 })
 
+//NOTE: This should be refactored into the same route as the one above...Ill do that post-MVP (Karina)
+app.post('/api/user/update/limit', function(req, res) {
+  var email = req.body.email;
+  var newLimit = req.body.limit;
+  db.updateUser(email, {monthly_limit: newLimit}, function(result) {
+    res.send(result);
+  });
+})
+
 //===================CUSTOM CAUSES=====================
 app.post('/api/customCause/add', function(req, res) {
   console.log('body', req.body);

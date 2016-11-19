@@ -277,7 +277,7 @@ app.post('/api/charities/search', function(req, res) {
   }
 });
 
-app.post('/api/charity/id', function (req, res) {
+app.post('/api/charity', function (req, res) {
   if (req.body.type === 'charity') {
     var options = {
       method: 'post',

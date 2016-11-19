@@ -25,15 +25,15 @@ class CharityModal extends Component {
     axios.get('http://localhost:8080/userSession')
       .then((res) => {
         this.setState({ userEmail: res.data.email || '' });
-        axios.post('http://localhost:8080/api/user/charities/donationInfo', {
+        axios.post('http://localhost:8080/api/user/charities/info', {
           email: this.state.userEmail
         })
         .then((res) => {
+          var usersCharities = res.data;
           if (Object.keys(this.props.currentCharity).length) {
             this.props.currentCharity.name = this.props.currentCharity.name.split(' ').map(word => _.capitalize(word)).join(' ');
             this.props.currentCharity.percentage = 0;
-            var usersCharities = res.data;
-            if (usersCharities === 'NO RECORDS') {
+            if (!usersCharities) {
               usersCharities = [this.props.currentCharity];
             } else {
               //test if current charity is already linked to user

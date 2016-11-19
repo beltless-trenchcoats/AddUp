@@ -92,7 +92,7 @@ class Header extends Component {
   signupUser (e) {
     e.preventDefault();
     if(this.state.password1 === this.state.password2) {
-      axios.post('http://localhost:8080/signup', {
+      axios.post('http://localhost:8080/api/session/signup', {
         email: this.state.email,
         password: this.state.password1,
         firstname: this.state.firstname,
@@ -124,7 +124,7 @@ class Header extends Component {
 
   loginUser (e) {
     e.preventDefault();
-    axios.post('http://localhost:8080/login', {
+    axios.post('http://localhost:8080/api/session/login', {
       email: this.state.email,
       password: this.state.password1
     })

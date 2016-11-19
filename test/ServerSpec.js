@@ -11,7 +11,7 @@ describe('Server routes', function() {
 
     describe('User login', function() {
       it('should send response with user data for a user who exists in the db', function(done) {
-        axios.post('http://localhost:8080/login',
+        axios.post('http://localhost:8080/api/session/login',
         {
           email: 'test@test.com',
           password: 'test'
@@ -49,9 +49,9 @@ describe('Server routes', function() {
           text: 'DELETE FROM users WHERE email=\'notarealemail@test.com\';'
         })
       });
-      
+
       it('should log in a user upon successful sign up', function(done) {
-        axios.post('http://localhost:8080/signup',
+        axios.post('http://localhost:8080/api/session/signup',
         {
           email: 'notarealemail@test.com',
           password: 'test',
@@ -64,7 +64,7 @@ describe('Server routes', function() {
           done();
         });
       });
-      
+
       it('should add a user to the database upon successful sign up', function(done) {
         Users.getUserFields('notarealemail@test.com', function(err, resp) {
           expect(resp[0]).to.exist;

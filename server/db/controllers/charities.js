@@ -188,10 +188,10 @@ exports.searchCustomCauses = function(searchFields, callback) {
 //     console.log('ERROR', err);
 //   });
 
-exports.createCharity({name: 'WORK PLEASEEEE', category: 'A', ein: 'po3oppoppp', donation_url: 'www.eggs.com', city: 'San Francisco',
-  state: 'CA', zip: '94114', mission_statement: 'To eat every frog in the fridge'}, function(err, response) {
-  console.log('THIS IS GOING TO BE THE RESPONSE ', response);
-});
+// exports.createCharity({name: 'SAVE THE CHARITY IDS34', category: 'A', ein: 'po3oppoppp', donation_url: 'www.eggs.com', city: 'San Francisco',
+//   state: 'CA', zip: '94114', mission_statement: 'To eat every frog in the fridge'}, function(err, response) {
+//   console.log('THIS IS GOING TO BE THE RESPONSE ', response);
+// });
 
 //custom cause
 // exports.createCharity({name: 'My cats paw grooming6', category: 'D', city: 'San Francisco',

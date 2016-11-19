@@ -56,8 +56,10 @@ class CharityModal extends Component {
   }
 
   updateTotal (percentage) {
-    this.setState( { donationTotal:  this.state.donationTotal += percentage } )
-    console.log('total', this.state.donationTotal)
+    var newTotal = (this.state.donationTotal += percentage);
+    newTotal = Math.round(newTotal * 100) / 100;
+    console.log('NEW TOTAL', newTotal);
+    this.setState( { donationTotal:  newTotal} )
   }
 
   close() {
@@ -78,16 +80,18 @@ class CharityModal extends Component {
   saveCharities () {
     console.log('updated in saveCharities', this.state.updatedCharities)
     this.setState( {charities: this.state.updatedCharities})
-      axios.post('http://localhost:8080/api/user/updateCharity', {
-        email: this.state.userEmail,
-        charities: this.state.updatedCharities
-      })
-      .then((res) => {
-        console.log('response', res)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    axios.post('http://localhost:8080/api/user/charities/update', {
+      email: this.state.userEmail,
+      charities: this.state.updatedCharities
+    })
+    .then((res) => {
+      if (this.props.updateProfile) {
+        this.props.updateProfile(this.state.updatedCharities);
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
     this.close();
   }
 
@@ -116,7 +120,7 @@ class CharityModal extends Component {
                   index={i}
                   charity={charity}
                   updateTotal={this.updateTotal}
-                  save={ this.updateCharities }/>
+                  updateCharities={ this.updateCharities }/>
               )}
             </tbody>
           </Table>
@@ -124,8 +128,8 @@ class CharityModal extends Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <div className="percentageError">{this.state.donationTotal > 1 ? <div>Donation total cannot be over 100%</div> : null}</div>
-          <Button bsStyle="primary" onClick={this.saveCharities} disabled={this.state.donationTotal > 1} >Save</Button>
+          <div className="percentageError">{this.state.donationTotal !== 1 ? <div>Donations must add to 100%</div> : null}</div>
+          <Button bsStyle="primary" onClick={this.saveCharities} disabled={this.state.donationTotal !== 1} >Save</Button>
           <Button onClick={this.close}>Cancel</Button>
         </Modal.Footer>
       </Modal>

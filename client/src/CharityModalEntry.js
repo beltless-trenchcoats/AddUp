@@ -12,7 +12,6 @@ class CharityModalEntry extends Component {
       name: this.props.charity.name,
       totalDonated: this.props.charity.total_donated,
       percentage: this.props.charity.percentage,
-      firstClick: true
     }
     this.prepForRemove = this.prepForRemove.bind(this)
     this.handleChange = this.handleChange.bind(this)
@@ -28,17 +27,12 @@ class CharityModalEntry extends Component {
   }
 
   handleChange (e) {
-    let updatedValue = Number(e.target.value)
-    let lastValue = this.state.percentage
-    this.setState({ percentage: updatedValue })
-    if (this.state.firstClick) {
-      this.setState({firstClick : false})
-      this.props.updateTotal.call(null, -lastValue)
-      this.props.updateTotal.call(null, updatedValue)
-    } else {
-      updatedValue <= lastValue ? this.props.updateTotal.call(null, updatedValue-lastValue) : this.props.updateTotal.call(null, updatedValue-lastValue)
-    }
-    this.props.save(this.props.index, this.state.charityId, this.state.remove, updatedValue);
+    let newPercent = Number(e.target.value);
+    let oldPercent = this.state.percentage;
+    this.setState({ percentage: newPercent });
+    this.props.updateTotal.call(null, parseFloat(oldPercent) * -1);
+    this.props.updateTotal.call(null, parseFloat(newPercent));
+    this.props.updateCharities(this.props.index, this.state.charityId, this.state.remove, newPercent);
   }
 
   render() {

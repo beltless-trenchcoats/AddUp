@@ -361,7 +361,6 @@ app.post('/userfield', function(req, res) {
 
 app.post('/api/user/updateCharity', function(req, res) {
   req.body.charities.forEach(function (charity) {
-    console.log('CHARITYCHARITY', charity)
     if (charity.remove) {
       userCharitiesDB.remove(req.body.email, charity.id, function (err, data) {
         if (err) {
@@ -371,33 +370,40 @@ app.post('/api/user/updateCharity', function(req, res) {
         }
       })
     } else {
-      charity.id = charity.id || null;
-      // charitiesDB.getCharityFields(charity.id, function (err, data) {
-
-      // })
-      userCharitiesDB.getUserCharityFields(req.body.email, charity.id, function (err, data) {
-        console.log('DATA!@#!@#',data)
-        if(err) {
-          console.log(err)
-        } else if (!charity.id) {
-          console.log('null data')
+      charitiesDB.searchByEIN(charity.ein, function (err, data) {
+        if(data.length === 0) {
           charitiesDB.createCharity(charity, function (err, data) {
-            console.log("DATATTATATATATATATATAT", charity)
-            console.log('DATA1', data[0].id)
-            userCharitiesDB.insert(req.body.email, data[0].id, charity.percentage, function (err, data) {
-              if (err) {
-                console.log(err)
-              } else {
-                console.log('Charity Added: ', data)
-              }
-            })
-          })
-        } else {
-          userCharitiesDB.updatePercentage(req.body.email, charity.id, charity.percentage, function (err, data) {
             if (err) {
               console.log(err)
             } else {
-              console.log('Charity Updated: ', data)
+              userCharitiesDB.insert(req.body.email, data[0].id, charity.percentage, function (err, data) {
+                if (err) {
+                  console.log(err)
+                } else {
+                  console.log('Charity Added: ', data)
+                }
+              })
+            }
+          })
+        } else {
+          var charityID = data[0].id
+          userCharitiesDB.getUserCharityFields(req.body.email, charityID, function (err, data) {
+            if (data === null) {
+              userCharitiesDB.insert(req.body.email, charityID, charity.percentage, function (err, data) {
+                if (err) {
+                  console.log(err)
+                } else {
+                  console.log('Charity Added: ', data)
+                }
+              })
+            } else {
+              userCharitiesDB.updatePercentage(req.body.email, charityID, charity.percentage, function (err, data) {
+                if (err) {
+                  console.log(err)
+                } else {
+                  console.log('Charity Updated: ', data)
+                }
+              })
             }
           })
         }

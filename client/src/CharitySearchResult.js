@@ -21,7 +21,7 @@ class CharitySearchResult extends Component {
         <p className="missionStatement"><span className="missionStatementTitle">Mission Statement: </span>{this.props.info.missionStatement}</p>
         <p className="location">{this.props.info.city}, {this.props.info.state}</p>
         <p className="website">{this.props.info.website}</p>
-        <a href={"/charity/" + this.state.type + '/' + this.state.charityId}><Button bsStyle="primary">Learn More and Donate</Button></a>
+        <a href={"/" + this.state.type + '/' + this.state.charityId}><Button bsStyle="primary">Learn More and Donate</Button></a>
       </Panel>
      </div>
     );

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Modal, Table } from 'react-bootstrap';
 import axios from 'axios';
 import $ from 'jquery';
+import _ from 'lodash';
 
 import CharityModalEntry from './CharityModalEntry';
 
@@ -28,16 +29,22 @@ class CharityModal extends Component {
           email: this.state.userEmail
         })
         .then((res) => {
-          this.props.currentCharity.percentage = 0;
-          if (res.data === 'NO RECORDS') {
-            res.data = [this.props.currentCharity];
-          } else {
-            ((res.data.filter((charity) => charity.ein === this.props.currentCharity.ein)).length > 0) ? null : res.data.push(this.props.currentCharity)
+          if (Object.keys(this.props.currentCharity).length) {
+            this.props.currentCharity.name = this.props.currentCharity.name.split(' ').map(word => _.capitalize(word)).join(' ');
+            this.props.currentCharity.percentage = 0;
+            var usersCharities = res.data;
+            if (usersCharities === 'NO RECORDS') {
+              usersCharities = [this.props.currentCharity];
+            } else {
+              //test if current charity is already linked to user
+              ((usersCharities.filter((charity) => charity.ein === this.props.currentCharity.ein)).length > 0) ? null : usersCharities.push(this.props.currentCharity)
+            }
           }
           console.log('currentcharity!', this.props.currentCharity)
           this.setState({
-            updatedCharities: res.data,
-            charities: res.data })
+            updatedCharities: usersCharities,
+            charities: usersCharities 
+          });
         })
         .catch((err) => {
           console.log(err)

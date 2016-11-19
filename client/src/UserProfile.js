@@ -84,13 +84,13 @@ class UserProfile extends Component {
             monthlyLimit: res.data.monthly_limit || '--'
           });
           if (this.state.monthlyLimit && this.state.monthlyLimit !== '--') {
-            this.state.monthlyLimitSet = true;
+            this.setState({monthlyLimitSet: true});
             $('#step2').removeClass('incomplete');
           } else {
             $('#step2').addClass('incomplete');
           }
           if (this.state.bankInfo.bank_name) {
-            this.state.hasLinkAccount = true;
+            this.setState({hasLinkAccount: true});
             $('#step1').removeClass('incomplete');
           } else{
             $('#step1').addClass('incomplete');
@@ -123,7 +123,7 @@ class UserProfile extends Component {
         .then(res => {
           this.setState({charities: res.data});
           if (this.state.charities.length) {
-            this.state.charitiesSelected = true;
+            this.setState({charitiesSelected: true});
             $('#step3').removeClass('incomplete');
           } else {
             $('#step3').addClass('incomplete');

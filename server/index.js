@@ -75,7 +75,7 @@ var plaidClient = new plaid.Client(client_id, secret, plaid.environments.tartan)
 
 //send a POST to Plaid's API to authenticate your user's credentials on
 //user bank linking
-app.post('/authenticate', function(req, res) {
+app.post('/api/plaid/authenticate', function(req, res) {
   var public_token = req.body.public_token;
   var account_id = req.body.account_id;
   var bank_name = req.body.institution_name;
@@ -90,7 +90,7 @@ app.post('/authenticate', function(req, res) {
       console.log('access token', access_token);
       console.log('stripe token', stripe_token);
       //save access tokens to the local db
-      axios.post('http://localhost:8080/transactions', {
+      axios.post('http://localhost:8080/api/plaid/transactions', {
         access_token: access_token
       })
       .then(resp => {
@@ -116,7 +116,7 @@ app.post('/authenticate', function(req, res) {
 });
 
 //sends POST to Plaid and returns transaction data
-app.post('/transactions', function(req, res) {
+app.post('/api/plaid/transactions', function(req, res) {
   axios.post('https://tartan.plaid.com/connect/get', {
     'client_id': '58224c96a753b9766d52bbd1',
     'secret': '04137ebffb7d68729f7182dd0a9e71',
@@ -203,7 +203,7 @@ app.get('/userSession', function(req, res) {
 
 
 //replace session email and currentUser with undefined
-app.get('/logout', function(req, res) {
+app.get('/api/session/logout', function(req, res) {
   currentUser = undefined;
   userSession = {};
   req.session.destroy(function(err) {
@@ -414,19 +414,19 @@ app.post('/api/user/charities/info', function(req, res) {
   })
 })
 
-app.post('/api/user/updateUser', function(req, res) {
+app.post('/api/user/update', function(req, res) {
   var email = req.body.email;
   var newEmail = req.body.newEmail;
   var newPassword = req.body.newPassword;
   console.log('email ', email, 'newEmail ', newEmail, 'newPassword ', newPassword);
   if(newEmail === undefined) {
     db.updateUser(email, {password: newPassword}, function(result) {
-      console.log('/api/user/updateUser password result ', result);
+      console.log('/api/user/update password result ', result);
       res.send(result);
     })
   } else {
     db.updateUser(email, {email: newEmail}, function(result) {
-      console.log('/api/user/updateUser email result ', result);
+      console.log('/api/user/update email result ', result);
       res.send(result);
     })
   }

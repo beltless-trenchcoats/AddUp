@@ -38,7 +38,6 @@ class CharityProfilePage extends Component {
       ein: this.state.charityId
     })
     .then((res) => {
-      console.log('basic info', res.data[0])
       res.data[0].name = res.data[0].charityName;
       res.data[0].zip = res.data[0].zipCode;
       res.data[0].donation_url = res.data[0].donationUrl;
@@ -54,7 +53,6 @@ class CharityProfilePage extends Component {
     })
     .then((res) => {
       this.setState({databaseCharityInfo: res.data})
-      console.log('hello', this.state.databaseCharityInfo)
     })
     .catch((err) => {
       console.log(err)

@@ -328,6 +328,7 @@ app.post('/api/charity/savedInfo', function (req, res) {
 
 app.post('/api/user/charities/update', function(req, res) {
   var userEmail = req.body.email;
+  var promises = [];
   req.body.charities.forEach(function (charity) {
     // Remove any charities that the user has marked to remove
     if (charity.remove) {
@@ -342,10 +343,7 @@ app.post('/api/user/charities/update', function(req, res) {
             if (err) {
               console.log(err);
             } else {
-              userCharitiesDB.insert(userEmail, charityAdded[0].id, charity.percentage, function (err, result) {
-                err ? console.log(err) : console.log('Charity Added and linked to user: ', charityAdded);
-                // res.sendStatus(200);
-              });
+              promises.push(userCharitiesDB.insert(userEmail, charityAdded[0].id, charity.percentage));
             }
           })
         } else { // If the charity is already in the db, check if the user is already linked to it
@@ -353,21 +351,16 @@ app.post('/api/user/charities/update', function(req, res) {
           userCharitiesDB.getUserCharityFields(userEmail, charityId, function (err, results) {
             if (results === null) {
               // If the user is not linked to the charity, add entry to db
-              userCharitiesDB.insert(userEmail, charityId, charity.percentage, function (err, result) {
-                err ? console.log(err) : console.log('Charity linked to user: ', result);
-                // res.sendStatus(200);
-              })
+              promises.push(userCharitiesDB.insert(userEmail, charityId, charity.percentage));
             } else { //If they are already linked, just update the percentage
-              userCharitiesDB.updatePercentage(userEmail, charityId, charity.percentage, function (err, result) {
-                err ? console.log(err) : console.log('Charity updated: ', result);
-                // res.sendStatus(200);
-              })
+              promises.push(userCharitiesDB.updatePercentage(userEmail, charityId, charity.percentage));
             }
           });
         }
       });
     }
   });
+  Promise.all(promises).then(() => res.sendStatus(200));
 })
 
 app.post('/api/user/info', function(req, res) {

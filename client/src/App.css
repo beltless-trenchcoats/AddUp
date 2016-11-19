@@ -14,8 +14,13 @@ body {
 
 /*************** HEADER AND MODALS ******************/
 
-.App-logo, .name {
+/*
+*  HEADER AND MODALS
+*/
+.App-logo {
+  position:relative;
   height: 145%;
+  top: -15%;
   float: left;
 }
 
@@ -57,6 +62,12 @@ body {
 .imageDiv {
   height: 400px;
 }
+
+.infoSections {
+  position: absolute;;
+  top: 60%;
+}
+
 .homeImage {
   width: 100%;
   height: auto;
@@ -67,6 +78,7 @@ body {
   -webkit-filter: blur(8px);
   -o-filter: blur(8px);
 }
+
 .jumbotron {
   top: 20%;
   border-radius: 8px;

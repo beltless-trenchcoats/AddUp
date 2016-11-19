@@ -28,16 +28,20 @@ class CharityModal extends Component {
           email: this.state.userEmail
         })
         .then((res) => {
-          this.props.currentCharity.percentage = 0;
-          if (res.data === 'NO RECORDS') {
-            res.data = [this.props.currentCharity];
-          } else {
-            ((res.data.filter((charity) => charity.ein === this.props.currentCharity.ein)).length > 0) ? null : res.data.push(this.props.currentCharity)
+          if (Object.keys(this.props.currentCharity).length) {
+            this.props.currentCharity.percentage = 0;
+            if (res.data === 'NO RECORDS') {
+              res.data = [this.props.currentCharity];
+            } else {
+              //test if current charity is already linked to user
+              ((res.data.filter((charity) => charity.ein === this.props.currentCharity.ein)).length > 0) ? null : res.data.push(this.props.currentCharity)
+            }
           }
           console.log('currentcharity!', this.props.currentCharity)
           this.setState({
             updatedCharities: res.data,
-            charities: res.data })
+            charities: res.data 
+          });
         })
         .catch((err) => {
           console.log(err)

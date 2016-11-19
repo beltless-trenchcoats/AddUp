@@ -132,6 +132,10 @@ class UserProfile extends Component {
     })
   }
 
+  updateCharities(charities) {
+    this.setState({charities: charities});
+  }
+
   openEmail () {
     this.setState({ showChangeEmailModal: true});
   }
@@ -701,7 +705,7 @@ class UserProfile extends Component {
           show={this.state.showEditCharitiesModal}
           onHide={this.closeEditCharitiesModal.bind(this)}
           currentCharity={{}}
-
+          updateProfile={this.updateCharities.bind(this)}
         />
       </Header>
     );

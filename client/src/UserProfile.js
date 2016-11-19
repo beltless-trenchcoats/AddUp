@@ -7,6 +7,7 @@ import $ from "jquery";
 
 import Header from './Header';
 import Transaction from './Transaction';
+import CharityModal from './CharityModal';
 
 const FieldGroup = ({ id, label, ...props }) => {
   return (
@@ -23,9 +24,9 @@ class UserProfile extends Component {
     this.state = {
       transactions: [],
       userSession: {},
-      hasLinkAccount: null,
-      monthlyLimitSet: null,
-      charitiesSelected: null,
+      hasLinkAccount: false,
+      monthlyLimitSet: false,
+      charitiesSelected: false,
       userInfo: {},
       monthlyLimit: '--',
       newMonthlyLimit: 0,
@@ -34,6 +35,7 @@ class UserProfile extends Component {
       customCauses: [],
       showChangePasswordModal: false,
       showChangeEmailModal: false,
+      showEditCharitiesModal: false,
       newPassword1: undefined,
       newPassword2: undefined,
       newEmail1: undefined,
@@ -82,13 +84,13 @@ class UserProfile extends Component {
             monthlyLimit: res.data.monthly_limit || '--'
           });
           if (this.state.monthlyLimit && this.state.monthlyLimit !== '--') {
-            this.state.monthlyLimitSet = true;
+            this.setState({monthlyLimitSet: true});
             $('#step2').removeClass('incomplete');
           } else {
             $('#step2').addClass('incomplete');
           }
           if (this.state.bankInfo.bank_name) {
-            this.state.hasLinkAccount = true;
+            this.setState({hasLinkAccount: true});
             $('#step1').removeClass('incomplete');
           } else{
             $('#step1').addClass('incomplete');
@@ -121,7 +123,7 @@ class UserProfile extends Component {
         .then(res => {
           this.setState({charities: res.data});
           if (this.state.charities.length) {
-            this.state.charitiesSelected = true;
+            this.setState({charitiesSelected: true});
             $('#step3').removeClass('incomplete');
           } else {
             $('#step3').addClass('incomplete');
@@ -218,14 +220,20 @@ class UserProfile extends Component {
 
     if (!this.state.hasLinkAccount) {
       $('#step1').addClass('incomplete');
+    } else {
+      $('#step1').removeClass('incomplete');
     }
 
     if (!this.state.monthlyLimitSet) {
       $('#step2').addClass('incomplete');
+    } else {
+      $('#step2').removeClass('incomplete');
     }
 
     if (!this.state.charitiesSelected) {
       $('#step3').addClass('incomplete');
+    } else {
+      $('#step3').removeClass('incomplete');
     }
 
     //This is currently not working...supposed to dim any charities that have reached their goals
@@ -236,6 +244,7 @@ class UserProfile extends Component {
 
   //This is called in PlaidLink.js when a user successfully links a bank account
   displayLinkAccount(bank_name, bank_digits) {
+    $('#step1').removeClass('incomplete');
     this.setState({
       hasLinkAccount: true,
       bankInfo: {
@@ -243,7 +252,6 @@ class UserProfile extends Component {
         bank_digits: bank_digits
       }
     });
-    $('#step1').removeClass('incomplete');
   }
 
   newLimit(e) {
@@ -256,11 +264,11 @@ class UserProfile extends Component {
       email: this.state.userSession.email,
       limit: this.state.newMonthlyLimit
     }).then(() => {
+      $('#step2').removeClass('incomplete');
       this.setState({
         monthlyLimit: this.state.newMonthlyLimit,
         monthlyLimitSet: true
       });
-      $('#step2').removeClass('incomplete');
     });
   }
 
@@ -326,6 +334,19 @@ class UserProfile extends Component {
     }
     this.renderEmailChange.call(this);
     this.setState({newEmail1: undefined, newEmail2: undefined});
+  }
+
+  openEditCharitiesModal() {
+    this.setState({ showEditCharitiesModal: true });
+  }
+  closeEditCharitiesModal() {
+    this.setState({ showEditCharitiesModal: false });
+  }
+
+  scrollDown() {
+    $('html,body').animate({
+        scrollTop: $('#charities').offset().top
+      }, 'slow');
   }
 
   render() {
@@ -394,7 +415,7 @@ class UserProfile extends Component {
                       this.state.charitiesSelected ? <div className='linked'>&#10004;</div> : null
                     }
                     <div className='stepText'>Select Your Charities</div>
-                    <div className='stepText'>&#9662;</div>
+                    <button onClick={this.scrollDown.bind(this)} className='scrollButton stepText'>&#9662;</button>
                   </div>
                 </Col>
               </div>
@@ -581,16 +602,16 @@ class UserProfile extends Component {
                 </Modal.Body>
               </Modal>
 
-            <Row >
+            <Row id='charities'>
               {
                 this.state.charities.length ?
-              <div className="userCharitiesContainer" md={12}>
-                <Button className='editButton'>Edit</Button>
+              <div className="userCharitiesContainer">
+                <Button className='editButton' onClick={this.openEditCharitiesModal.bind(this)} >Edit</Button>
                 <h1>Your Donation Breakdown</h1>
                 <div className='userCharities'>
                 {
                   this.state.charities.sort((a, b) => b.percentage - a.percentage).map(charity =>
-                    <a href={'/charity/' + charity.ein}>
+                    <a href={'/' + charity.type + '/' + (charity.ein || charity.id)}>
                       <div className='userCharity'>
                         <div className='percentInfo'>
                           {charity.percentage*100} %
@@ -614,7 +635,7 @@ class UserProfile extends Component {
               : 
               <div className='charitiesBanner'>
                 <div>Add a charity to start donating!</div>
-                <Button className='startButton'>Search</Button>
+                <Button className='startButton' href="/search">Search</Button>
               </div>
               }
             </Row>
@@ -627,7 +648,7 @@ class UserProfile extends Component {
             <Row>
             {
               this.state.customCauses.length ? 
-              <Col className="userCharitiesContainer" md={12}>
+              <div className="userCharitiesContainer">
                 <h1>Causes You've Started</h1>
                 <div className='customCauses'>
                 {
@@ -641,7 +662,7 @@ class UserProfile extends Component {
                     )
                 }
                 </div>
-              </Col>
+              </div>
               : null
             } 
             </Row>
@@ -675,6 +696,13 @@ class UserProfile extends Component {
           : null
           }
         </div>
+
+        <CharityModal 
+          show={this.state.showEditCharitiesModal} 
+          onHide={this.closeEditCharitiesModal.bind(this)} 
+          currentCharity={{}} 
+
+        />
       </Header>
     );
   }

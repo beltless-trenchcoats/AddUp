@@ -237,6 +237,16 @@ h1 {
   border: 1px solid red;
 }
 
+.scrollButton {
+  background-color: rgba(255,255, 255, 0);
+  border: none;
+  width: 100px;
+}
+
+.scrollButton:focus {
+  outline: none;
+}
+
 /*************** User Charities Banners ***************/
 
 .charitiesBanner {

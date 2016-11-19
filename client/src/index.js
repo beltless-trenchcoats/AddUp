@@ -14,9 +14,9 @@ ReactDOM.render (
 		<Route path="/" component={App}/>
 	    <Route path="/user" component={UserProfile} />
 	   	<Route path="/search" component={SearchPage} />
-	   	<Route path="/charity/:type/:id" component={CharityProfilePage} />
 			<Route path="/about" component={About} />
 			<Route path="/contact" component={Contact} />
+	   	<Route path="/:type/:id" component={CharityProfilePage} />
 	</Router>,
   document.getElementById('root')
 );

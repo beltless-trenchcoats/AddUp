@@ -277,29 +277,6 @@ app.post('/charitySearch', function(req, res) {
   }
 });
 
-app.post('/api/user/charities/donationInfo', function(req, res) {
-  dbHelpers.getIDs(req.body.email, '', function(idObj) {
-    var id_users = idObj.id_users;
-    console.log('SELECT * FROM (SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\') AS uc \
-      INNER JOIN charities ON charities.id = uc.id_charities;');
-    var queryString = 'SELECT * FROM (SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\') AS uc \
-      INNER JOIN charities ON charities.id = uc.id_charities;';
-    dbConfig.query({
-        text: queryString
-      },
-      function(err, results) {
-        if (err) {
-          res.send(err);
-        } else if (results.rowCount > 0) {
-          res.send(results.rows);
-        } else {
-          res.send('NO RECORDS');
-        }
-      }
-    );
-  });
-});
-
 app.post('/charityInfo', function (req, res) {
   if (req.body.type === 'charity') {
     var options = {

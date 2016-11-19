@@ -45,7 +45,7 @@ class CharityModalEntry extends Component {
     return ( 
       <tr>
         <td>{this.props.charity.name}</td>
-        <td>${this.props.charity.total_donated || 0}</td>
+        <td>${this.props.charity.user_donation_total || 0}</td>
         <td>
           <FormControl componentClass="select" onChange={this.handleChange} disabled={this.state.remove}>
             <option value={this.state.percentage}>{(this.state.percentage*100) + '%'}</option>

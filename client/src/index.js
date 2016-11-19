@@ -18,7 +18,7 @@ ReactDOM.render (
 			<Route path="/about" component={About} />
 			<Route path="/contact" component={Contact} />
 	   	<Route path="/:type/:id" component={CharityProfilePage} />
-      <Route path="/myCause/:id" component={CustomCauseProfilePage} />
+      <Route path="/myCause/edit/:id" component={CustomCauseProfilePage} />
 	</Router>,
   document.getElementById('root')
 );

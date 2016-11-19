@@ -24,7 +24,7 @@ class CustomCauseProfilePage extends Component {
   }
 
   componentWillMount () {
-    axios.get('http://localhost:8080/userSession')
+    axios.get('http://localhost:8080/api/session')
     .then(res => {
       this.setState({
         userSession: res.data

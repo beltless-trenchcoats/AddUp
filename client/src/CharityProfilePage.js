@@ -50,11 +50,11 @@ class CharityProfilePage extends Component {
     })
 
     axios.post('http://localhost:8080/api/charity/savedInfo', {
-      charityId: this.state.charityId
+      ein: this.state.charityId
     })
     .then((res) => {
       this.setState({databaseCharityInfo: res.data})
-      console.log(this.state.databaseCharityInfo)
+      console.log('hello', this.state.databaseCharityInfo)
     })
     .catch((err) => {
       console.log(err)

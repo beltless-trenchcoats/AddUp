@@ -1,8 +1,8 @@
 
 import React, { Component } from 'react';
 import PlaidLinkComponent from './PlaidLink';
-import { Col, Row, Grid, Table, Button, Modal, Checkbox, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Sector, Cell } from 'recharts';
+import { Col, Row, Grid, Table, Button, FormControl } from 'react-bootstrap';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell } from 'recharts';
 import axios from 'axios';
 import $ from "jquery";
 
@@ -317,7 +317,7 @@ class UserProfile extends Component {
                     fill="#8884d8"
                   >
                     {
-                      data.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
+                      charityPieChartData.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
                     }
                   </Pie>
               </PieChart>

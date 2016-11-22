@@ -338,6 +338,16 @@ app.post('/api/charities/search', function(req, res) {
   }
 });
 
+app.get('/api/transactions/all', function(req, res) {
+  dbConfig.query('SELECT * FROM transactions;', function(err, results) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(results.rows);
+    }
+  });
+});
+
 app.post('/api/charity', function (req, res) {
   if (req.body.type === 'charity') {
     var options = {
@@ -520,13 +530,19 @@ app.post('/charityInfo', function (req, res) {
       if (err) {
         console.log(err);
       } else {
-        var toSend = result[0];
-        toSend.category = helperFunctions.convertCategoryToString(toSend.category);
-        res.send(toSend);
+        if (!(req.body.charityId)) {
+          res.send(result);
+        } else {
+          var toSend = result[0];
+          toSend.category = helperFunctions.convertCategoryToString(toSend.category);
+          console.log(toSend);
+          res.send(toSend);
+        }
       }
     });
   }
 });
+
 
 //===================CUSTOM CAUSES=====================
 app.post('/api/customCause/add', function(req, res) {

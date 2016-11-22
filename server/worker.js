@@ -18,6 +18,7 @@ var processDailyTransactions = function() {
           .then(resp => {
             var transactions = resp.data.transactions;
             var newTransactions = findRecentTransactions(user, transactions);
+            // console.log('TRANSACTIONS', newTransactions);
             newTransactions.forEach(transaction => {
               var amtToCharge = roundUpTransaction(user, transaction);
               if (amtToCharge) {
@@ -37,22 +38,27 @@ var findRecentTransactions = function(user, transactions) {
     return transaction._account === user.plaid_account_id;
   });
   var mostRecentTransactionId = user.last_transaction_id;
+  var newTransactionId = '';
   var newTransactions = [];
   var index = 0;
   var trans = usersTransactions[index];
   while (trans && trans._id && trans._id !== mostRecentTransactionId) {
     newTransactions.push(trans);
+    newTransactionId = trans._id;
     index++;
     trans = usersTransactions[index];
   }
+  Users.updateUser(user.email, {
+    last_transaction_id: newTransactionId
+  }, () => {})
   return newTransactions;
 };
 
 // Calculate rounded amount to charge
 var roundUpTransaction = function(user, transaction) {
   var transAmt = transaction.amount;
-  // If the user is already over their limit or the transaction is 0 or a refund, exit
-  if (user.monthly_total >= user.monthly_limit || transAmt <= 0) {
+  // If the user is already over their limit or the transaction is 0  or even or a refund, exit
+  if (user.monthly_total >= user.monthly_limit || transAmt <= 0 || transAmt % 1 === 0) {
     return 0;
   }
   // Calculate round-up amount
@@ -88,6 +94,8 @@ var charge = function(user, amount) {
   }, function(err, charge) {
     if (err && err.type === 'StripeCardError') {
       console.log('Card Declined');
+    } else if (err) {
+      console.log(err);
     }
     // console.log('CHARGE', charge);
     if (charge) { //if the charge goes through
@@ -100,18 +108,22 @@ var charge = function(user, amount) {
 //check if limit has been reached for custom charity
 var distributeDonation = function(user, amount) {
   UsersCharities.getUserCharityFields(user.email, '', (err, charities) => {
-    charities.forEach(userCharity => {
-      var charity_id = userCharity.id_charities;
-      var amountForCharity = (amount * userCharity.percentage).toFixed(2);
-      Transactions.insert(user.id, charity_id, amountForCharity, () => {});
-      Charities.updateBalance(charity_id, {total_donated: amountForCharity, balance_owed: amountForCharity}, () => {
-        if (userCharity.type === 'custom' && userCharity.total_donated >= userCharity.dollar_goal) {
-          UsersCharities.updatePercentage(user.email, userCharity.name, 0, function(response) {
-            console.log(response);
-          });
-        };
+    if (charities) {
+    console.log('got hereeeee', charities);
+      charities.forEach(userCharity => {
+        var charity_id = userCharity.id_charities;
+        var amountForCharity = (amount * userCharity.percentage).toFixed(2);
+        Transactions.insert(user.id, charity_id, amountForCharity, () => {});
+        console.log('INSERTED');
+        Charities.updateBalance(charity_id, {total_donated: amountForCharity, balance_owed: amountForCharity}, () => {
+          if (userCharity.type === 'custom' && userCharity.total_donated >= userCharity.dollar_goal) {
+            UsersCharities.updatePercentage(user.email, userCharity.name, 0, function(response) {
+              console.log(response);
+            });
+          };
+        });
       });
-    });
+    }
   });
 }
 
@@ -123,4 +135,4 @@ module.exports = {
   distributeDonation: distributeDonation
 };
 
-// processDailyTransactions();
+processDailyTransactions();

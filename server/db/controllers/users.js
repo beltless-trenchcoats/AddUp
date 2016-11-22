@@ -56,6 +56,7 @@ exports.loginUser = function(email, password, callback) {
 };
 
 exports.updateUser = function(email, updateFields, callback) {
+  
   //encrypt new password
   if (updateFields.password) {
     var hash = bcrypt.hashSync(updateFields.password, 10);

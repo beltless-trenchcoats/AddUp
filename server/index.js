@@ -80,26 +80,41 @@ app.post('/api/plaid/authenticate', function(req, res) {
   var account_id = req.body.account_id;
   var bank_name = req.body.institution_name;
   var bank_digits = '';
-  // Exchange a public_token for a Plaid access_token
+
+  // Exchange a public_token for a Plaid access_token to get users past transactions
   plaidClient.exchangeToken(public_token, account_id, function(err, exchangeTokenRes) {
     if (err != null) {
       res.json('error!');
     } else {
       var access_token = exchangeTokenRes.access_token;
-      var stripe_token = exchangeTokenRes.stripe_bank_account_token;
-      //save access tokens to the local db
+
       axios.post('http://localhost:8080/api/plaid/transactions', {
         access_token: access_token
       })
       .then(resp => {
-        resp.data.accounts.forEach(account => {
-          if (account._id === account_id) {
-            bank_digits = account.meta.number;
+        var accounts = resp.data.accounts;
+        var transactions = resp.data.transactions;
+        //Get user's last four digits of bank account number
+        var index = 0;
+        while (bank_digits === '') {
+          if (accounts[index]._id === account_id) {
+            bank_digits = accounts[index].meta.number;
           }
-        });
+          index++;
+        }
+        //Get most recent transaction (to keep track of which transactions not to round up)
+        index = 0;
+        var mostRecentTransaction = '';
+        while (mostRecentTransaction === '') {
+          if (transactions[index]._account === account_id) {
+            mostRecentTransaction = transactions[index]._id;
+          }
+          index++;
+        }
         db.updateUser(userSession.email, {
+          plaid_account_id: account_id,
           plaid_access_token: access_token,
-          stripe_bank_account_token: stripe_token,
+          plaid_public_token: public_token,
           bank_name: bank_name,
           bank_digits: bank_digits
         },
@@ -331,7 +346,6 @@ app.post('/api/user/charities/update', function(req, res) {
         err ? console.log(err) : null;
       });
     } else { // Check if the current charity has already been saved to the database
-      console.log('SEARCHING FOR', charity.ein);
       charitiesDB.searchByEIN(charity.ein, function (err, results) {
         // If it is not in db, add and also add entry to userscharities to link user to charity
         if (results.length === 0) {
@@ -339,7 +353,6 @@ app.post('/api/user/charities/update', function(req, res) {
             if (err) {
               console.log(err);
             } else {
-              // console.log('new charity', charityAdded);
               promises.push(userCharitiesDB.insert(userEmail, charityAdded[0].id, charity.percentage));
             }
           })
@@ -438,7 +451,6 @@ app.post('/charityInfo', function (req, res) {
           } else {
             var toSend = body.data;
             toSend.total_donated = result[0] ? result[0].total_donated : 0;
-            console.log('sending', toSend);
             res.send(JSON.stringify(toSend));
           }
         });
@@ -451,7 +463,6 @@ app.post('/charityInfo', function (req, res) {
       } else {
         var toSend = result[0];
         toSend.category = helperFunctions.convertCategoryToString(toSend.category);
-        console.log(toSend);
         res.send(toSend);
       }
     });
@@ -483,7 +494,6 @@ app.post('/api/customCause/search', function(req, res) {
 });
 
 app.post('/api/customCause/transactions', function(req, res) {
-  console.log('body', req.body);
   Transactions.getTransactionsForCharity(req.body.charityID, function(err, response) {
     if (err) {
       res.send(err);

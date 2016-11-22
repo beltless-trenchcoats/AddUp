@@ -23,6 +23,7 @@ body {
   text-align: center;
   font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
   color: #333;
+  height: 100vh;
 }
 
 
@@ -71,6 +72,10 @@ body {
 
 .headerButton:hover {
   color: black;
+}
+
+.headerButton:focus {
+  outline: none;
 }
 
 .loginoutButton {
@@ -268,7 +273,7 @@ h1 {
 }
 
 .stepBox .account {
-  font-size: 24px;
+  font-size: 22px;
 }
 
 .stepBox div button {

@@ -41,18 +41,19 @@ var processDailyTransactions = function() {
 
 // Return new transactions since last transaction checked
 var findRecentTransactions = function(user, transactions) {
+  //filter transactions for correct account and whether they are already an even dollar amount and positive
   var usersTransactions = transactions.filter(function(transaction) {
-    return transaction._account === user.plaid_account_id;
+    return (transaction._account === user.plaid_account_id && 
+            transaction.amount % 1 !== 0 &&
+            transaction.amount > 0);
   });
   var mostRecentTransactionId = user.last_transaction_id;
-  var newTransactionId = '';
   var newTransactions = [];
   var index = 0;
   var trans = usersTransactions[index];
   // Iterate through recent transactions until find the last transaction that was rounded
   while (trans && trans._id && trans._id !== mostRecentTransactionId) {
     newTransactions.push(trans);
-    newTransactionId = trans._id;
     index++;
     trans = usersTransactions[index];
   }
@@ -62,8 +63,8 @@ var findRecentTransactions = function(user, transactions) {
 // Calculate rounded amount to charge
 var roundUpTransaction = function(user, transaction) {
   var transAmt = transaction.amount;
-  // If the user is already over their limit or the transaction is 0  or even or a refund, exit
-  if (user.monthly_total >= user.monthly_limit || transAmt <= 0 || transAmt % 1 === 0) {
+  // If the user is already over their limit, exit
+  if (user.monthly_total >= user.monthly_limit) {
     return 0;
   }
   // Calculate round-up amount

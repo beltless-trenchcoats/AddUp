@@ -69,10 +69,13 @@ body {
   font-weight: 200;
 }
 
+.headerButton:hover {
+  color: black;
+}
+
 .loginoutButton {
   color: #000;
 }
-
 
 .userProfileLink {
   display: inline-block;
@@ -82,6 +85,10 @@ body {
   color: #5B7091;
   font-size: 20px;
   margin-right: 10px;
+}
+
+.userProfileLink:hover {
+  color: black;
 }
 
 .modalButton {

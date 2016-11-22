@@ -1,6 +1,7 @@
 var db = require('../config/db');
 var bcrypt = require('bcrypt');
 var Promise = require('bluebird');
+var helpers = require('./helpers');
 
 exports.createUser = Promise.promisify(function(email, password, first_name, last_name, callback) {
   db.query({
@@ -87,23 +88,13 @@ exports.updateUser = function(email, updateFields, callback) {
 };
 
 exports.getUserFields = function(email, callback) {
-  var queryString = '';
-  if (email === '') {
-    queryString += 'SELECT * FROM users;';
-  } else {
-    queryString += 'SELECT * FROM users WHERE email = \'' + email + '\';'
-  }
-  db.query({
-    text: queryString
-  }, 
-  function(err, results) {
+  var filterFields = email ? {email: email} : null;
+  helpers.getFields(['*'], 'users', filterFields, function(err, results) {
     if (err) {
       callback(err, null);
-    } else if (results.rowCount > 0) {
-      callback(null, results.rows);
     } else {
-      callback('no rows for user ' + email, null);
-    }
+      callback(null, results);
+    } 
   });
 }
 
@@ -121,7 +112,7 @@ exports.getUserFields = function(email, callback) {
 //   console.log(result);
 // });
 
-// exports.getUserFields('herbert@gmail.com', function(err, data) {
+// exports.getUserFields('helga@gmail.com', function(err, data) {
 //   if (err) {
 //     console.log(err);
 //   } else {

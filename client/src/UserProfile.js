@@ -310,6 +310,21 @@ class UserProfile extends Component {
                 <Button className='searchButton' href="/search" >Add</Button>
                 <Button className='editButton' onClick={this.openEditCharitiesModal.bind(this)} >Edit</Button>
                 <h1>Your Donation Breakdown</h1>
+                <PieChart width={500} height={350} onMouseEnter={this.onPieEnter} className="pieChart">
+                  <Pie
+                    data={charityPieChartData}
+                    cx={150}
+                    cy={150}
+                    labelLine={false}
+                    label={renderCustomizedLabel}
+                    outerRadius={150}
+                    fill="#8884d8"
+                  >
+                    {
+                      data.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
+                    }
+                  </Pie>
+              </PieChart>
                 <div className='userCharities'>
                 {
                   this.state.charities.sort((a, b) => b.percentage - a.percentage).map(charity =>
@@ -418,22 +433,6 @@ class UserProfile extends Component {
             <Area type='monotone' dataKey='Donated' stroke='#82ca9d' fill='#82ca9d' />
           </AreaChart>
         </div>
-
-        <PieChart width={1800} height={1800} onMouseEnter={this.onPieEnter}>
-        <Pie
-          data={charityPieChartData}
-          cx={300}
-          cy={200}
-          labelLine={false}
-          label={renderCustomizedLabel}
-          outerRadius={150}
-          fill="#8884d8"
-        >
-        	{
-          	data.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
-          }
-        </Pie>
-      </PieChart>
       </Header>
     );
   }

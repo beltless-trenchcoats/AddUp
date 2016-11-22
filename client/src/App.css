@@ -535,3 +535,8 @@ a:hover .charityInfo{
   left: 19%;
   margin-top: 35px;
 }
+
+.pieChart {
+  position: relative;
+  left: 40%;
+}

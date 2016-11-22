@@ -15,7 +15,7 @@ class About extends Component {
   render () {
     return (
       <Header>
-        <img src={require('../public/Star_Rain_in_the_Desert.jpg')} className="aboutPhoto"/>
+        <img src={require('../public/sky.png')} className="aboutPhoto"/>
         <div>
           <div className="aboutUsSection">
 

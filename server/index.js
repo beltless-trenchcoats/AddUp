@@ -100,7 +100,7 @@ app.post('/api/plaid/authenticate', function(req, res) {
         db.updateUser(userSession.email, {
           plaid_account_id: account_id,
           plaid_access_token: access_token,
-          stripe_bank_account_token: stripe_token,
+          stripe_bank_account_token: public_token,
           bank_name: bank_name,
           bank_digits: bank_digits
         },

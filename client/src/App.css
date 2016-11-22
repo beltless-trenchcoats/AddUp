@@ -584,6 +584,11 @@ a:hover .charityInfo{
   font-size: 20pt;
 }
 
+.contactPhoto {
+  max-width: 100%;
+  height: auto;
+}
+
 
 /*************** Charts ***************/
 

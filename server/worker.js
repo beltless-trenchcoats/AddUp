@@ -12,20 +12,27 @@ var stripe = require('stripe')(test_key);
 var processDailyTransactions = function() {
   Users.getUserFields('', function(err, users) {
     users.forEach(user => {
-      if (user.email === 'kk@gmail.com' && user.plaid_access_token) { //If the user has linked a bank account through plaid
+      //If the user has linked a bank account through plaid
+      //TODO : Change stripe token to public token
+      if (user.plaid_access_token && user.stripe_bank_account_token) { 
         axios.post('http://localhost:8080/api/plaid/transactions', {
             'access_token': user.plaid_access_token
           })
           .then(resp => {
             var transactions = resp.data.transactions;
             var newTransactions = findRecentTransactions(user, transactions);
-            // console.log('TRANSACTIONS', newTransactions);
-            newTransactions.forEach(transaction => {
-              var amtToCharge = roundUpTransaction(user, transaction);
-              if (amtToCharge) {
-                charge(user, amtToCharge);
-              }
-            });
+            if (newTransactions) {
+              // Update in the db that this is now the most recent transaction processed
+              Users.updateUser(user.email, {
+                last_transaction_id: newTransactions[0]._id;
+              }, () => {});
+              newTransactions.forEach(transaction => {
+                var amtToCharge = roundUpTransaction(user, transaction);
+                if (amtToCharge) {
+                  charge(user, amtToCharge);
+                }
+              });
+            }
           })
           .catch(err => console.log('error pinging localhost:', err));
       }
@@ -43,15 +50,13 @@ var findRecentTransactions = function(user, transactions) {
   var newTransactions = [];
   var index = 0;
   var trans = usersTransactions[index];
+  // Iterate through recent transactions until find the last transaction that was rounded
   while (trans && trans._id && trans._id !== mostRecentTransactionId) {
     newTransactions.push(trans);
     newTransactionId = trans._id;
     index++;
     trans = usersTransactions[index];
   }
-  Users.updateUser(user.email, {
-    last_transaction_id: newTransactionId
-  }, () => {})
   return newTransactions;
 };
 

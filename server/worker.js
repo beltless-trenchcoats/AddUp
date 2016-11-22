@@ -3,6 +3,7 @@ var Transactions = require('./db/controllers/transactions');
 var UsersCharities = require('./db/controllers/usersCharities');
 var Charities = require('./db/controllers/charities');
 var axios = require('axios');
+var plaid = require('plaid');
 
 // Note: This should be the testing key unless we actually want to charge real money!
 var test_key = 'sk_test_eKJNtjs3Il6V1QZvyKs1dS6y';
@@ -11,7 +12,7 @@ var stripe = require('stripe')(test_key);
 var processDailyTransactions = function() {
   Users.getUserFields('', function(err, users) {
     users.forEach(user => {
-      if (user.plaid_access_token) { //If the user has linked a bank account through plaid
+      if (user.email === 'kk@gmail.com' && user.plaid_access_token) { //If the user has linked a bank account through plaid
         axios.post('http://localhost:8080/api/plaid/transactions', {
             'access_token': user.plaid_access_token
           })
@@ -85,31 +86,35 @@ var roundUpTransaction = function(user, transaction) {
 };
 
 var charge = function(user, amount) {
-  var stripe_token = user.stripe_bank_account_token;
-  var chargeAmount = amount * 100; // Note: The stripe charge takes an integer representing the number of cents (100 = $1.00)
-  var charge = stripe.charges.create({
-    amount: chargeAmount,
-    currency: "usd",
-    source: stripe_token
-  }, function(err, charge) {
-    if (err && err.type === 'StripeCardError') {
-      console.log('Card Declined');
-    } else if (err) {
-      console.log(err);
-    }
-    // console.log('CHARGE', charge);
-    if (charge) { //if the charge goes through
-      var chargeAmount = charge.amount / 100; //Change the amount back to a normal $X.XX number
-      distributeDonation(user, chargeAmount);
-    }
+  var client_id = '58224c96a753b9766d52bbd1';
+  var secret = '04137ebffb7d68729f7182dd0a9e71';
+  var plaidClient = new plaid.Client(client_id, secret, plaid.environments.tartan);
+  //TODO: Change name of stripe_bank...to public_token in db
+  plaidClient.exchangeToken(user.stripe_bank_account_token, user.plaid_account_id, function(err, exchangeTokenRes) {
+    var stripe_token = exchangeTokenRes.stripe_bank_account_token;
+    var chargeAmount = amount * 100; // Note: The stripe charge takes an integer representing the number of cents (100 = $1.00)
+    var charge = stripe.charges.create({
+      amount: chargeAmount,
+      currency: "usd",
+      source: stripe_token
+    }, function(err, charge) {
+      if (err && err.type === 'StripeCardError') {
+        console.log('Card Declined');
+      } else if (err) {
+        console.log(err);
+      }
+      if (charge) { //if the charge goes through
+        var chargeAmount = charge.amount / 100; //Change the amount back to a normal $X.XX number
+        distributeDonation(user, chargeAmount);
+      }
+    });
   });
 };
 
 //check if limit has been reached for custom charity
 var distributeDonation = function(user, amount) {
-  UsersCharities.getUserCharityFields(user.email, '', (err, charities) => {
+  UsersCharities.getUserCharityFields(user.email, null, (err, charities) => {
     if (charities) {
-    console.log('got hereeeee', charities);
       charities.forEach(userCharity => {
         var charity_id = userCharity.id_charities;
         var amountForCharity = (amount * userCharity.percentage).toFixed(2);

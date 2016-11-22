@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import PlaidLinkComponent from './PlaidLink';
 import { Col, Row, Grid, Table, Button, Modal, Checkbox, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Sector, Cell } from 'recharts';
-// import { scalePow, scaleLog } from 'd3-scale';
 import axios from 'axios';
 import $ from "jquery";
 

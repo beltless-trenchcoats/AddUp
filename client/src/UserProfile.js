@@ -114,10 +114,78 @@ class UserProfile extends Component {
         })
         .then(res => {
           this.setState({transactions: res.data});
-          res.data.map( (transaction) => {
-            var newDate = transaction.date_time.split('T');
-            transactionChartData.push({'Date': newDate[0], 'Donated': transaction.amount});
-          })
+            var months = [];
+            var January = {'date': 'January', 'Donated': 0 };
+            var February = {'date': 'February', 'Donated': 0 };
+            var March = {'date': 'March', 'Donated': 0 };
+            var April = {'date': 'April', 'Donated': 0 };
+            var May = {'date': 'May', 'Donated': 0 };
+            var June = {'date': 'June', 'Donated': 0 };
+            var July = {'date': 'July', 'Donated': 0 };
+            var August = {'date': 'August', 'Donated': 0 };
+            var September = {'date': 'September', 'Donated': 0 };
+            var October = {'date': 'October', 'Donated': 0 };
+            var November = {'date': 'November', 'Donated': 0 };
+            var December = {'date': 'December', 'Donated': 0 };
+          for(var i = 0; i < 1; i++) {
+            res.data.map( (transaction) => {
+              var newDate = transaction.date_time.split('T');
+              var newMonth = newDate[0].split('-');
+              if(newMonth[1] === '01') {
+                January['Donated'] += transaction.amount;
+                console.log('January', January);
+              } else if(newMonth[1] === '02') {
+                February['Donated'] += transaction.amount;
+                console.log('February ', February);
+              } else if(newMonth[1] === '03') {
+                March['Donated'] += transaction.amount;
+                console.log('March ', March);
+              } else if(newMonth[1] === '04') {
+                April['Donated'] += transaction.amount;
+                console.log('April ', April);
+              } else if(newMonth[1] === '05') {
+                May['Donated'] += transaction.amount;
+                console.log('May ', May);
+              } else if(newMonth[1] === '06') {
+                June['Donated'] += transaction.amount;
+                console.log('June ', June);
+              } else if(newMonth[1] === '07') {
+                July['Donated'] += transaction.amount;
+                console.log('July ', July);
+              } else if(newMonth[1] === '08') {
+                August['Donated'] += transaction.amount;
+                console.log('August ', August);
+              } else if(newMonth[1] === '09') {
+                September['Donated'] += transaction.amount;
+                console.log('September ', September);
+              } else if(newMonth[1] === '10') {
+                October['Donated'] += transaction.amount;
+                console.log('October ', October);
+              } else if(newMonth[1] === '11') {
+                November['Donated'] += transaction.amount;
+                console.log('November ', November);
+              } else if(newMonth[1] === '12') {
+                December['Donated'] += transaction.amount;
+                console.log('December ', December);
+              }
+            })
+            months.push(January);
+            months.push(February);
+            months.push(March);
+            months.push(April);
+            months.push(May);
+            months.push(June);
+            months.push(July);
+            months.push(August);
+            months.push(September);
+            months.push(October);
+            months.push(November);
+            months.push(December);
+          }
+          for(var j = 0; j < months.length; j++) {
+            console.log('months ',months[j]);
+            transactionChartData.push({ 'Date': months[j].date, 'Donated': months[j].Donated })
+          }
         });
 
       axios.post('http://localhost:8080/api/user/charities/info', {

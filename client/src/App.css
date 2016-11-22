@@ -77,6 +77,13 @@ body {
   color: #000;
 }
 
+.loginoutButton:hover {
+  border-style: solid;
+  border-radius: 10px;
+  border-width:0.5px;
+  border-color: black;
+}
+
 .userProfileLink {
   display: inline-block;
   font-weight: 200;

@@ -6,7 +6,7 @@ class PlaidLinkComponent extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      plaidData: [],
+      plaidData: {},
       public_token: ''
     }
     this.handleOnSuccess = this.handleOnSuccess.bind(this)

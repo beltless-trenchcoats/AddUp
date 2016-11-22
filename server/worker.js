@@ -13,18 +13,17 @@ var processDailyTransactions = function() {
   Users.getUserFields('', function(err, users) {
     users.forEach(user => {
       //If the user has linked a bank account through plaid
-      //TODO : Change stripe token to public token
-      if (user.plaid_access_token && user.stripe_bank_account_token) { 
+      if (user.plaid_access_token && user.plaid_public_token) { 
         axios.post('http://localhost:8080/api/plaid/transactions', {
             'access_token': user.plaid_access_token
           })
           .then(resp => {
             var transactions = resp.data.transactions;
             var newTransactions = findRecentTransactions(user, transactions);
-            if (newTransactions) {
+            if (newTransactions.length > 0) {
               // Update in the db that this is now the most recent transaction processed
               Users.updateUser(user.email, {
-                last_transaction_id: newTransactions[0]._id;
+                last_transaction_id: newTransactions[0]._id
               }, () => {});
               newTransactions.forEach(transaction => {
                 var amtToCharge = roundUpTransaction(user, transaction);
@@ -94,8 +93,7 @@ var charge = function(user, amount) {
   var client_id = '58224c96a753b9766d52bbd1';
   var secret = '04137ebffb7d68729f7182dd0a9e71';
   var plaidClient = new plaid.Client(client_id, secret, plaid.environments.tartan);
-  //TODO: Change name of stripe_bank...to public_token in db
-  plaidClient.exchangeToken(user.stripe_bank_account_token, user.plaid_account_id, function(err, exchangeTokenRes) {
+  plaidClient.exchangeToken(user.plaid_public_token, user.plaid_account_id, function(err, exchangeTokenRes) {
     var stripe_token = exchangeTokenRes.stripe_bank_account_token;
     var chargeAmount = amount * 100; // Note: The stripe charge takes an integer representing the number of cents (100 = $1.00)
     var charge = stripe.charges.create({
@@ -124,7 +122,6 @@ var distributeDonation = function(user, amount) {
         var charity_id = userCharity.id_charities;
         var amountForCharity = (amount * userCharity.percentage).toFixed(2);
         Transactions.insert(user.id, charity_id, amountForCharity, () => {});
-        console.log('INSERTED');
         Charities.updateBalance(charity_id, {total_donated: amountForCharity, balance_owed: amountForCharity}, () => {
           if (userCharity.type === 'custom' && userCharity.total_donated >= userCharity.dollar_goal) {
             UsersCharities.updatePercentage(user.email, userCharity.name, 0, function(response) {

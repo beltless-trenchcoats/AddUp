@@ -211,11 +211,10 @@ class UserProfile extends Component {
     return (
       <Header>
         <div className="profilePage">
-          <Grid>
             <Row>
-              <Col md={6}>
+              <Col >
                 <div className="userProfile">
-                <div className='welcome'>Welcome, {this.state.userSession.firstName} {this.state.userSession.lastName}</div>
+                  <div className='welcome'>Welcome, {this.state.userSession.firstName} {this.state.userSession.lastName}</div>
                   <div className='profileField'>
                     <span className='label'>Email:</span>
                     <span className='value'> {this.state.userSession.email}</span>
@@ -234,6 +233,7 @@ class UserProfile extends Component {
                 </div>
               </Col>
             </Row>
+          <Grid>
             <Row>
               <div className='profileOptions'>
                 <Col md={4}>
@@ -278,7 +278,7 @@ class UserProfile extends Component {
               </div>
             </Row>
           </Grid>
-          <Grid>
+
             <Row id='charities'>
               {
                 this.state.charities.length ?
@@ -346,7 +346,7 @@ class UserProfile extends Component {
               : null
             }
             </Row>
-          </Grid>
+
           {
             this.state.transactions.length ?
           <Grid>

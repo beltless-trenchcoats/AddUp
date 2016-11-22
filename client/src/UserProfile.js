@@ -115,7 +115,8 @@ class UserProfile extends Component {
         .then(res => {
           this.setState({transactions: res.data});
           res.data.map( (transaction) => {
-            transactionChartData.push({'name': transaction.name, 'Donated': transaction.amount});
+            var newDate = transaction.date_time.split('T');
+            transactionChartData.push({'Date': newDate[0], 'Donated': transaction.amount});
           })
         });
 
@@ -433,7 +434,7 @@ class UserProfile extends Component {
         <div className="donationGraph">
           <AreaChart width={900} height={400} data={transactionChartData} syncId="anyId"
                 margin={{top: 10, right: 30, left: 0, bottom: 0}}>
-            <XAxis dataKey="name"/>
+            <XAxis dataKey="Date"/>
             <YAxis/>
             <CartesianGrid strokeDasharray="3 3"/>
             <Tooltip/>

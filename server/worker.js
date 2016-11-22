@@ -3,6 +3,7 @@ var Transactions = require('./db/controllers/transactions');
 var UsersCharities = require('./db/controllers/usersCharities');
 var Charities = require('./db/controllers/charities');
 var axios = require('axios');
+var plaid = require('plaid');
 
 // Note: This should be the testing key unless we actually want to charge real money!
 var test_key = 'sk_test_eKJNtjs3Il6V1QZvyKs1dS6y';
@@ -11,19 +12,26 @@ var stripe = require('stripe')(test_key);
 var processDailyTransactions = function() {
   Users.getUserFields('', function(err, users) {
     users.forEach(user => {
-      if (user.plaid_access_token) { //If the user has linked a bank account through plaid
+      //If the user has linked a bank account through plaid
+      if (user.plaid_access_token && user.plaid_public_token) { 
         axios.post('http://localhost:8080/api/plaid/transactions', {
             'access_token': user.plaid_access_token
           })
           .then(resp => {
             var transactions = resp.data.transactions;
             var newTransactions = findRecentTransactions(user, transactions);
-            newTransactions.forEach(transaction => {
-              var amtToCharge = roundUpTransaction(user, transaction);
-              if (amtToCharge) {
-                charge(user, amtToCharge);
-              }
-            });
+            if (newTransactions.length > 0) {
+              // Update in the db that this is now the most recent transaction processed
+              Users.updateUser(user.email, {
+                last_transaction_id: newTransactions[0]._id
+              }, () => {});
+              newTransactions.forEach(transaction => {
+                var amtToCharge = roundUpTransaction(user, transaction);
+                if (amtToCharge) {
+                  charge(user, amtToCharge);
+                }
+              });
+            }
           })
           .catch(err => console.log('error pinging localhost:', err));
       }
@@ -37,11 +45,14 @@ var findRecentTransactions = function(user, transactions) {
     return transaction._account === user.plaid_account_id;
   });
   var mostRecentTransactionId = user.last_transaction_id;
+  var newTransactionId = '';
   var newTransactions = [];
   var index = 0;
   var trans = usersTransactions[index];
+  // Iterate through recent transactions until find the last transaction that was rounded
   while (trans && trans._id && trans._id !== mostRecentTransactionId) {
     newTransactions.push(trans);
+    newTransactionId = trans._id;
     index++;
     trans = usersTransactions[index];
   }
@@ -51,8 +62,8 @@ var findRecentTransactions = function(user, transactions) {
 // Calculate rounded amount to charge
 var roundUpTransaction = function(user, transaction) {
   var transAmt = transaction.amount;
-  // If the user is already over their limit or the transaction is 0 or a refund, exit
-  if (user.monthly_total >= user.monthly_limit || transAmt <= 0) {
+  // If the user is already over their limit or the transaction is 0  or even or a refund, exit
+  if (user.monthly_total >= user.monthly_limit || transAmt <= 0 || transAmt % 1 === 0) {
     return 0;
   }
   // Calculate round-up amount
@@ -79,39 +90,47 @@ var roundUpTransaction = function(user, transaction) {
 };
 
 var charge = function(user, amount) {
-  var stripe_token = user.stripe_bank_account_token;
-  var chargeAmount = amount * 100; // Note: The stripe charge takes an integer representing the number of cents (100 = $1.00)
-  var charge = stripe.charges.create({
-    amount: chargeAmount,
-    currency: "usd",
-    source: stripe_token
-  }, function(err, charge) {
-    if (err && err.type === 'StripeCardError') {
-      console.log('Card Declined');
-    }
-    // console.log('CHARGE', charge);
-    if (charge) { //if the charge goes through
-      var chargeAmount = charge.amount / 100; //Change the amount back to a normal $X.XX number
-      distributeDonation(user, chargeAmount);
-    }
+  var client_id = '58224c96a753b9766d52bbd1';
+  var secret = '04137ebffb7d68729f7182dd0a9e71';
+  var plaidClient = new plaid.Client(client_id, secret, plaid.environments.tartan);
+  plaidClient.exchangeToken(user.plaid_public_token, user.plaid_account_id, function(err, exchangeTokenRes) {
+    var stripe_token = exchangeTokenRes.stripe_bank_account_token;
+    var chargeAmount = amount * 100; // Note: The stripe charge takes an integer representing the number of cents (100 = $1.00)
+    var charge = stripe.charges.create({
+      amount: chargeAmount,
+      currency: "usd",
+      source: stripe_token
+    }, function(err, charge) {
+      if (err && err.type === 'StripeCardError') {
+        console.log('Card Declined');
+      } else if (err) {
+        console.log(err);
+      }
+      if (charge) { //if the charge goes through
+        var chargeAmount = charge.amount / 100; //Change the amount back to a normal $X.XX number
+        distributeDonation(user, chargeAmount);
+      }
+    });
   });
 };
 
 //check if limit has been reached for custom charity
 var distributeDonation = function(user, amount) {
-  UsersCharities.getUserCharityFields(user.email, '', (err, charities) => {
-    charities.forEach(userCharity => {
-      var charity_id = userCharity.id_charities;
-      var amountForCharity = (amount * userCharity.percentage).toFixed(2);
-      Transactions.insert(user.id, charity_id, amountForCharity, () => {});
-      Charities.updateBalance(charity_id, {total_donated: amountForCharity, balance_owed: amountForCharity}, () => {
-        if (userCharity.type === 'custom' && userCharity.total_donated >= userCharity.dollar_goal) {
-          UsersCharities.updatePercentage(user.email, userCharity.name, 0, function(response) {
-            console.log(response);
-          });
-        };
+  UsersCharities.getUserCharityFields(user.email, null, (err, charities) => {
+    if (charities) {
+      charities.forEach(userCharity => {
+        var charity_id = userCharity.id_charities;
+        var amountForCharity = (amount * userCharity.percentage).toFixed(2);
+        Transactions.insert(user.id, charity_id, amountForCharity, () => {});
+        Charities.updateBalance(charity_id, {total_donated: amountForCharity, balance_owed: amountForCharity}, () => {
+          if (userCharity.type === 'custom' && userCharity.total_donated >= userCharity.dollar_goal) {
+            UsersCharities.updatePercentage(user.email, userCharity.name, 0, function(response) {
+              console.log(response);
+            });
+          };
+        });
       });
-    });
+    }
   });
 }
 
@@ -123,4 +142,4 @@ module.exports = {
   distributeDonation: distributeDonation
 };
 
-// processDailyTransactions();
+processDailyTransactions();

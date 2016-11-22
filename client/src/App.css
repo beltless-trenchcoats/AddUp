@@ -570,6 +570,10 @@ a:hover .charityInfo{
   top: 30%;
   font-size: 16pt;
 }
+.aboutPhoto {
+  max-width: 100%;
+  height: auto;
+}
 
 /*************** Contact Us Page ***************/
 
@@ -580,6 +584,9 @@ a:hover .charityInfo{
   font-size: 20pt;
 }
 
+
+/*************** Charts ***************/
+
 .recharts-wrapper {
   position: relative;
   left: 19%;
@@ -589,9 +596,4 @@ a:hover .charityInfo{
 .pieChart {
   position: relative;
   left: 40%;
-}
-
-.aboutPhoto {
-  max-width: 100%;
-  height: auto;
 }

@@ -719,7 +719,7 @@ class UserProfile extends Component {
         />
 
         <div class="donationGraph">
-          <AreaChart width={600} height={200} data={data2} syncId="anyId"
+          <AreaChart width={900} height={400} data={data2} syncId="anyId"
                 margin={{top: 10, right: 30, left: 0, bottom: 0}}>
             <XAxis dataKey="name"/>
             <YAxis/>

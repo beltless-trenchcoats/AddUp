@@ -167,6 +167,21 @@ app.post("/oauth/callback", function(req, res) {
     var accessToken = JSON.parse(body).access_token;
     var stripeUserID = JSON.parse(body).stripe_user_id;
 
+    // var stripe = require("stripe")(
+    //   "sk_test_eKJNtjs3Il6V1QZvyKs1dS6y"
+    // );
+
+    // stripe.tokens.create({
+    //   card: {
+    //     "number": '4242424242424242',
+    //     "exp_month": 12,
+    //     "exp_year": 2017,
+    //     "cvc": '123'
+    //   }
+    // }, function(err, token) {
+    //   // asynchronously called
+    // });
+
     // Do something with your accessToken
     stripe.charges.create({
       amount: .01,
@@ -348,6 +363,7 @@ app.get('/api/transactions/all', function(req, res) {
   });
 });
 
+//charityId in request is EIN
 app.post('/api/charity', function (req, res) {
   if (req.body.type === 'charity') {
     var options = {
@@ -361,7 +377,7 @@ app.post('/api/charity', function (req, res) {
         console.log(err);
         res.send(err);
       } else {
-        charitiesDB.searchByEIN(req.body.charityId, function(err, result) {
+        charitiesDB.getCharityFields({ein: req.body.charityId}, function(err, result) {
           if (err) {
             console.log(err);
           } else {
@@ -373,7 +389,7 @@ app.post('/api/charity', function (req, res) {
       }
     });
   } else {
-    charitiesDB.getCharityFields(req.body.charityId, function(err, result) {
+    charitiesDB.getCharityFields({id: req.body.charityId}, function(err, result) {
       if (err) {
         console.log(err);
       } else {
@@ -386,7 +402,7 @@ app.post('/api/charity', function (req, res) {
 });
 
 app.post('/api/charity/savedInfo', function (req, res) {
-  charitiesDB.searchByEIN(req.body.ein, function (err, data) {
+  charitiesDB.getCharityFields({ein: req.body.ein}, function (err, data) {
     if (err) {
       res.send(err)
     } else {
@@ -405,7 +421,7 @@ app.post('/api/user/charities/update', function(req, res) {
         err ? console.log(err) : null;
       });
     } else { // Check if the current charity has already been saved to the database
-      charitiesDB.searchByEIN(charity.ein, function (err, results) {
+      charitiesDB.getCharityFields({ein: charity.ein}, function (err, results) {
         // If it is not in db, add and also add entry to userscharities to link user to charity
         if (results.length === 0) {
           charitiesDB.createCharity(charity, function (err, charityAdded) {
@@ -514,7 +530,7 @@ app.post('/charityInfo', function (req, res) {
         console.log(err);
         res.send(err);
       } else {
-        charitiesDB.searchByEIN(req.body.charityId, function(err, result) {
+        charitiesDB.getCharityFields({ein: req.body.charityId}, function(err, result) {
           if (err) {
             console.log(err);
           } else {
@@ -526,7 +542,9 @@ app.post('/charityInfo', function (req, res) {
       }
     });   
   } else {
-    charitiesDB.getCharityFields(req.body.charityId, function(err, result) {
+    if (req.body.charityId) { var filterFields = {id: req.body.charityId}; }
+    else { var filterFields = null; }
+    charitiesDB.getCharityFields(filterFields, function(err, result) {
       if (err) {
         console.log(err);
       } else {

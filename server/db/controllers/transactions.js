@@ -23,8 +23,7 @@ exports.insert = function(id_users, id_charities, amount, callback) {
 };
 
 exports.getTransactions = function(email, callback) {
-  helpers.getIDs(email, '', function(idObj) {
-    var id_users = idObj.id_users;
+  helpers.getUserID(email, function(id_users) {
     console.log('SELECT date_time, amount, name FROM (SELECT * FROM transactions WHERE id_users = \'' + id_users + '\') AS t \
       INNER JOIN charities ON charities.id = t.id_charities;');
     db.query({
@@ -78,8 +77,12 @@ exports.getTransactionsForCharity = function(id_charities, callback) {
 //   console.log(response);
 // });
 
-// exports.getTransactions('test@gmail.com', function(err, result) {
-//   console.log(err, result);
+// exports.getTransactions('kk@gmail.com', function(err, result) {
+//   if (err) {
+//     console.log(err)
+//   } else {
+//     console.log('transactions', result);
+//   }
 // });
 
 // exports.getTransactionsForCharity(14, function(err, results) {

@@ -20,12 +20,6 @@ const FieldGroup = ({ id, label, ...props }) => {
   );
 }
 
-// const data = [
-//       {name: 'Donation 1', Donated: 0.21},
-//       {name: 'Donation 2', Donated: 0.09},
-//       {name: 'Donation 3', Donated: 0.53}
-// ];
-
 let data2 = [];
 
 class UserProfile extends Component {
@@ -724,8 +718,7 @@ class UserProfile extends Component {
           updateProfile={this.updateCharities.bind(this)}
         />
 
-        <div>
-        	<h4>Donation Visualization</h4>
+        <div class="donationGraph">
           <AreaChart width={600} height={200} data={data2} syncId="anyId"
                 margin={{top: 10, right: 30, left: 0, bottom: 0}}>
             <XAxis dataKey="name"/>

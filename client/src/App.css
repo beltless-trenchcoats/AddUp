@@ -3,7 +3,7 @@ body {
   padding: 0;
   font-family: sans-serif;
   font-weight: 300;
-  background-color: #D3D3D3;
+  
 }
 
 .App::after {
@@ -541,8 +541,10 @@ a:hover .charityInfo{
 .searchPage {
   top: 55px;
   width: 100%;
+  height: 100vh;
   position: relative;
   color: black;
+  background-color: #D3D3D3;
 }
 
 .charityCard {

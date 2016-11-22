@@ -20,6 +20,7 @@ class CustomCauseProfilePage extends Component {
   }
 
   componentWillMount () {
+    console.log('THIS IS THE CURRENT URL', this.props.location.pathname);
     axios.get('http://localhost:8080/api/session')
     .then(res => {
       this.setState({

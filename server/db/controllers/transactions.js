@@ -62,9 +62,21 @@ exports.getTransactionsForCharity = function(id_charities, callback) {
 };
 
 //EXAMPLE USAGE
-// exports.insert(51, 14, 90, function(response) {
+// exports.insert(79, 72, .87, function(response) {
 //   console.log(response);
-// })
+// });
+
+// exports.insert(77, 72, .57, function(response) {
+//   console.log(response);
+// });
+
+// exports.insert(77, 72, .34, function(response) {
+//   console.log(response);
+// });
+
+// exports.insert(77, 72, .98, function(response) {
+//   console.log(response);
+// });
 
 // exports.getTransactions('test@gmail.com', function(err, result) {
 //   console.log(err, result);

@@ -12,15 +12,7 @@ import Transaction from './Transaction';
 import CharityModal from './CharityModal';
 import CustomCauseModal from './CustomCauseModal';
 import ChangeEmailModal from './ChangeEmailModal';
-
-const FieldGroup = ({ id, label, ...props }) => {
-  return (
-    <FormGroup controlId={id}>
-      <ControlLabel>{label}</ControlLabel>
-      <FormControl {...props} />
-    </FormGroup>
-  );
-}
+import ChangePasswordModal from './ChangePasswordModal';
 
 let data2 = [];
 
@@ -39,17 +31,8 @@ class UserProfile extends Component {
       bankInfo: {},
       charities: [],
       customCauses: [],
-      showChangePasswordModal: false,
       showEditCharitiesModal: false,
-      newPassword1: undefined,
-      newPassword2: undefined,
-      newPasswordMatch: true,
     }
-    this.openPassword = this.openPassword.bind(this);
-    this.closePassword = this.closePassword.bind(this);
-    this.newPassword1 = this.newPassword1.bind(this);
-    this.newPassword2 = this.newPassword2.bind(this);
-    this.checkPassword = this.checkPassword.bind(this);
     this.setCustomCauses = this.setCustomCauses.bind(this);
     this.setSession = this.setSession.bind(this);
   }
@@ -87,7 +70,6 @@ class UserProfile extends Component {
           } else{
             $('#step1').addClass('incomplete');
           }
-          console.log('id ', res.data.id);
           var userSession = this.state.userSession;
           userSession.id = res.data.id;
           this.setState({userSession: userSession});
@@ -127,33 +109,6 @@ class UserProfile extends Component {
     })
   }
 
-  updateCharities(charities) {
-    this.setState({charities: charities});
-  }
-
-  openPassword () {
-    this.setState({ showChangePasswordModal: true});
-  }
-
-  closePassword () {
-    this.setState({ showChangePasswordModal: false});
-  }
-
-  newPassword1 (e) {
-    this.setState({ newPassword1: e.target.value});
-  }
-
-  newPassword2 (e) {
-    this.setState({ newPassword2: e.target.value});
-  }
-
-  toggleModal () {
-    this.setState({
-      showChangeEmailModal: !this.state.showChangeEmailModal,
-      showChangePasswordModal: !this.state.showChangePasswordModal
-    })
-  }
-
   componentDidMount() {
     //Style pre-styled Plaid Link Button
     $('.stepBox div button span').html('Add Account');
@@ -182,6 +137,17 @@ class UserProfile extends Component {
     $( document ).ready(function() {
       $('.goalReached').closest('.userCharity').addClass('dim');
     });
+  }
+
+  updateCharities(charities) {
+    this.setState({charities: charities});
+  }
+
+  toggleModal () {
+    this.setState({
+      showChangeEmailModal: !this.state.showChangeEmailModal,
+      showChangePasswordModal: !this.state.showChangePasswordModal
+    })
   }
 
   //This is called in PlaidLink.js when a user successfully links a bank account
@@ -227,28 +193,6 @@ class UserProfile extends Component {
     return 'since ' + date.toLocaleDateString("en-us", options)
   }
 
-  checkPassword (e) {
-    e.preventDefault();
-    if(this.state.newPassword1 === this.state.newPassword2) {
-      this.setState({ newPasswordMatch: true});
-      this.closePassword();
-      axios.post('http://localhost:8080/api/user/update', {
-        email: this.state.userSession.email,
-        newEmail1: this.state.newEmail1,
-        newPassword: this.state.newPassword1
-      })
-      .then(function(res) {
-        console.log('Response in checkPassword ', res);
-      })
-      .catch(function(err) {
-        console.log('error in checkPassword POST ', err);
-      })
-    } else {
-      this.setState({ newPasswordMatch: false });
-    }
-    this.setState({newPassword1: undefined, newPassword2: undefined});
-  }
-
   openEditCharitiesModal() {
     this.setState({ showEditCharitiesModal: true });
   }
@@ -274,7 +218,6 @@ class UserProfile extends Component {
     return (
       <Header>
         <div className="profilePage">
-
           <Grid>
             <Row>
               <Col md={6}>
@@ -288,7 +231,7 @@ class UserProfile extends Component {
                   <div className='profileField'>
                     <span className='label'>Password:</span>
                     <span className='value'>*******</span>
-                    {<Button className="changeButton" bsSize="small" onClick={this.openPassword}>Change</Button>}
+                    <ChangePasswordModal session={this.state.userSession}/>
                   </div>
                   <div className='profileField'>
                     <span className='label'>Monthly Limit: </span>
@@ -342,46 +285,7 @@ class UserProfile extends Component {
               </div>
             </Row>
           </Grid>
-
-            <div>
-              <Modal className="modal" show={this.state.showChangePasswordModal} onHide={this.closePassword}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Change Password</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <p>Please enter your new password</p>
-
-                  <form onSubmit={this.signupUser}>
-                    <FieldGroup
-                      id="formControlsFirstname"
-                      type="password"
-                      required={true}
-                      label="New Password*"
-                      placeholder="Password"
-                      onChange={this.newPassword1}
-                    />
-                    <FieldGroup
-                      id="formControlsLastname"
-                      type="password"
-                      required={true}
-                      label="Confirm Password*"
-                      placeholder="Confirm Password"
-                      onChange={this.newPassword2}
-                    />
-                    <Button
-                      className="modalButton"
-                      type="submit"
-                      bsStyle="primary"
-                      onClick={this.checkPassword}
-                      >Change Password
-                    </Button>
-                    {this.state.newPasswordMatch ? null : <div className="matchError">Password's do not match</div>}
-                    <Button className="modalButton" onClick={this.closePassword}>Cancel</Button>
-                  </form>
-                  </Modal.Body>
-                </Modal>
-              </div>
-
+          <Grid>
             <Row id='charities'>
               {
                 this.state.charities.length ?
@@ -450,6 +354,7 @@ class UserProfile extends Component {
               : null
             }
             </Row>
+          </Grid>
           {
             this.state.transactions.length ?
           <Grid>

@@ -528,6 +528,6 @@ a:hover .charityInfo{
 
 .recharts-wrapper {
   position: relative;
-  left: 27%;
-  top: 50%
+  left: 19%;
+  margin-top: 35px;
 }

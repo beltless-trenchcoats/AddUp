@@ -320,7 +320,7 @@ class UserProfile extends Component {
                       charityPieChartData.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
                     }
                   </Pie>
-              </PieChart>
+                </PieChart>
                 <div className='userCharities'>
                 {
                   this.state.charities.sort((a, b) => b.percentage - a.percentage).map(charity =>

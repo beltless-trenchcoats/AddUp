@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import PlaidLinkComponent from './PlaidLink';
 import { Col, Row, Grid, Table, Button, Modal, Checkbox, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip} from 'recharts';
+// import { scalePow, scaleLog } from 'd3-scale';
 import axios from 'axios';
 import $ from "jquery";
 
@@ -17,6 +19,14 @@ const FieldGroup = ({ id, label, ...props }) => {
     </FormGroup>
   );
 }
+
+// const data = [
+//       {name: 'Donation 1', Donated: 0.21},
+//       {name: 'Donation 2', Donated: 0.09},
+//       {name: 'Donation 3', Donated: 0.53}
+// ];
+
+let data2 = [];
 
 class UserProfile extends Component {
   constructor(props) {
@@ -115,6 +125,9 @@ class UserProfile extends Component {
         })
         .then(res => {
           this.setState({transactions: res.data});
+          res.data.map( (transaction) => {
+            data2.push({'name': transaction.name, 'Donated': transaction.amount});
+          })
         });
 
       axios.post('http://localhost:8080/api/user/charities/info', {
@@ -681,7 +694,6 @@ class UserProfile extends Component {
               <Col className="userTransactionsContainer">
                 <h1>Your Donation History</h1>
                 <div className="transactionHistory">
-
                   <Table responsive striped hover>
                     <thead>
                       <tr>
@@ -711,6 +723,18 @@ class UserProfile extends Component {
           currentCharity={{}}
           updateProfile={this.updateCharities.bind(this)}
         />
+
+        <div>
+        	<h4>Donation Visualization</h4>
+          <AreaChart width={600} height={200} data={data2} syncId="anyId"
+                margin={{top: 10, right: 30, left: 0, bottom: 0}}>
+            <XAxis dataKey="name"/>
+            <YAxis/>
+            <CartesianGrid strokeDasharray="3 3"/>
+            <Tooltip/>
+            <Area type='monotone' dataKey='Donated' stroke='#82ca9d' fill='#82ca9d' />
+          </AreaChart>
+        </div>
       </Header>
     );
   }

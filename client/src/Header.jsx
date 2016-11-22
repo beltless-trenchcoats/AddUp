@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Button, Modal, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import { Link, browserHistory } from 'react-router';
 
-import logo from '../assets/images/addUpLogoUpdatedWhite.png';
+import logo from '../assets/images/addUpLogoUpdated.png';
 import FaUser from 'react-icons/lib/fa/user';
 
 const FieldGroup = ({ id, label, ...props }) => {
@@ -198,10 +198,11 @@ class Header extends Component {
 
           <div className="userButtons">
             {this.state.loggedIn ? <Link to="/user"><span className="userProfileLink"><FaUser className="userIcon"/> Hello, {this.state.firstname}!</span></Link> : null}
-            <Button className="navButton" bsSize="small" href="/search"><div className="searchLink">Search</div></Button>
-            {this.state.loggedIn ? <Button className="logoutButton" bsSize="small" onClick={this.openLogout}>Logout</Button> : null}
-            {this.state.loggedIn ? null : <Button className="loginButton" bsSize="small" onClick={this.openLogin}>Login</Button>}
-            {this.state.loggedIn ? null : <Button className="signupButton" bsSize="small" onClick={this.openSignup}>Sign Up</Button>}
+            <Link to="/about"><button className='headerButton'>About</button></Link>
+            <Link to="/search"><button className='headerButton'>Search</button></Link>
+            {this.state.loggedIn ? <button className="headerButton loginoutButton" onClick={this.openLogout}>Logout</button> : null}
+            {this.state.loggedIn ? null : <button className="headerButton loginoutButton" onClick={this.openLogin}>Login</button>}
+            {this.state.loggedIn ? null : <button className="headerButton loginoutButton" onClick={this.openSignup}>Sign Up</button>}
           </div>
 
         </div>

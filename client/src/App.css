@@ -575,6 +575,11 @@ a:hover .charityInfo{
   height: auto;
 }
 
+.aboutButton {
+  position: relative;
+  left: 46.5%;
+}
+
 /*************** Contact Us Page ***************/
 
 .contactUsSection {

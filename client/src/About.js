@@ -30,7 +30,7 @@ class About extends Component {
                     your donation history with our mobile app.
                 </p>
               </Panel>
-              <Link to="/contact"><Button>Contact Us</Button></Link>
+              <Link to="/contact"><Button className="aboutButton">Contact Us</Button></Link>
             </Col>
           </div>
         </div>

@@ -15,6 +15,7 @@ class Contact extends Component {
     return (
       <Header>
         <div>
+          <img src={require('../public/ocean.jpg')} className="contactPhoto" />
           <div className="contactUsSection">
 
             <Col xs={12} md={6} className="infoColumn">

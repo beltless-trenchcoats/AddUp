@@ -316,9 +316,7 @@ class UserProfile extends Component {
                     outerRadius={150}
                     fill="#8884d8"
                   >
-                    {
-                      charityPieChartData.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
-                    }
+                    {charityPieChartData.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)}
                   </Pie>
                 </PieChart>
                 <div className='userCharities'>

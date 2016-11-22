@@ -74,7 +74,6 @@ class UserProfile extends Component {
         'email': email
         })
         .then(res => {
-          console.log('userInfo', res.data)
           this.setState({
             userInfo: res.data,
             bankInfo: {

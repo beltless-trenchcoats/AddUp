@@ -163,7 +163,7 @@ exports.searchCustomCauses = function(searchFields, callback) {
     } else if (results.rowCount > 0) {
       if (searchFields.name) {
         var sendResults = results.rows.filter(function(item) {
-          return (item.name.indexOf(searchFields.name) > -1);
+          return (item.name.toLowerCase().indexOf(searchFields.name.toLowerCase()) > -1);
         });
       } else {
         var sendResults = results.rows;     

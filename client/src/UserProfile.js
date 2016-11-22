@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import PlaidLinkComponent from './PlaidLink';
 import { Col, Row, Grid, Table, Button, Modal, Checkbox, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip} from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Sector, Cell } from 'recharts';
 // import { scalePow, scaleLog } from 'd3-scale';
 import axios from 'axios';
 import $ from "jquery";
@@ -14,7 +14,26 @@ import CustomCauseModal from './CustomCauseModal';
 import ChangeEmailModal from './ChangeEmailModal';
 import ChangePasswordModal from './ChangePasswordModal';
 
-let data2 = [];
+let transactionChartData = [];
+
+const data = [{name: 'Group A', value: 400}, {name: 'Group B', value: 300},
+                  {name: 'Group C', value: 300}, {name: 'Group D', value: 200}];
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+const RADIAN = Math.PI / 180;
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+ 	const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x  = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy  + radius * Math.sin(-midAngle * RADIAN);
+
+  return (
+    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} 	dominantBaseline="central">
+    	{`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
+
+let charityPieChartData = [];
 
 class UserProfile extends Component {
   constructor(props) {
@@ -90,7 +109,7 @@ class UserProfile extends Component {
         .then(res => {
           this.setState({transactions: res.data});
           res.data.map( (transaction) => {
-            data2.push({'name': transaction.name, 'Donated': transaction.amount});
+            transactionChartData.push({'name': transaction.name, 'Donated': transaction.amount});
           })
         });
 
@@ -105,6 +124,11 @@ class UserProfile extends Component {
           } else {
             $('#step3').addClass('incomplete');
           }
+          res.data.map( (charity) => {
+            if(charity.percentage > 0) {
+              charityPieChartData.push({'name': charity.name, 'value': charity.percentage})
+            }
+          })
         });
     })
   }
@@ -286,6 +310,21 @@ class UserProfile extends Component {
                 <Button className='searchButton' href="/search" >Add</Button>
                 <Button className='editButton' onClick={this.openEditCharitiesModal.bind(this)} >Edit</Button>
                 <h1>Your Donation Breakdown</h1>
+                <PieChart width={500} height={350} onMouseEnter={this.onPieEnter} className="pieChart">
+                  <Pie
+                    data={charityPieChartData}
+                    cx={150}
+                    cy={150}
+                    labelLine={false}
+                    label={renderCustomizedLabel}
+                    outerRadius={150}
+                    fill="#8884d8"
+                  >
+                    {
+                      data.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
+                    }
+                  </Pie>
+              </PieChart>
                 <div className='userCharities'>
                 {
                   this.state.charities.sort((a, b) => b.percentage - a.percentage).map(charity =>
@@ -385,7 +424,7 @@ class UserProfile extends Component {
         />
 
         <div class="donationGraph">
-          <AreaChart width={900} height={400} data={data2} syncId="anyId"
+          <AreaChart width={900} height={400} data={transactionChartData} syncId="anyId"
                 margin={{top: 10, right: 30, left: 0, bottom: 0}}>
             <XAxis dataKey="name"/>
             <YAxis/>

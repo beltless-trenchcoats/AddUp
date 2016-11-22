@@ -62,6 +62,14 @@ class UserProfile extends Component {
   }
 
   componentWillMount() {
+    // if (this.props.location.query.code) {
+    //   axios.post('http://localhost:8080/oauth/callback', {
+    //     code: this.props.location.query.code
+    //   })
+    //   .then(res => {
+    //     console.log('stripe info', res.data);
+    //   });
+    // }
     axios.get('http://localhost:8080/api/session')
     .then(res => {
       this.setState({
@@ -437,6 +445,9 @@ class UserProfile extends Component {
                 <div>Doing some fundraising of your own? Add a custom cause and invite friends to help you meet your goal!</div>
                   <CustomCauseModal purpose='add' session={this.state.userSession} setCauses={this.setCustomCauses}/>
               </div>
+              <Col>
+                <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_9bfGnqU5JGVlcbNEJfmcmCCDAewlhQP7&scope=read_write" class="stripe-connect"><span>Connect with Stripe</span></a>
+              </Col>
             </Row>
             <Row>
             {

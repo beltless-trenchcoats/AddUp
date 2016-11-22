@@ -3,7 +3,6 @@ import { Link } from 'react-router';
 import { Button, Jumbotron, Col, Panel } from 'react-bootstrap';
 import axios from 'axios';
 
-import homeImage from '../public/background.jpg'
 import './App.css';
 
 import Header from './Header';
@@ -33,14 +32,12 @@ class App extends Component {
     return (
       <Header>
         <div className="App">
-
-          <div className="imageDiv">
-            <img src={homeImage} className="homeImage" alt="home" />
+          <div className="description">
             <Jumbotron className='jumbotron'>
               <h2>Make a Difference</h2>
               <p className="homePageSubtitle">Have a voice. Make a Difference. AddUp.</p>
               <p>Find and support charitable causes on your budget</p>
-              <p><Link to="/search"><Button bsStyle="primary">Find Charities</Button></Link></p>
+              <p><Link to="/search"><Button className='findButton' >Find Charities</Button></Link></p>
             </Jumbotron>
           </div>
 
@@ -65,13 +62,14 @@ class App extends Component {
             </Col>
 
             <div className="footer">
-              <p><Link to="/about"><Button bsStyle="primary">About Us</Button></Link></p>
-              <p><Link to="/contact"><Button bsStyle="primary">Contact Us</Button></Link></p>
+              
             </div>
 
           </div>
 
 
+        </div>
+        <div className='graph'>
         </div>
       </Header>
     );

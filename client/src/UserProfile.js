@@ -231,7 +231,7 @@ class UserProfile extends Component {
     return (
       <Header>
         <div className="profilePage">
-            <Row>
+            <Row className='lessPadding'>
               <Col >
                 <div className="userProfile">
                   <div className='welcome'>Welcome, {this.state.userSession.firstName} {this.state.userSession.lastName}</div>
@@ -256,7 +256,7 @@ class UserProfile extends Component {
           <Grid>
             <Row>
               <div className='profileOptions'>
-                <Col md={4}>
+                <Col md={4} xs={4}>
                   <div className='step'>Step 1</div>
                 {
                   !this.state.hasLinkAccount ?
@@ -274,7 +274,7 @@ class UserProfile extends Component {
                     </div>
                 }
                 </Col>
-                <Col md={4}>
+                <Col md={4} xs={4}>
                   <div className='step'>Step 2</div>
                   <div id='step2' className="stepBox shadowbox">
                     {
@@ -285,7 +285,7 @@ class UserProfile extends Component {
                     <Button onClick={this.setMontlyLimit.bind(this)}>Save</Button>
                   </div>
                 </Col>
-                <Col md={4}>
+                <Col md={4} xs={4}>
                   <div className='step'>Step 3</div>
                   <div id='step3' className="stepBox shadowbox">
                     {
@@ -417,7 +417,7 @@ class UserProfile extends Component {
           updateProfile={this.updateCharities.bind(this)}
         />
 
-        <div class="donationGraph">
+        <div className="donationGraph">
           <AreaChart width={900} height={400} data={transactionChartData} syncId="anyId"
                 margin={{top: 10, right: 30, left: 0, bottom: 0}}>
             <XAxis dataKey="name"/>

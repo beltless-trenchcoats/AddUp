@@ -10,6 +10,7 @@ import $ from "jquery";
 import Header from './Header';
 import Transaction from './Transaction';
 import CharityModal from './CharityModal';
+import CustomCauseModal from './CustomCauseModal';
 
 const FieldGroup = ({ id, label, ...props }) => {
   return (
@@ -46,10 +47,6 @@ class UserProfile extends Component {
       newEmail2: undefined,
       newEmailMatch: true,
       newPasswordMatch: true,
-      showCauseModal: false,
-      addCustomCauseFields: {},
-      causePrivacy: true,
-      showCauseModal: false
     }
     this.openEmail = this.openEmail.bind(this);
     this.closeEmail = this.closeEmail.bind(this);
@@ -62,8 +59,7 @@ class UserProfile extends Component {
     this.newEmail1 = this.newEmail1.bind(this);
     this.newEmail2 = this.newEmail2.bind(this);
     this.renderEmailChange = this.renderEmailChange.bind(this);
-    this.openCause = this.openCause.bind(this);
-    this.closeCause = this.closeCause.bind(this);
+    this.setCustomCauses = this.setCustomCauses.bind(this);
   }
 
   componentWillMount() {
@@ -175,47 +171,6 @@ class UserProfile extends Component {
     this.setState({ newEmail2: e.target.value});
   }
 
-  openCause () {
-    this.setState({ showCauseModal: true})
-  }
-
-  closeCause () {
-    this.setState({ showCauseModal: false})
-  }
-
-  onFieldChange(type, e) {
-    var fields = this.state.addCustomCauseFields;
-    fields[type] = e.target.value;
-    console.log('fields is now ', fields);
-    this.setState({addCustomCauseFields: fields});
-  }
-
-  toggleCausePrivacy() {
-    console.log('this is getting called privacy');
-    this.setState({causePrivacy: !(this.state.causePrivacy)});
-  }
-
-  submitCause() {
-    var fields = this.state.addCustomCauseFields;
-    fields.private = '' + this.state.causePrivacy;
-    fields.id_owner = Number(this.state.userSession.id);
-    fields.type = 'custom';
-    fields.dollar_goal = Number(fields.dollar_goal);
-    console.log('submitting', fields);
-    axios.post('http://localhost:8080/api/customCause/add', fields)
-      .then(res => {
-        console.log('response', res);
-        axios.post('http://localhost:8080/api/charities/search', {
-          'id_owner': fields.id_owner,
-          'type': 'Custom Cause'
-          })
-          .then(response => {
-            this.setState({customCauses: response.data});
-          });
-      });
-    this.closeCause();
-  }
-
   toggleModal () {
     this.setState({
       showChangeEmailModal: !this.state.showChangeEmailModal,
@@ -265,7 +220,6 @@ class UserProfile extends Component {
     });
   }
 
-<<<<<<< e3914069028b5dbe6eaa0e24a97536e080b1ba1a
   newLimit(e) {
     this.setState({newMonthlyLimit: e.target.value});
   }
@@ -282,13 +236,6 @@ class UserProfile extends Component {
         monthlyLimitSet: true
       });
     });
-=======
-  setMontlyLimit(e) {
-    e.preventDefault();
-    console.log('MONTHLY LIMIT IS');
-    // console.log($(e.target).closest('input'));
-    console.log($('.limitInput').value);
->>>>>>> (feat) Redesign UserProfile
   }
 
   convertToReadableDate(date_time) {
@@ -366,6 +313,10 @@ class UserProfile extends Component {
     $('html,body').animate({
         scrollTop: $('#charities').offset().top
       }, 'slow');
+  }
+
+  setCustomCauses(causes) {
+    this.setState({customCauses: causes});
   }
 
   render() {
@@ -517,109 +468,6 @@ class UserProfile extends Component {
                   </Modal.Body>
                 </Modal>
               </div>
-            <Modal className="modal" show={this.state.showCauseModal} onHide={this.closeCause.bind(this)}>
-              <Modal.Header closeButton>
-                <Modal.Title>Add a Cause</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <p>Please provide detailed information so users will want to donate to your cause!</p>
-
-              <form onSubmit={this.addCauseUser}>
-                <FieldGroup
-                  id="formControlsCausename"
-                  type="text"
-                  required={true}
-                  label="Cause Name*"
-                  placeholder="Cause Name"
-                  onChange={this.onFieldChange.bind(this, 'name')}
-                />
-                <FormGroup controlId="formControlsSelect">
-                  <ControlLabel>Category</ControlLabel>
-                  <FormControl componentClass="select" onChange={this.onFieldChange.bind(this, 'category')} placeholder="Category">
-                    <option value="">select</option>
-                    <option value="A">Arts, Culture and Humanities</option>
-                    <option value="B">Educational Institutions and Related Activities</option>
-                    <option value="C">Environmental Quality, Protection and Beautification</option>
-                    <option value="D">Animal-Related</option>
-                    <option value="E">Health - General and Rehabilitative</option>
-                    <option value="F">Mental Health, Crisis Intervention</option>
-                    <option value="G">Diseases, Disorders, Medical Disciplines</option>
-                    <option value="H">Medical Research</option>
-                    <option value="I">Crime, Legal-Related</option>
-                    <option value="J">Employment, Job-Related</option>
-                    <option value="K">Food, Agriculture and Nutrition</option>
-                    <option value="L">Housing, Shelter</option>
-                    <option value="M">Public Safety, Disaster Preparedness and Relief</option>
-                    <option value="N">Recreation, Sports, Leisure, Athletics</option>
-                    <option value="O">Youth Development</option>
-                    <option value="P">Human Services - Multipurpose and Other</option>
-                    <option value="Q">International, Foreign Affairs and National Security</option>
-                    <option value="R">Civil Rights, Social Action, Advocacy</option>
-                    <option value="S">Community Improvement, Capacity Building</option>
-                    <option value="T">Philanthropy, Voluntarism and Grantmaking Foundations</option>
-                    <option value="U">Science and Technology Research Institutes, Services</option>
-                    <option value="V">Social Science Research Institutes, Services</option>
-                    <option value="W">Public, Society Benefit - Multipurpose and Other</option>
-                    <option value="X">Religion-Related, Spiritual Development</option>
-                    <option value="Y">Mutual/Membership Benefit Organizations, Other</option>
-                  </FormControl>
-                </FormGroup>
-                <FieldGroup
-                  id="formControlsDescription"
-                  type="text"
-                  required={true}
-                  label="Description*"
-                  placeholder="Description"
-                  onChange={this.onFieldChange.bind(this, 'mission_statement')}
-                />
-                <FieldGroup
-                  id="formControlsGoal"
-                  type="text"
-                  required={true}
-                  label="Fundraising Goal*"
-                  placeholder="100000000"
-                  onChange={this.onFieldChange.bind(this, 'dollar_goal')}
-                />
-                <FieldGroup
-                  id="formControlsCity"
-                  type="text"
-                  required={true}
-                  label="City*"
-                  placeholder="City"
-                  onChange={this.onFieldChange.bind(this, 'city')}
-                />
-                <FieldGroup
-                  id="formControlsState"
-                  type="text"
-                  required={true}
-                  label="State*"
-                  placeholder="State"
-                  onChange={this.onFieldChange.bind(this, 'state')}
-                />
-                <FieldGroup
-                  id="formControlsZip"
-                  type="text"
-                  required={true}
-                  label="Zip Code*"
-                  placeholder="Zip"
-                  onChange={this.onFieldChange.bind(this, 'zip')}
-                />
-                <FormGroup>
-                  <Checkbox onChange={this.toggleCausePrivacy.bind(this)}>
-                    Appear in public search results?
-                  </Checkbox>
-                </FormGroup>
-                <Button
-                  className="modalButton"
-                  bsStyle="primary"
-                  onClick={this.submitCause.bind(this)}
-                  >Save
-                </Button>
-                <Button className="modalButton" onClick={this.closeCause.bind(this)}>Cancel</Button>
-              </form>
-
-                </Modal.Body>
-              </Modal>
 
             <Row id='charities'>
               {
@@ -662,7 +510,7 @@ class UserProfile extends Component {
             <Row>
               <div className='charitiesBanner'>
                 <div>Doing some fundraising of your own? Add a custom cause and invite friends to help you meet your goal!</div>
-                <Button className='startButton' onClick={this.openCause.bind(this)}>Get Started</Button>
+                  <CustomCauseModal purpose='add' session={this.state.userSession} setCauses={this.setCustomCauses}/>
               </div>
             </Row>
             <Row>

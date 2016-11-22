@@ -6,7 +6,6 @@ import axios from 'axios';
 import apiKeys from '../../server/config/API_Keys';
 import Header from './Header';
 import Donation from './Donation';
-import EditCauseModal from './EditCauseModal';
 import CustomCauseModal from './CustomCauseModal';
 
 class CustomCauseProfilePage extends Component {

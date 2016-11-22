@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Jumbotron, Col, Panel } from 'react-bootstrap';
+import { Link } from 'react-router';
 import Header from './Header';
 import './App.css';
 
@@ -28,6 +29,7 @@ class About extends Component {
                     your donation history with our mobile app.
                 </p>
               </Panel>
+              <Link to="/contact"><Button>Contact Us</Button></Link>
             </Col>
           </div>
         </div>

@@ -2,6 +2,20 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+  font-weight: 300;
+}
+
+.App::after {
+  content: '';
+  background: url("../public/road.jpg");
+  background-size: cover;
+  opacity: 0.8;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
 }
 
 .App {
@@ -23,31 +37,50 @@ body {
 .App-header {
   z-index: 1000;
   width: 100%;
-  background-color: #337AB7;
+  padding: 0 20px;
+  background: linear-gradient(90deg, #F3F6F6 10%, #E6EDEC, #fff 70%);
   height: 55px;
-  padding: 5px;
   color: white;
   position: absolute;
 }
 .logo, .name {
   font-size: 1.4em;
   font-weight: 800;
-  color: white;
+  color: #000;
 }
 
 .userButtons {
   float: right;
   height: 55px;
 }
-.loginButton, .signupButton, .logoutButton, .userIcon, .navButton{
-  margin: 5px;
+
+.userIcon {
+  margin: -5px 5px 0 5px;
 }
 
-.userProfileLink {
+.headerButton {
+  border: none;
+  margin-left: 10px;
+  background: rgba(255, 255, 255, 0);
+  color: #547A96;
+  height: 100%;
+  font-size: 18px;
   font-weight: 200;
-  color: white;
+}
+
+.loginoutButton {
+  color: #000;
+}
+
+
+.userProfileLink {
+  display: inline-block;
+  font-weight: 200;
   position: relative;
-  top: 9%
+  top: 2%;
+  color: #5B7091;
+  font-size: 20px;
+  margin-right: 10px;
 }
 
 .modalButton {
@@ -56,36 +89,51 @@ body {
 
 /*************** HOMEPAGE BODY ***************/
 
-.imageDiv {
+.description {
   height: 400px;
 }
 
 .infoSections {
-  position: absolute;
-  top: 60%;
-}
-
-.homeImage {
-  width: 100%;
-  height: auto;
-  top: 0;
-  opacity: 0.8;
-  filter: blur(6px);
-  -moz-filter: blur(8px);
-  -webkit-filter: blur(8px);
-  -o-filter: blur(8px);
+  font-weight: 300;
+  font-size: 16px;
+  letter-spacing: 0.3px;
+  margin-top: 50px;
 }
 
 .jumbotron {
   top: 20%;
   border-radius: 8px;
-  background: #eee;
+  background: linear-gradient(90deg, #fff, #f5f5f5, #fff);
   word-wrap: break-word;
-  width: 50%;
+  width: 48%;
   padding: 5px;
   font-size: 12px;
   position: absolute;
-  margin-left: 20px;
+  margin-left: 50px;
+}
+
+.findButton {
+  font-weight: 200;
+  font-size: 18px;
+  letter-spacing: 0.7px;
+  background: #5687AD;
+  color: #fff;
+  border: none;
+  margin: 5px;
+}
+
+.panel {
+  border: none;
+}
+
+.panel-heading {
+  background-color: #5687AD !important;
+  border: none;
+  font-size: 18px;
+}
+
+.graph {
+  height: 800px;
 }
 
 /*************** USER PROFILE PAGE ***************/
@@ -100,6 +148,7 @@ h1 {
   padding: 10px 20px;
   font-size: 45px;
   margin-top: 30px;
+  font-weight: 300;
 }
 
 .error {
@@ -112,18 +161,12 @@ h1 {
   position: relative;
 }
 
-.userProfileLink, .logoutButton {
-  display: inline-block;
-}
-
-.userProfileLink {
-  color: #fff;
-  font-size: 20px;
-  margin-right: 10px;
-}
-
 .row {
   padding: 20px 10px 30px 10px;
+}
+
+.startButton, .searchButton, .editButton {
+  font-weight: 300;
 }
 
 /*************** User Profile Box ***************/
@@ -131,15 +174,19 @@ h1 {
 .welcome {
   font-size: 45px;
   margin-bottom: 30px;
-  padding-top: 20px;
+  padding-top: 30px;
   padding-left: 100px;
 }
 
 .userProfile {
-  height: 260px;
-  border: 1px solid #f1f1f1;
+  height: 280px;
   padding-left: 200px;
-  margin-top: 20px;
+  margin-top: 15px;
+  background-color: #F2F0EF !important;
+}
+
+.lessPadding {
+  padding-bottom: 10px;
 }
 
 .profileField {
@@ -164,6 +211,8 @@ h1 {
   text-align: left;
   float: left;
   color: #337AB7;
+  font-weight: 400;
+  letter-spacing: 0.5px;
 }
 
 .profileField span {
@@ -186,18 +235,19 @@ h1 {
   width: 320px;
   height: 210px;
   text-align: center;
-  background-color: #BDD4E7;
+  background-color: #A6C0D3;
   color: #001328;
   font-size: 36px;
+  font-weight: 300;
   padding: 20px 30px 30px 0;
   padding-right: 30px;
   padding-left: 30px;
 }
 
 .stepBox .linked {
-  color: green;
+  color: #E6EDEC;
   float: right;
-  font-size: 30px;
+  font-size: 26px;
   line-height: 20px;
 }
 
@@ -239,7 +289,7 @@ h1 {
 }
 
 .incomplete {
-  border: 1px solid red;
+  border: 2px solid #B53D47;
 }
 
 .scrollButton {
@@ -262,7 +312,7 @@ h1 {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  background-color: #eee;
+  background-color: #F2F0EF;
   font-size: 40px;
 }
 

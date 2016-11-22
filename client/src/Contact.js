@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Jumbotron, Col, Panel } from 'react-bootstrap';
+import { Col, Panel } from 'react-bootstrap';
 import Header from './Header';
 import './App.css';
 
@@ -15,7 +15,7 @@ class Contact extends Component {
     return (
       <Header>
         <div>
-          <img src={require('../public/ocean.jpg')} className="contactPhoto" />
+          <img src={require('../public/ocean.jpg')} alt="Contact Page" className="contactPhoto" />
           <div className="contactUsSection">
 
             <Col xs={12} md={10} className="infoColumn">

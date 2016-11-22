@@ -34,7 +34,6 @@ class PhotoUploader extends Component {
   getSignedRequest(file){
     axios.get(`http://localhost:8080/sign-s3?file-name=${file.name}&file-type=${file.type}&userId=${this.props.user.id}`)
     .then((res) => {
-      console.log('GETSIGNED REQUEST!', res)
       this.uploadFile(file, res.data.signedRequest, res.data.url);
     })
     .catch ((err)=> {
@@ -45,11 +44,14 @@ class PhotoUploader extends Component {
 
   uploadFile(file, signedRequest, url) {
     console.log('UPLOADFILE', file, signedRequest, url)
-    axios.put(signedRequest)
+    var options = {
+      headers: {
+        'Content-Type': file.type
+      }
+    }
+    axios.put(signedRequest, file, options)
     .then((res) => {
-      console.log('UPLOADFILE RESPONSE', res)
       this.setState({ profilePhotoUrl: url})
-      res.send(file)
     })
     .catch((err) => {
       alert('Could not upload file.');
@@ -70,7 +72,7 @@ class PhotoUploader extends Component {
         />
 
         <div className="profilePhotoImage">
-        {this.state.profilePhotoUrl ? <div className="image"><img src={this.state.profilePhotoUrl}/></div> : <FaUser className="image"/>}
+        {this.state.profilePhotoUrl ? <div className="image"><img src={this.state.profilePhotoUrl} alt="Profile"/></div> : <FaUser className="image"/>}
         </div>
       </div>
     );

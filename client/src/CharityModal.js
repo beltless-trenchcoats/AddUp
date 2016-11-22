@@ -37,7 +37,7 @@ class CharityModal extends Component {
               usersCharities = [this.props.currentCharity];
             } else {
               //test if current charity is already linked to user
-              ((usersCharities.filter((charity) => charity.ein === this.props.currentCharity.ein)).length > 0) ? null : usersCharities.push(this.props.currentCharity)
+              (((usersCharities.filter((charity) => charity.ein === this.props.currentCharity.ein)).length > 0) ? null : usersCharities.push(this.props.currentCharity))
             }
           }
           

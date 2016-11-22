@@ -15,7 +15,7 @@ body {
   bottom: 0;
   right: 0;
   position: absolute;
-  z-index: -1;   
+  z-index: -1;
 }
 
 .App {
@@ -589,4 +589,9 @@ a:hover .charityInfo{
 .pieChart {
   position: relative;
   left: 40%;
+}
+
+.aboutPhoto {
+  max-width: 100%;
+  height: auto;
 }

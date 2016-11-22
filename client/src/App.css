@@ -15,7 +15,7 @@ body {
   bottom: 0;
   right: 0;
   position: absolute;
-  z-index: -1;   
+  z-index: -1;
 }
 
 .App {
@@ -568,7 +568,17 @@ a:hover .charityInfo{
 .aboutUsSection {
   position: absolute;
   top: 30%;
+  left: 25%;
   font-size: 16pt;
+}
+.aboutPhoto {
+  max-width: 100%;
+  height: auto;
+}
+
+.aboutButton {
+  position: relative;
+  left: 42.7%;
 }
 
 /*************** Contact Us Page ***************/
@@ -579,6 +589,14 @@ a:hover .charityInfo{
   left: 32%;
   font-size: 20pt;
 }
+
+.contactPhoto {
+  max-width: 100%;
+  height: auto;
+}
+
+
+/*************** Charts ***************/
 
 .recharts-wrapper {
   position: relative;

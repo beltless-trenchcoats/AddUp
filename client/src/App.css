@@ -149,6 +149,11 @@ body {
   height: 800px;
 }
 
+.chartLabel {
+  text-align: center;
+  font-size: 12pt;
+}
+
 /*************** USER PROFILE PAGE ***************/
 
 .shadowbox {

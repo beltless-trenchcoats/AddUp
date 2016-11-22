@@ -1,59 +1,55 @@
 var db = require('../config/db');
 
-exports.getIDs = function(email, charity, callback) {
-  if (email !== '' && charity !== '') {
-    db.query({
-      text: 'SELECT id FROM charities \
-        WHERE name = \'' + charity + '\';'
-    }, 
-    function(err, results) {
-      if (err) {
-        callback(err);
-      } else {
-        var id_charities = results.rows[0].id;
-        db.query({
-          text: 'SELECT id FROM users \
-            WHERE email = \'' + email + '\';'
-        }, 
-        function(err, results) {
-          if (err) {
-            callback(err);
-          } else {
-            var id_users = results.rows[0].id;
-            callback({id_users: id_users, id_charities: id_charities});
-          }
-        });
-      }
-    });
-  } else if (email !== '') {
-    console.log('SELECT id FROM users \
-        WHERE email = \'' + email + '\';');
-    db.query({
-      text: 'SELECT id FROM users \
-        WHERE email = \'' + email + '\';'
-    }, 
-    function(err, results) {
-      if (err) {
-        callback(err);
-      } else {
-        var id_users = results.rows[0].id;
-        callback({id_users: id_users, id_charities: ''});
-      }
-    });
-  } else if (charity !== '') {
-    db.query({
-      text: 'SELECT id FROM charities \
-        WHERE name = \'' + charity + '\';'
-    }, 
-    function(err, results) {
-      if (err) {
-        callback(err);
-      } else {
-        var id_charities = results.rows[0].id;
-        callback({id_users: '', id_charities: id_charities});
-      }
-    });
-  } else {
-    callback({id_users: '', id_charities: ''});
+
+exports.getFields = function(searchFields, table, filterFields, callback) {
+  var queryString = 'SELECT ';
+  for (var item of searchFields) {
+    queryString +=  item + ", ";
   }
+  queryString = queryString.slice(0, queryString.length - 2);
+  queryString += ' FROM ' + table;
+  if (filterFields) {
+    queryString += ' WHERE ';
+    for (var key in filterFields) {
+      if (typeof filterFields[key] === 'string') {
+        queryString +=  key + " = '" + filterFields[key] + "' AND "
+      } else {
+        queryString +=  key + ' = ' + filterFields[key] + ' AND '
+      }
+    }
+    queryString = queryString.slice(0, queryString.length - 5);
+  }
+  queryString += ';'
+  // console.log(queryString);
+  db.query(queryString, function(err, rows) {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, rows.rows);
+    }
+  });
 };
+
+exports.getUserID = function(email, callback) {
+  // if (email) {
+  exports.getFields(['id'], 'users', {email: email}, function(err, result) {
+    if (err) {
+      callback(err);
+    } else {
+      var id_users = result[0].id;
+      callback(id_users);
+    }   
+  });
+};
+
+// exports.getUserID('kk@gmail.com', function(id_users) {
+//   console.log(id_users);
+// });
+
+// exports.getFields(['id', 'name', 'mission_statement', 'total_donated'], 'charities', {id: 66, ein: '454347065'}, function(err, results) {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log(results);
+//   }
+// })

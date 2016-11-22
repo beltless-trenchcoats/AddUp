@@ -2,10 +2,8 @@ var db = require('../config/db');
 var helpers = require('./helpers');
 var Promise = require('bluebird');
 
-exports.insert = Promise.promisify(function(email, charityID, percentage, callback) {
-  helpers.getIDs(email, '', function(idObj) {
-    var id_users = idObj.id_users;
-    var id_charities = charityID;
+exports.insert = Promise.promisify(function(email, id_charities, percentage, callback) {
+  helpers.getUserID(email, function(id_users) {
     // console.log('SELECT * FROM usersCharities \
     //     WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';');
     db.query({
@@ -36,10 +34,8 @@ exports.insert = Promise.promisify(function(email, charityID, percentage, callba
   });
 });
 
-exports.remove = function(email, charityID, callback) {
-  helpers.getIDs(email, '', function(idObj) {
-    var id_users = idObj.id_users;
-    var id_charities = charityID;
+exports.remove = function(email, id_charities, callback) {
+  helpers.getUserID(email, function(id_users) {
     // console.log('DELETE FROM usersCharities \
     //   WHERE id_users =' + id_users + ' AND id_charities = ' + id_charities + ';');
     db.query({
@@ -56,10 +52,8 @@ exports.remove = function(email, charityID, callback) {
   });
 }
 
-exports.updatePercentage = Promise.promisify(function(email, charityID, percentage, callback) {
-  helpers.getIDs(email, '', function(idObj) {
-    var id_users = idObj.id_users;
-    var id_charities = charityID;
+exports.updatePercentage = Promise.promisify(function(email, id_charities, percentage, callback) {
+  helpers.getUserID(email, function(id_users) {
     // console.log('SELECT * FROM usersCharities \
     //     WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';');
     db.query({
@@ -97,16 +91,14 @@ exports.updatePercentage = Promise.promisify(function(email, charityID, percenta
   });
 });
 
-exports.getUserCharityFields = function(email, charityID, callback) {
-  helpers.getIDs(email, '', function(idObj) {
-    var id_users = idObj.id_users;
-    var id_charities = charityID;
+exports.getUserCharityFields = function(email, id_charities, callback) {
+  helpers.getUserID(email, function(id_users) {
     var queryString = '';
-    if (charityID === null && email === '') {
+    if (id_charities === null && email === '') {
       queryString += 'SELECT * FROM usersCharities;';
-    } else if (charityID !== null && email === '') {
+    } else if (id_charities !== null && email === '') {
       queryString += 'SELECT * FROM usersCharities WHERE id_charities = \'' + id_charities + '\';'
-    } else if (email !== '' && charityID === null) {
+    } else if (email !== '' && id_charities === null) {
       queryString += 'SELECT * FROM (SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\') AS uc \
       INNER JOIN charities ON charities.id = uc.id_charities;'
       // 'SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\';'
@@ -130,8 +122,7 @@ exports.getUserCharityFields = function(email, charityID, callback) {
 };
 
 exports.getUsersCharityDonationsInfo = function(email, callback) {
-  helpers.getIDs(email, '', function(idObj) {
-    var id_users = idObj.id_users;
+  helpers.getUserID(email, function(id_users) {
     // console.log('SELECT charities.id, name, percentage, ein, type, \
     //       (SELECT SUM(amount) FROM transactions WHERE id_users=\'' + id_users + '\' AND id_charities=charities.id) \
     //         AS total_donated, \
@@ -163,10 +154,10 @@ exports.getUsersCharityDonationsInfo = function(email, callback) {
 
 // EXAMPLE USAGE:
 
-// exports.getUsersCharityDonationsInfo('test@gmail.com', (err, results) => console.log(results));
+// exports.getUsersCharityDonationsInfo('kk@gmail.com', (err, results) => console.log(results));
 
-// exports.insert('j@j.com', 3, 0)
-// .then(() => exports.insert('j@j.com', 5, 0));
+// exports.insert('kk@gmail.com',  5, 0)
+// .then((result) => console.log(result));
 
 // exports.insert('test@gmail.com', 13, 0, function(result) {
 //   console.log(result);
@@ -196,14 +187,14 @@ exports.getUsersCharityDonationsInfo = function(email, callback) {
 //   console.log(result);
 // });
 
-// exports.remove('test@gmail.com', 14, function(result) {
+// exports.remove('kk@gmail.com', 5, function(result) {
 //   console.log(result);
 // });
 
-// exports.updatePercentage('j@j.com', 3, .8)
-// .then(() => exports.updatePercentage('j@j.com', 5, .2));
+// exports.updatePercentage('kk@gmail.com',  5, .8)
+// .then((result) => console.log(result));
 
-// exports.getUserCharityFields('test@gmail.com', 14, function(err, charities) {
+// exports.getUserCharityFields('kk@gmail.com', 5, function(err, charities) {
 //   if (err) {
 //     console.log('ERROR getting users charities', err);
 //   }

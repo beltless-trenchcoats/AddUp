@@ -1,4 +1,5 @@
 var db = require('../config/db');
+var helpers = require('./helpers');
 var Promise = require('bluebird');
 
 exports.createCharity = Promise.promisify(function(values, callback) {
@@ -32,16 +33,20 @@ exports.createCharity = Promise.promisify(function(values, callback) {
           if (err) {
             callback(err, null);
           } else {
-            db.query({
-              text: 'SELECT id FROM charities WHERE ein = \'' + values.ein + '\';'
-            },
-            function(err, result) {
-              if (err) {
-                callback(err, null);
-              } else {
-                callback(null, result.rows);
-              }
-            });
+            if (values.ein) {
+              db.query({
+                text: 'SELECT id FROM charities WHERE ein = \'' + values.ein + '\';'
+              },
+              function(err, result) {
+                if (err) {
+                  callback(err, null);
+                } else {
+                  callback(null, result.rows);
+                }
+              });
+            } else {
+              callback(err, 'success');
+            }
           }
         });
       }
@@ -73,18 +78,6 @@ exports.updateCharity = function(charityID, updateFields, callback) {
   });
 };
 
-exports.searchByEIN = function(ein, callback) {
-  db.query({
-    text: 'SELECT * FROM charities WHERE ein = \'' + ein + '\';'
-  },
-  function(err, result) {
-    if (err) {
-      callback(err, null);
-    } else {
-      callback(null, result.rows);
-    }
-  });
-};
 
 exports.updateBalance = function(charityId, amountObj, callback) {
   db.query({
@@ -120,53 +113,44 @@ exports.updateBalance = function(charityId, amountObj, callback) {
   });
 };
 
-exports.getCharityFields = function(charityId, callback) {
-  var queryString = '';
-  if (charityId === '') {
-    queryString += 'SELECT * FROM charities;';
-  } else {
-    queryString += 'SELECT * FROM charities WHERE id = \'' + charityId + '\';'
-  }
-  db.query({
-    text: queryString
-  }, 
-  function(err, results) {
+exports.getCharityFields = function(filterFields, callback) {
+  helpers.getFields(['*'], 'charities', filterFields, function(err, result) {
     if (err) {
       callback(err, null);
-    } else if (results.rowCount > 0) {
-      callback(null, results.rows);
     } else {
-      callback('no rows for charityId ' + charityId, null);
+      callback(null, result);
     }
   });
 };
 
+// exports.searchByEIN = function(ein, callback) {
+//   db.query({
+//     text: 'SELECT * FROM charities WHERE ein = \'' + ein + '\';'
+//   },
+//   function(err, result) {
+//     if (err) {
+//       callback(err, null);
+//     } else {
+//       callback(null, result.rows);
+//     }
+//   });
+// };
+
 exports.searchCustomCauses = function(searchFields, callback) {
-  var searchString = 'SELECT * FROM charities WHERE type=\'custom\' AND ';
-  for (var key in searchFields) {
-    if (key !== 'name') {
-      if (typeof searchFields[key] === 'string') {
-        searchString +=  key + " = '" + searchFields[key] + "' AND "
-      } else {
-        searchString +=  key + ' = ' + searchFields[key] + ' AND '
-      }
-    }
-  }
-  searchString = searchString.slice(0, searchString.length - 5) + ';';
-  console.log(searchString);
-  db.query({
-    text: searchString
-  }, 
-  function(err, results) {
+  var searchName = searchFields.name;
+  delete searchFields.name;
+  searchFields.type = 'custom';
+  console.log('search fields ', searchFields);
+  helpers.getFields(['*'], 'charities', searchFields, function(err, result) {
     if (err) {
       callback(err, null);
-    } else if (results.rowCount > 0) {
-      if (searchFields.name) {
-        var sendResults = results.rows.filter(function(item) {
-          return (item.name.toLowerCase().indexOf(searchFields.name.toLowerCase()) > -1);
+    } else if (result.length > 0) {
+      if (searchName) {
+        var sendResults = result.filter(function(item) {
+          return (item.name.toLowerCase().indexOf(searchName.toLowerCase()) > -1);
         });
       } else {
-        var sendResults = results.rows;     
+        var sendResults = result;     
       }
       callback(null, sendResults);
     } else {
@@ -207,12 +191,12 @@ exports.searchCustomCauses = function(searchFields, callback) {
 //   console.log(response);
 // });
 
-// exports.getCharityFields(1, function(error, response) {
+// exports.getCharityFields({ein: '454347065'}, function(error, response) {
 //   console.log(response);
 // });
 
 //search
-// exports.searchCustomCauses({city: 'San Francisco', private: 'false'}, function(err, results) {
+// exports.searchCustomCauses({name: 'new', city: 'San Francisco', private: 'false'}, function(err, results) {
 //   if (err) {
 //     console.log(err);
 //   } else {

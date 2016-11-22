@@ -18,13 +18,14 @@ CREATE TABLE users (
   phone_number VARCHAR(64) NULL DEFAULT NULL,
   plaid_access_token VARCHAR(256) NULL DEFAULT NULL,
   plaid_account_id VARCHAR(64) NULL DEFAULT NULL,
-  stripe_bank_account_token VARCHAR(256) NULL DEFAULT NULL,
+  plaid_public_token VARCHAR(256) NULL DEFAULT NULL,
   pending_balance REAL NULL DEFAULT NULL,
   monthly_total REAL NULL DEFAULT NULL,
   monthly_limit REAL NULL DEFAULT NULL,
   last_transaction_id VARCHAR(64) NULL DEFAULT NULL,
   bank_name VARCHAR(64) NULL DEFAULT NULL,
-  bank_digits VARCHAR(4) NULL DEFAULT NULL
+  bank_digits VARCHAR(4) NULL DEFAULT NULL,
+  photo_url VARCHAR(256) NULL DEFAULT NULL
 );
 
 -- ---

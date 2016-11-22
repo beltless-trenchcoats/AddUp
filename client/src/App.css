@@ -202,6 +202,29 @@ h1 {
   padding-bottom: 10px;
 }
 
+.profilePhoto {
+  margin: 30px;
+}
+
+.profilePhotoImage {
+  background: #f1f1f1;
+  border-radius: 50%;
+  height: 150px;
+  width: 150px;
+  position: relative;
+}
+
+.profilePhotoImage .image {
+  margin: 25px 23px;
+  height: 100px;
+  width: 100px;
+  color: white;
+}
+
+.userProfile .loginButton {
+  margin-right: 160px;
+}
+
 .profileField {
   width: 50%;
   height: 40px;

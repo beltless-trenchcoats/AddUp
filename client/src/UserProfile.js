@@ -143,13 +143,6 @@ class UserProfile extends Component {
     this.setState({charities: charities});
   }
 
-  toggleModal () {
-    this.setState({
-      showChangeEmailModal: !this.state.showChangeEmailModal,
-      showChangePasswordModal: !this.state.showChangePasswordModal
-    })
-  }
-
   //This is called in PlaidLink.js when a user successfully links a bank account
   displayLinkAccount(bank_name, bank_digits) {
     $('#step1').removeClass('incomplete');
@@ -348,7 +341,6 @@ class UserProfile extends Component {
                       </div>
                     )
                 }
-
                 </div>
               </div>
               : null

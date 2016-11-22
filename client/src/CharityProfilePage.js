@@ -76,20 +76,53 @@ class CharityProfilePage extends Component {
               <h2 className="charityName">{this.state.charity.name}</h2>
               <div className="charityType">{this.state.charity.nteeType}</div>
               <div className="charityType">{this.state.charity.category}</div>
-              {this.state.charity.mission_statement ? <div className="charityType">{this.state.charity.mission_statement}</div> : null}
-              <div className="charityActivities">{this.state.charity.activity1 ? this.state.charity.activity1 + ',' : null} {this.state.charity.activity2 ? this.state.charity.activity2 + ',' : null} {this.state.charity.activity3}</div>
-              {this.props.params.type==='custom' ? <h3> ${this.state.charity.total_donated * 100 / this.state.charity.dollar_goal ? Math.floor(this.state.charity.total_donated * 100 / this.state.charity.dollar_goal) : 0}% Funded!</h3> : null}
+              {
+                this.state.charity.mission_statement ? 
+                  <div className="charityType">{this.state.charity.mission_statement}</div> 
+                : null
+              }
+              <div className="charityActivities">
+                {
+                  this.state.charity.activity1 ? this.state.charity.activity1 + ',' : null
+                }
+                {
+                  this.state.charity.activity2 ? this.state.charity.activity2 + ',' : null
+                }
+                {this.state.charity.activity3}
+              </div>
+              {
+                this.props.params.type==='custom' ? 
+                  <h3> ${
+                    this.state.charity.total_donated * 100 / this.state.charity.dollar_goal ? 
+                      Math.floor(this.state.charity.total_donated * 100 / this.state.charity.dollar_goal) 
+                      : 0}% Funded!</h3>
+                : null
+              }
               <h3> Total AddUp+ Donations to Date: ${this.state.charity.total_donated}</h3>
-              {this.props.params.type==='custom' ? <h3> Fundraising Goal: ${this.state.charity.dollar_goal}</h3> : null}
-              {this.state.selected ? <Button onClick={this.openModal} className="removeCharity" bsStyle="primary">Remove from My Charities</Button> : <Button onClick={this.openModal} className="addCharity" bsStyle="primary">Add to My Charities</Button>}
+              {
+                this.props.params.type==='custom' ? 
+                  <h3> Fundraising Goal: ${this.state.charity.dollar_goal}</h3> 
+                : null
+              }
+              {
+                this.state.selected ? 
+                  <Button onClick={this.openModal} className="removeCharity" bsStyle="primary">Remove from My Charities</Button>
+                : <Button onClick={this.openModal} className="addCharity" bsStyle="primary">Add to My Charities</Button>}
             </Row>
 
             <Row>
                 {<Col md={6} mdPush={6} className="charityClassification">
                   {this.props.params.type!=='custom' ? <h4>Foundation Classification Info</h4> : null }
                   <div className="corpInfo">{this.state.charity.organization}, {this.state.charity.classification}</div>
-                  {this.props.params.type!=='custom' ? <div className="corpInfo">Section {this.state.charity.subsection} {this.state.charity.deductibility}</div> : null }
-                  {this.props.params.type!=='custom' ? <div className="corpInfo">Reported Revenue: ${this.state.charity.totrevenue}</div> : null }
+                  {
+                    this.props.params.type!=='custom' ? 
+                      <div className="corpInfo">Section {this.state.charity.subsection} {this.state.charity.deductibility}</div> 
+                      : null 
+                  }
+                  {
+                    this.props.params.type!=='custom' ? 
+                      <div className="corpInfo">Reported Revenue: ${this.state.charity.totrevenue}</div> : null 
+                  }
                   <div className="corpInfo">{this.state.charity.foundation}</div>
                   <div className="corpInfo">{this.state.charity.affiliation}</div>
                 </Col>}

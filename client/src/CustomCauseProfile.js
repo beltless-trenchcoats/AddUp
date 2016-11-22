@@ -5,9 +5,8 @@ import axios from 'axios';
 
 import apiKeys from '../../server/config/API_Keys';
 import Header from './Header';
-// import CharityModal from './CharityModal';
 import Donation from './Donation';
-import EditCauseModal from './EditCauseModal';
+import CustomCauseModal from './CustomCauseModal';
 
 class CustomCauseProfilePage extends Component {
   constructor(props) {
@@ -17,9 +16,7 @@ class CustomCauseProfilePage extends Component {
       charity: {},
       donations: [],
       showCauseModal: false,
-      editCustomCauseFields: {},
       userSession: {},
-      causePrivacy: true
     }
   }
 
@@ -36,7 +33,6 @@ class CustomCauseProfilePage extends Component {
       charityID: this.state.charityId
     })
     .then((res) => {
-      console.log('transactions info', res.data)
       this.setState({donations: res.data});
     })
     .catch((err) => {
@@ -54,7 +50,6 @@ class CustomCauseProfilePage extends Component {
       type: 'custom'
     })
     .then((res) => {
-      console.log('cause info', res.data);
       this.setState({charity: res.data})
     })
     .catch((err) => {
@@ -74,7 +69,7 @@ class CustomCauseProfilePage extends Component {
         <Grid>
           <Row>
             <Col>
-              <Button className="loginButton" bsSize="small" onClick={this.openCause.bind(this)}>Edit Cause</Button>
+              <CustomCauseModal purpose='edit' getCharityInfo={this.getCharityInfo.bind(this)} charity={this.state.charity} session={this.state.userSession} setCauses={this.setCustomCauses}/>
             </Col>
             <h3>{this.state.charity.name}</h3>
             <div className="charityType">{this.state.charity.mission_statement}</div>
@@ -86,7 +81,6 @@ class CustomCauseProfilePage extends Component {
             <Col className="userTransactionsContainer">
               <h2>Donations to Cause</h2>
               <div className="transactionHistory">
-
                 <Table responsive striped hover>
                   <thead>
                     <tr>
@@ -95,7 +89,6 @@ class CustomCauseProfilePage extends Component {
                       <th>Donor</th>
                     </tr>
                   </thead>
-
                   <tbody>
                     {this.state.donations.map ((donation, i) =>
                       <Donation key={i} donation={donation} />
@@ -104,11 +97,7 @@ class CustomCauseProfilePage extends Component {
                 </Table>
               </div>
             </Col>
-          </Row>
-          <div>
-            <EditCauseModal getCharityInfo={this.getCharityInfo.bind(this)} userSession={this.state.userSession} charity={this.state.charity} showCauseModal={this.state.showCauseModal} closeCause={this.closeCause.bind(this)}/>
-          </div>
-         
+          </Row>         
         </Grid>
  
       </div>

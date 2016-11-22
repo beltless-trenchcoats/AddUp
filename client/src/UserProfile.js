@@ -10,15 +10,9 @@ import $ from "jquery";
 import Header from './Header';
 import Transaction from './Transaction';
 import CharityModal from './CharityModal';
-
-const FieldGroup = ({ id, label, ...props }) => {
-  return (
-    <FormGroup controlId={id}>
-      <ControlLabel>{label}</ControlLabel>
-      <FormControl {...props} />
-    </FormGroup>
-  );
-}
+import CustomCauseModal from './CustomCauseModal';
+import ChangeEmailModal from './ChangeEmailModal';
+import ChangePasswordModal from './ChangePasswordModal';
 
 let data2 = [];
 
@@ -37,33 +31,10 @@ class UserProfile extends Component {
       bankInfo: {},
       charities: [],
       customCauses: [],
-      showChangePasswordModal: false,
-      showChangeEmailModal: false,
       showEditCharitiesModal: false,
-      newPassword1: undefined,
-      newPassword2: undefined,
-      newEmail1: undefined,
-      newEmail2: undefined,
-      newEmailMatch: true,
-      newPasswordMatch: true,
-      showCauseModal: false,
-      addCustomCauseFields: {},
-      causePrivacy: true,
-      showCauseModal: false
     }
-    this.openEmail = this.openEmail.bind(this);
-    this.closeEmail = this.closeEmail.bind(this);
-    this.openPassword = this.openPassword.bind(this);
-    this.closePassword = this.closePassword.bind(this);
-    this.newPassword1 = this.newPassword1.bind(this);
-    this.newPassword2 = this.newPassword2.bind(this);
-    this.checkPassword = this.checkPassword.bind(this);
-    this.checkEmail = this.checkEmail.bind(this);
-    this.newEmail1 = this.newEmail1.bind(this);
-    this.newEmail2 = this.newEmail2.bind(this);
-    this.renderEmailChange = this.renderEmailChange.bind(this);
-    this.openCause = this.openCause.bind(this);
-    this.closeCause = this.closeCause.bind(this);
+    this.setCustomCauses = this.setCustomCauses.bind(this);
+    this.setSession = this.setSession.bind(this);
   }
 
   componentWillMount() {
@@ -99,7 +70,6 @@ class UserProfile extends Component {
           } else{
             $('#step1').addClass('incomplete');
           }
-          console.log('id ', res.data.id);
           var userSession = this.state.userSession;
           userSession.id = res.data.id;
           this.setState({userSession: userSession});
@@ -139,90 +109,6 @@ class UserProfile extends Component {
     })
   }
 
-  updateCharities(charities) {
-    this.setState({charities: charities});
-  }
-
-  openEmail () {
-    this.setState({ showChangeEmailModal: true});
-  }
-
-  closeEmail () {
-    this.setState({ showChangeEmailModal: false});
-  }
-
-  openPassword () {
-    this.setState({ showChangePasswordModal: true});
-  }
-
-  closePassword () {
-    this.setState({ showChangePasswordModal: false});
-  }
-
-  newPassword1 (e) {
-    this.setState({ newPassword1: e.target.value});
-  }
-
-  newPassword2 (e) {
-    this.setState({ newPassword2: e.target.value});
-  }
-
-  newEmail1 (e) {
-    this.setState({ newEmail1: e.target.value});
-  }
-
-  newEmail2 (e) {
-    this.setState({ newEmail2: e.target.value});
-  }
-
-  openCause () {
-    this.setState({ showCauseModal: true})
-  }
-
-  closeCause () {
-    this.setState({ showCauseModal: false})
-  }
-
-  onFieldChange(type, e) {
-    var fields = this.state.addCustomCauseFields;
-    fields[type] = e.target.value;
-    console.log('fields is now ', fields);
-    this.setState({addCustomCauseFields: fields});
-  }
-
-  toggleCausePrivacy() {
-    console.log('this is getting called privacy');
-    this.setState({causePrivacy: !(this.state.causePrivacy)});
-  }
-
-  submitCause() {
-    var fields = this.state.addCustomCauseFields;
-    fields.private = '' + this.state.causePrivacy;
-    fields.id_owner = Number(this.state.userSession.id);
-    fields.type = 'custom';
-    fields.dollar_goal = Number(fields.dollar_goal);
-    console.log('submitting', fields);
-    axios.post('http://localhost:8080/api/customCause/add', fields)
-      .then(res => {
-        console.log('response', res);
-        axios.post('http://localhost:8080/api/charities/search', {
-          'id_owner': fields.id_owner,
-          'type': 'Custom Cause'
-          })
-          .then(response => {
-            this.setState({customCauses: response.data});
-          });
-      });
-    this.closeCause();
-  }
-
-  toggleModal () {
-    this.setState({
-      showChangeEmailModal: !this.state.showChangeEmailModal,
-      showChangePasswordModal: !this.state.showChangePasswordModal
-    })
-  }
-
   componentDidMount() {
     //Style pre-styled Plaid Link Button
     $('.stepBox div button span').html('Add Account');
@@ -251,6 +137,10 @@ class UserProfile extends Component {
     $( document ).ready(function() {
       $('.goalReached').closest('.userCharity').addClass('dim');
     });
+  }
+
+  updateCharities(charities) {
+    this.setState({charities: charities});
   }
 
   //This is called in PlaidLink.js when a user successfully links a bank account
@@ -296,57 +186,6 @@ class UserProfile extends Component {
     return 'since ' + date.toLocaleDateString("en-us", options)
   }
 
-  checkPassword (e) {
-    e.preventDefault();
-    if(this.state.newPassword1 === this.state.newPassword2) {
-      this.setState({ newPasswordMatch: true});
-      this.closePassword();
-      axios.post('http://localhost:8080/api/user/update', {
-        email: this.state.userSession.email,
-        newEmail1: this.state.newEmail1,
-        newPassword: this.state.newPassword1
-      })
-      .then(function(res) {
-        console.log('Response in checkPassword ', res);
-      })
-      .catch(function(err) {
-        console.log('error in checkPassword POST ', err);
-      })
-    } else {
-      this.setState({ newPasswordMatch: false });
-    }
-    this.setState({newPassword1: undefined, newPassword2: undefined});
-  }
-
-  renderEmailChange () {
-    let userSession = this.state.userSession;
-    userSession.email = this.state.newEmail1;
-    this.setState({ userSession: userSession});
-  }
-
-  checkEmail(e) {
-    e.preventDefault();
-    if(this.state.newEmail1 === this.state.newEmail2) {
-      this.setState({ newEmailMatch: true });
-      this.closeEmail();
-      axios.post('http://localhost:8080/api/user/update', {
-        email: this.state.userSession.email,
-        newEmail: this.state.newEmail1,
-        newPassword: this.state.newPassword1
-      })
-      .then(function(res) {
-        console.log('Response in checkEmail ', res);
-      })
-      .catch(function(err) {
-        console.log('error in checkEmail POST ', err);
-      })
-    } else {
-      this.setState({ newEmailMatch: false });
-    }
-    this.renderEmailChange.call(this);
-    this.setState({newEmail1: undefined, newEmail2: undefined});
-  }
-
   openEditCharitiesModal() {
     this.setState({ showEditCharitiesModal: true });
   }
@@ -360,25 +199,31 @@ class UserProfile extends Component {
       }, 'slow');
   }
 
+  setCustomCauses(causes) {
+    this.setState({customCauses: causes});
+  }
+
+  setSession(session) {
+    this.setState({ userSession: session});
+  }
+
   render() {
     return (
       <Header>
         <div className="profilePage">
-
-          <Grid>
             <Row>
-              <Col md={6}>
+              <Col >
                 <div className="userProfile">
-                <div className='welcome'>Welcome, {this.state.userSession.firstName} {this.state.userSession.lastName}</div>
+                  <div className='welcome'>Welcome, {this.state.userSession.firstName} {this.state.userSession.lastName}</div>
                   <div className='profileField'>
                     <span className='label'>Email:</span>
                     <span className='value'> {this.state.userSession.email}</span>
-                    {<Button className="loginButton" bsSize="small" onClick={this.openEmail}>Change</Button>}
+                    <ChangeEmailModal session={this.state.userSession} setSession={this.setSession}/>
                   </div>
                   <div className='profileField'>
                     <span className='label'>Password:</span>
                     <span className='value'>*******</span>
-                    {<Button className="loginButton" bsSize="small" onClick={this.openPassword}>Change</Button>}
+                    <ChangePasswordModal session={this.state.userSession}/>
                   </div>
                   <div className='profileField'>
                     <span className='label'>Monthly Limit: </span>
@@ -388,6 +233,7 @@ class UserProfile extends Component {
                 </div>
               </Col>
             </Row>
+          <Grid>
             <Row>
               <div className='profileOptions'>
                 <Col md={4}>
@@ -432,186 +278,6 @@ class UserProfile extends Component {
               </div>
             </Row>
           </Grid>
-            <div>
-              <Modal className="modal" show={this.state.showChangeEmailModal} onHide={this.closeEmail}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Change Email</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <p>Please enter your new email</p>
-
-                  <form onSubmit={this.signupUser}>
-                    <FieldGroup
-                      id="formControlsFirstname"
-                      type="text"
-                      required={true}
-                      label="New Email*"
-                      placeholder="Email"
-                      onChange={this.newEmail1}
-                    />
-                    <FieldGroup
-                      id="formControlsLastname"
-                      type="text"
-                      required={true}
-                      label="Confirm Email*"
-                      placeholder="Confirm Email"
-                      onChange={this.newEmail2}
-                    />
-                    <Button
-                      className="modalButton"
-                      type="submit"
-                      bsStyle="primary"
-                      onClick={this.checkEmail}
-                      >Change Email
-                    </Button>
-                    {this.state.newEmailMatch ? null : <div className="emailMatchError">Email's do not match</div>}
-                    <Button className="modalButton" onClick={this.closeEmail}>Cancel</Button>
-
-                  </form>
-                </Modal.Body>
-              </Modal>
-            </div>
-            <div>
-              <Modal className="modal" show={this.state.showChangePasswordModal} onHide={this.closePassword}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Change Password</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <p>Please enter your new password</p>
-
-                  <form onSubmit={this.signupUser}>
-                    <FieldGroup
-                      id="formControlsFirstname"
-                      type="password"
-                      required={true}
-                      label="New Password*"
-                      placeholder="Password"
-                      onChange={this.newPassword1}
-                    />
-                    <FieldGroup
-                      id="formControlsLastname"
-                      type="password"
-                      required={true}
-                      label="Confirm Password*"
-                      placeholder="Confirm Password"
-                      onChange={this.newPassword2}
-                    />
-                    <Button
-                      className="modalButton"
-                      type="submit"
-                      bsStyle="primary"
-                      onClick={this.checkPassword}
-                      >Change Password
-                    </Button>
-                    {this.state.newPasswordMatch ? null : <div className="matchError">Password's do not match</div>}
-                    <Button className="modalButton" onClick={this.closePassword}>Cancel</Button>
-                  </form>
-                  </Modal.Body>
-                </Modal>
-              </div>
-            <Modal className="modal" show={this.state.showCauseModal} onHide={this.closeCause.bind(this)}>
-              <Modal.Header closeButton>
-                <Modal.Title>Add a Cause</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <p>Please provide detailed information so users will want to donate to your cause!</p>
-
-              <form onSubmit={this.addCauseUser}>
-                <FieldGroup
-                  id="formControlsCausename"
-                  type="text"
-                  required={true}
-                  label="Cause Name*"
-                  placeholder="Cause Name"
-                  onChange={this.onFieldChange.bind(this, 'name')}
-                />
-                <FormGroup controlId="formControlsSelect">
-                  <ControlLabel>Category</ControlLabel>
-                  <FormControl componentClass="select" onChange={this.onFieldChange.bind(this, 'category')} placeholder="Category">
-                    <option value="">select</option>
-                    <option value="A">Arts, Culture and Humanities</option>
-                    <option value="B">Educational Institutions and Related Activities</option>
-                    <option value="C">Environmental Quality, Protection and Beautification</option>
-                    <option value="D">Animal-Related</option>
-                    <option value="E">Health - General and Rehabilitative</option>
-                    <option value="F">Mental Health, Crisis Intervention</option>
-                    <option value="G">Diseases, Disorders, Medical Disciplines</option>
-                    <option value="H">Medical Research</option>
-                    <option value="I">Crime, Legal-Related</option>
-                    <option value="J">Employment, Job-Related</option>
-                    <option value="K">Food, Agriculture and Nutrition</option>
-                    <option value="L">Housing, Shelter</option>
-                    <option value="M">Public Safety, Disaster Preparedness and Relief</option>
-                    <option value="N">Recreation, Sports, Leisure, Athletics</option>
-                    <option value="O">Youth Development</option>
-                    <option value="P">Human Services - Multipurpose and Other</option>
-                    <option value="Q">International, Foreign Affairs and National Security</option>
-                    <option value="R">Civil Rights, Social Action, Advocacy</option>
-                    <option value="S">Community Improvement, Capacity Building</option>
-                    <option value="T">Philanthropy, Voluntarism and Grantmaking Foundations</option>
-                    <option value="U">Science and Technology Research Institutes, Services</option>
-                    <option value="V">Social Science Research Institutes, Services</option>
-                    <option value="W">Public, Society Benefit - Multipurpose and Other</option>
-                    <option value="X">Religion-Related, Spiritual Development</option>
-                    <option value="Y">Mutual/Membership Benefit Organizations, Other</option>
-                  </FormControl>
-                </FormGroup>
-                <FieldGroup
-                  id="formControlsDescription"
-                  type="text"
-                  required={true}
-                  label="Description*"
-                  placeholder="Description"
-                  onChange={this.onFieldChange.bind(this, 'mission_statement')}
-                />
-                <FieldGroup
-                  id="formControlsGoal"
-                  type="text"
-                  required={true}
-                  label="Fundraising Goal*"
-                  placeholder="100000000"
-                  onChange={this.onFieldChange.bind(this, 'dollar_goal')}
-                />
-                <FieldGroup
-                  id="formControlsCity"
-                  type="text"
-                  required={true}
-                  label="City*"
-                  placeholder="City"
-                  onChange={this.onFieldChange.bind(this, 'city')}
-                />
-                <FieldGroup
-                  id="formControlsState"
-                  type="text"
-                  required={true}
-                  label="State*"
-                  placeholder="State"
-                  onChange={this.onFieldChange.bind(this, 'state')}
-                />
-                <FieldGroup
-                  id="formControlsZip"
-                  type="text"
-                  required={true}
-                  label="Zip Code*"
-                  placeholder="Zip"
-                  onChange={this.onFieldChange.bind(this, 'zip')}
-                />
-                <FormGroup>
-                  <Checkbox onChange={this.toggleCausePrivacy.bind(this)}>
-                    Appear in public search results?
-                  </Checkbox>
-                </FormGroup>
-                <Button
-                  className="modalButton"
-                  bsStyle="primary"
-                  onClick={this.submitCause.bind(this)}
-                  >Save
-                </Button>
-                <Button className="modalButton" onClick={this.closeCause.bind(this)}>Cancel</Button>
-              </form>
-
-                </Modal.Body>
-              </Modal>
 
             <Row id='charities'>
               {
@@ -654,7 +320,7 @@ class UserProfile extends Component {
             <Row>
               <div className='charitiesBanner'>
                 <div>Doing some fundraising of your own? Add a custom cause and invite friends to help you meet your goal!</div>
-                <Button className='startButton' onClick={this.openCause.bind(this)}>Get Started</Button>
+                  <CustomCauseModal purpose='add' session={this.state.userSession} setCauses={this.setCustomCauses}/>
               </div>
             </Row>
             <Row>
@@ -675,12 +341,12 @@ class UserProfile extends Component {
                       </div>
                     )
                 }
-
                 </div>
               </div>
               : null
             }
             </Row>
+
           {
             this.state.transactions.length ?
           <Grid>

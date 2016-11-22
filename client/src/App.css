@@ -568,6 +568,7 @@ a:hover .charityInfo{
 .aboutUsSection {
   position: absolute;
   top: 30%;
+  left: 25%;
   font-size: 16pt;
 }
 .aboutPhoto {
@@ -577,7 +578,7 @@ a:hover .charityInfo{
 
 .aboutButton {
   position: relative;
-  left: 46.5%;
+  left: 42.7%;
 }
 
 /*************** Contact Us Page ***************/

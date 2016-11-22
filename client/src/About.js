@@ -19,7 +19,7 @@ class About extends Component {
         <div>
           <div className="aboutUsSection">
 
-            <Col xs={6} md={12} className="infoColumn">
+            <Col xs={6} md={8} className="infoColumn">
               <Panel header="About Us!" bsStyle="primary">
                 <p>AddUp++ aggregates charitable donations through automatic
                     micropayments by rounding up each credit or debit transaction

@@ -16,9 +16,9 @@ exports.createUser = Promise.promisify(function(email, password, first_name, las
     } else {
       bcrypt.hash(password, 10, function(err, hash) {
         db.query({
-          text: 'INSERT INTO users(email, password, first_name, last_name) \
-            VALUES($1, $2, $3, $4)',
-          values: [email, hash, first_name, last_name]
+          text: 'INSERT INTO users(email, password, first_name, last_name, monthly_limit, monthly_total, pending_balance) \
+            VALUES($1, $2, $3, $4, $5, $6, $7)',
+          values: [email, hash, first_name, last_name, 0, 0, 0]
         },
         function(err, result) {
           if (err) {

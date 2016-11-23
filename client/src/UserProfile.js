@@ -9,6 +9,7 @@ import $ from "jquery";
 import Header from './Header';
 import Transaction from './Transaction';
 import CharityModal from './CharityModal';
+import PhotoUploader from './PhotoUploader';
 import CustomCauseModal from './CustomCauseModal';
 import ChangeEmailModal from './ChangeEmailModal';
 import ChangePasswordModal from './ChangePasswordModal';
@@ -21,7 +22,6 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
  	const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x  = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy  + radius * Math.sin(-midAngle * RADIAN);
-
   return (
     <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} 	dominantBaseline="central">
     	{`${(percent * 100).toFixed(0)}%`}
@@ -47,6 +47,15 @@ class UserProfile extends Component {
       charities: [],
       customCauses: [],
       showEditCharitiesModal: false,
+      newPassword1: undefined,
+      newPassword2: undefined,
+      newEmail1: undefined,
+      newEmail2: undefined,
+      newEmailMatch: true,
+      newPasswordMatch: true,
+      showCauseModal: false,
+      addCustomCauseFields: {},
+      causePrivacy: true
     }
     this.setCustomCauses = this.setCustomCauses.bind(this);
     this.setSession = this.setSession.bind(this);
@@ -65,6 +74,7 @@ class UserProfile extends Component {
         'email': email
         })
         .then(res => {
+          console.log('userInfo', res.data)
           this.setState({
             userInfo: res.data,
             bankInfo: {
@@ -181,7 +191,7 @@ class UserProfile extends Component {
 
   setMontlyLimit(e) {
     e.preventDefault();
-    axios.post('http://localhost:8080/api/user/update/limit', {
+    axios.post('http://localhost:8080/api/user/update', {
       email: this.state.userSession.email,
       limit: this.state.newMonthlyLimit
     }).then(() => {
@@ -232,7 +242,7 @@ class UserProfile extends Component {
       <Header>
         <div className="profilePage">
             <Row className='lessPadding'>
-              <Col >
+              <Col xs={12} md={8}>
                 <div className="userProfile">
                   <div className='welcome'>Welcome, {this.state.userSession.firstName} {this.state.userSession.lastName}</div>
                   <div className='profileField'>
@@ -251,6 +261,9 @@ class UserProfile extends Component {
                     <span className='value'>$ {this.state.monthlyLimit}</span>
                   </div>
                 </div>
+              </Col>
+              <Col xs={6} md={4}>
+                <PhotoUploader user={this.state.userInfo}/>
               </Col>
             </Row>
           <Grid>

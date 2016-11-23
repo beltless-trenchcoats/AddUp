@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Jumbotron, Col, Panel } from 'react-bootstrap';
+import { Button, Col, Panel } from 'react-bootstrap';
 import { Link } from 'react-router';
 import Header from './Header';
 import './App.css';
@@ -15,7 +15,7 @@ class About extends Component {
   render () {
     return (
       <Header>
-        <img src={require('../public/sky_resized-min.png')} className="aboutPhoto"/>
+        <img src={require('../public/sky_resized-min.png')} alt="About Page" className="aboutPhoto"/>
         <div>
           <div className="aboutUsSection">
 

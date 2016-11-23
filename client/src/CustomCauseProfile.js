@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Col, Row, Grid, Table, Button, Modal, Checkbox, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
-import { Gmaps, Marker } from 'react-gmaps';
+import { Col, Row, Grid, Table } from 'react-bootstrap';
+
 import axios from 'axios';
 
-import apiKeys from '../../server/config/API_Keys';
 import Header from './Header';
 import Donation from './Donation';
 import CustomCauseModal from './CustomCauseModal';

@@ -212,12 +212,16 @@ h1 {
   height: 150px;
   width: 150px;
   position: relative;
+  overflow: hidden;
 }
 
-.profilePhotoImage .image {
-  margin: 25px 23px;
-  height: 100px;
-  width: 100px;
+.image {
+  position: absolute;
+  top:25%; 
+  height:25%; 
+  margin-top:-15%;
+  width: 100%;
+  height: auto;
   color: white;
 }
 
@@ -226,9 +230,9 @@ h1 {
 }
 
 .profileField {
-  width: 50%;
+  width: 75%;
   height: 40px;
-  padding-left: 125px;
+  padding-left: 100px;
   position: relative;
 }
 

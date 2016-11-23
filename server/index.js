@@ -413,25 +413,35 @@ app.post('/api/user/update', function(req, res) {
   var email = req.body.email;
   var newEmail = req.body.newEmail;
   var newPassword = req.body.newPassword;
-  if(newEmail === undefined) {
-    db.updateUser(email, {password: newPassword}, function(result) {
-      res.send(result);
-    })
-  } else {
+  var newPhotoUrl = req.body.photoUrl;
+  var newLimit = req.body.limit;
+  if(newEmail) {
     db.updateUser(email, {email: newEmail}, function(result) {
       res.send(result);
     })
+  } else if (newPassword) {
+    db.updateUser(email, {password: newPassword}, function(result) {
+      res.send(result);
+    })
+  } else if (newPhotoUrl) {
+    db.updateUser(email, {photo_url: newPhotoUrl}, function(result) {
+      res.send(result);
+    })
+  } else {
+    db.updateUser(email, {monthly_limit: newLimit}, function(result) {
+      res.send(result);
+    });
   }
 })
 
-//NOTE: This should be refactored into the same route as the one above...Ill do that post-MVP (Karina)
-app.post('/api/user/update/limit', function(req, res) {
-  var email = req.body.email;
-  var newLimit = req.body.limit;
-  db.updateUser(email, {monthly_limit: newLimit}, function(result) {
-    res.send(result);
-  });
-})
+// //NOTE: This should be refactored into the same route as the one above...Ill do that post-MVP (Karina)
+// app.post('/api/user/update/limit', function(req, res) {
+//   var email = req.body.email;
+//   var newLimit = req.body.limit;
+//   db.updateUser(email, {monthly_limit: newLimit}, function(result) {
+//     res.send(result);
+//   });
+// })
 
 
 app.post('/charityInfo', function (req, res) {

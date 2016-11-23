@@ -3,7 +3,7 @@ body {
   padding: 0;
   font-family: sans-serif;
   font-weight: 300;
-  background-color: #D3D3D3;
+  
 }
 
 .App::after {
@@ -207,26 +207,36 @@ h1 {
 }
 
 .profilePhoto {
-  margin: 30px;
-}
+  margin: 20px;
+  text-align: center;
+/*  border: 1px solid green;
+*/}
 
 .profilePhotoImage {
-  background: #f1f1f1;
+  background: #d5d5d5;
   border-radius: 50%;
-  height: 150px;
-  width: 150px;
-  position: relative;
+  height: 160px;
+  width: 160px;
   overflow: hidden;
+  margin-top: 25px;
+  margin-bottom: 15px;
+  margin-left: 17%;
 }
 
 .image {
-  position: absolute;
-  top:25%; 
-  height:25%; 
-  margin-top:-15%;
+  object-fit: cover;
   width: 100%;
-  height: auto;
+  height: 100%;
   color: white;
+}
+
+.profilePhoto label {
+  font-weight: 400;
+  font-size: 16px;
+}
+
+input[type=file] {
+  margin-left: 15%;
 }
 
 .userProfile .loginButton {
@@ -234,7 +244,7 @@ h1 {
 }
 
 .profileField {
-  width: 75%;
+  width: 90%;
   height: 40px;
   padding-left: 100px;
   position: relative;
@@ -330,6 +340,10 @@ h1 {
   margin-right: 5px;
   width: 150px;
   font-size: 18px;
+}
+
+.invalidLimit {
+  border: 2px solid #B53D47;
 }
 
 .incomplete {
@@ -541,8 +555,10 @@ a:hover .charityInfo{
 .searchPage {
   top: 55px;
   width: 100%;
+  height: 100vh;
   position: relative;
   color: black;
+  background-color: #D3D3D3;
 }
 
 .charityCard {
@@ -620,19 +636,29 @@ a:hover .charityInfo{
 /*************** About Us Page ***************/
 
 .aboutUsSection {
-  position: absolute;
-  top: 30%;
-  left: 25%;
-  font-size: 16pt;
+  background: url('../public/sky_resized-min.png');
+  background-size: cover;
+  height: 100vh;
+  text-align: center;
+  padding-top: 200px;
 }
-.aboutPhoto {
-  max-width: 100%;
-  height: auto;
+
+.about {
+  width: 65vw;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 40px 50px;
+  text-align: center;
+  font-size: 22px;
+  line-height: 32px;
 }
 
 .aboutButton {
-  position: relative;
-  left: 42.7%;
+  margin-top: 20px;
+  border: none;
+  background-color: rgba(243, 246, 246, 0.9);
+  color: #333;
+  padding: 5px 15px;
 }
 
 /*************** Contact Us Page ***************/

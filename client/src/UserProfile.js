@@ -445,9 +445,10 @@ class UserProfile extends Component {
                 <div>Doing some fundraising of your own? Add a custom cause and invite friends to help you meet your goal!</div>
                   <CustomCauseModal purpose='add' session={this.state.userSession} setCauses={this.setCustomCauses}/>
               </div>
-              <Col>
-                <a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_9bfGnqU5JGVlcbNEJfmcmCCDAewlhQP7&scope=read_write" class="stripe-connect"><span>Connect with Stripe</span></a>
-              </Col>
+              {//for adding stripe in the future <Col>
+                //<a href="https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_9bfGnqU5JGVlcbNEJfmcmCCDAewlhQP7&scope=read_write" class="stripe-connect"><span>Connect with Stripe</span></a>
+             // </Col>
+              }
             </Row>
             <Row>
             {

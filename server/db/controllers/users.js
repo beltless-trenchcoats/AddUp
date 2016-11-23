@@ -63,22 +63,7 @@ exports.updateUser = function(email, updateFields, callback) {
     var hash = bcrypt.hashSync(updateFields.password, 10);
     updateFields.password = hash;
   }
-  var updateString = '';
-  for (var key in updateFields) {
-    if (typeof updateFields[key] === 'string') {
-      updateString +=  key + " = '" + updateFields[key] + "', "
-    } else {
-      updateString +=  key + ' = ' + updateFields[key] + ', '
-    }
-  }
-  updateString = updateString.slice(0, updateString.length - 2);
-  console.log('UPDATE users SET ' + updateString + ' \
-      WHERE email = \'' + email + '\';');
-  db.query({
-    text: 'UPDATE users SET ' + updateString + ' \
-      WHERE email = \'' + email + '\';'
-  }, 
-  function(err, rows) {
+  helpers.updateFields(updateFields, 'users', {email: email}, function(err, result) {
     if (err) {
       callback(err);
     } else {
@@ -108,7 +93,7 @@ exports.getUserFields = function(email, callback) {
 //   console.log(response);
 // });
 
-// exports.updateUser('herbert@gmail.com', {plaid_access_token: 'n358sy98ty239582379', password: 'hi', pending_balance: 8}, function(result) {
+// exports.updateUser('helga@gmail.com', {plaid_access_token: null, password: '2', pending_balance: 8}, function(result) {
 //   console.log(result);
 // });
 

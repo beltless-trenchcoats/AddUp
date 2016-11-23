@@ -77,8 +77,8 @@ class CharityProfilePage extends Component {
               <div className="charityType">{this.state.charity.nteeType}</div>
               <div className="charityType">{this.state.charity.category}</div>
               {
-                this.state.charity.mission_statement ? 
-                  <div className="charityType">{this.state.charity.mission_statement}</div> 
+                this.state.charity.mission_statement ?
+                  <div className="charityType">{this.state.charity.mission_statement}</div>
                 : null
               }
               <div className="charityActivities">
@@ -91,21 +91,21 @@ class CharityProfilePage extends Component {
                 {this.state.charity.activity3}
               </div>
               {
-                this.props.params.type==='custom' ? 
+                this.props.params.type==='custom' ?
                   <h3> ${
-                    this.state.charity.total_donated * 100 / this.state.charity.dollar_goal ? 
-                      Math.floor(this.state.charity.total_donated * 100 / this.state.charity.dollar_goal) 
+                    this.state.charity.total_donated * 100 / this.state.charity.dollar_goal ?
+                      Math.floor(this.state.charity.total_donated * 100 / this.state.charity.dollar_goal)
                       : 0}% Funded!</h3>
                 : null
               }
               <h3> Total AddUp+ Donations to Date: ${this.state.charity.total_donated}</h3>
               {
-                this.props.params.type==='custom' ? 
-                  <h3> Fundraising Goal: ${this.state.charity.dollar_goal}</h3> 
+                this.props.params.type==='custom' ?
+                  <h3> Fundraising Goal: ${this.state.charity.dollar_goal}</h3>
                 : null
               }
               {
-                this.state.selected ? 
+                this.state.selected ?
                   <Button onClick={this.openModal} className="removeCharity" bsStyle="primary">Remove from My Charities</Button>
                 : <Button onClick={this.openModal} className="addCharity" bsStyle="primary">Add to My Charities</Button>}
             </Row>
@@ -115,13 +115,13 @@ class CharityProfilePage extends Component {
                   {this.props.params.type!=='custom' ? <h4>Foundation Classification Info</h4> : null }
                   <div className="corpInfo">{this.state.charity.organization}, {this.state.charity.classification}</div>
                   {
-                    this.props.params.type!=='custom' ? 
-                      <div className="corpInfo">Section {this.state.charity.subsection} {this.state.charity.deductibility}</div> 
-                      : null 
+                    this.props.params.type!=='custom' ?
+                      <div className="corpInfo">Section {this.state.charity.subsection} {this.state.charity.deductibility}</div>
+                      : null
                   }
                   {
-                    this.props.params.type!=='custom' ? 
-                      <div className="corpInfo">Reported Revenue: ${this.state.charity.totrevenue}</div> : null 
+                    this.props.params.type!=='custom' ?
+                      <div className="corpInfo">Reported Revenue: ${this.state.charity.totrevenue}</div> : null
                   }
                   <div className="corpInfo">{this.state.charity.foundation}</div>
                   <div className="corpInfo">{this.state.charity.affiliation}</div>
@@ -141,7 +141,7 @@ class CharityProfilePage extends Component {
                     lat={this.state.charity.latitude}
                     lng={this.state.charity.longitude}
                     zoom={12}
-                    params={{v: '3.exp', key: apiKeys.gmaps}}
+                    // params={{v: '3.exp', key: apiKeys.gmaps}}
                     onMapCreated={this.onMapCreated}>
                     <Marker
                       lat={this.state.charity.latitude}
@@ -155,7 +155,7 @@ class CharityProfilePage extends Component {
           </Grid>
         </div>
         {
-          this.state.showModal ? 
+          this.state.showModal ?
           <CharityModal
             show={this.state.showModal}
             onHide={this.closeModal}

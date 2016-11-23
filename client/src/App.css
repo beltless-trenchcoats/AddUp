@@ -332,6 +332,10 @@ h1 {
   font-size: 18px;
 }
 
+.invalidLimit {
+  border: 2px solid #B53D47;
+}
+
 .incomplete {
   border: 2px solid #B53D47;
 }

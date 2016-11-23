@@ -31,7 +31,7 @@ class SearchPage extends Component {
   onSearchInput (type, e) {
     var stateChange = {};
     stateChange[type] = e.target.value;
-    this.setState(stateChange);
+    this.setState(stateChange.toUpperCase());
   }
 
   handleSelect (evt,evtKey) {

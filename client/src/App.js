@@ -8,21 +8,6 @@ import './App.css';
 
 import Header from './Header';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-
-const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x  = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy  + radius * Math.sin(-midAngle * RADIAN);
-
-  return (
-    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'}  dominantBaseline="central">
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
-
 
 class App extends Component {
   constructor(props) {
@@ -49,18 +34,12 @@ class App extends Component {
 
     axios.get('http://localhost:8080/api/transactions/all')
     .then((res) => {
-      // var data = res.data.map(function(elt) {
-      //   return {name: elt.name, total_donated: elt.total_donated, category: elt.category};
-      // });
-      // this.setState({data: data});
-      console.log('all', res.data);
       var transactions = res.data;
       var daysData = [];
       var totalDonated = 0;
       transactions.forEach(function(elt) {
         var day = new Date(elt.date_time);
-        var dayString = day.getMonth() + 1 +'/' + day.getDate() + '/' + day.getFullYear();
-        console.log(dayString, elt.date_time);
+        var dayString = day.getMonth() + 1 + '/' + day.getFullYear();
         daysData[dayString] = daysData[dayString] + elt.amount || elt.amount;
         totalDonated += elt.amount;
       });
@@ -70,7 +49,11 @@ class App extends Component {
       for (var key in daysData) {
         data.push({name: key, 'Amount Donated': daysData[key]});
       }
-      console.log('daysData', data);
+      data.sort(function(a,b) {
+        var bNum = Number(''+b.name.split('/')[1] + b.name.split('/')[0]);
+        var aNum = Number(''+a.name.split('/')[1] + a.name.split('/')[0]);
+        return (aNum - bNum);
+      });
       this.setState({data: data});
       // this.setState({
       //   userSession: res.data
@@ -127,7 +110,7 @@ class App extends Component {
         </div>
         <div className='graph'>
           <Row>
-            <div className="chartLabel">AddUp users have donated ${this.state.totalDonated} to charities so far!</div>
+            <h2 className="chartLabel">AddUp users have donated ${this.state.totalDonated} to charities so far!</h2>
             <LineChart width={800} height={400} data={this.state.data}>
               <XAxis dataKey="name"/>
               <YAxis label="Dollars Donated" />

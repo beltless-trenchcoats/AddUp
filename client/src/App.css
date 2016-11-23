@@ -550,6 +550,10 @@ a:hover .charityInfo{
   color: white;
 }
 
+.button {
+  background-color: #547A96;
+}
+
 .dropdownCat {
   height: auto;
   width: auto;

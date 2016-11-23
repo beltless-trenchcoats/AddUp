@@ -218,7 +218,7 @@ h1 {
   height: 160px;
   width: 160px;
   overflow: hidden;
-  margin-top: 30px;
+  margin-top: 25px;
   margin-bottom: 15px;
   margin-left: 17%;
 }
@@ -636,19 +636,29 @@ a:hover .charityInfo{
 /*************** About Us Page ***************/
 
 .aboutUsSection {
-  position: absolute;
-  top: 30%;
-  left: 25%;
-  font-size: 16pt;
+  background: url('../public/sky_resized-min.png');
+  background-size: cover;
+  height: 100vh;
+  text-align: center;
+  padding-top: 200px;
 }
-.aboutPhoto {
-  max-width: 100%;
-  height: auto;
+
+.about {
+  width: 65vw;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 40px 50px;
+  text-align: center;
+  font-size: 22px;
+  line-height: 32px;
 }
 
 .aboutButton {
-  position: relative;
-  left: 42.7%;
+  margin-top: 20px;
+  border: none;
+  background-color: rgba(243, 246, 246, 0.9);
+  color: #333;
+  padding: 5px 15px;
 }
 
 /*************** Contact Us Page ***************/

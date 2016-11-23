@@ -190,6 +190,7 @@ class Header extends Component {
 
   render() {
     return (
+      <div>
       <header>
         <div className="App-header">
           <Link to="/" className="logo">
@@ -329,6 +330,10 @@ class Header extends Component {
 
         {this.props.children}
       </header>
+      <footer>
+        Hello this is in the footer
+      </footer>
+      </div>
     );
   }
 }

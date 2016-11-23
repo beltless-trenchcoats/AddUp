@@ -7,4 +7,4 @@ dist/
 
 .DS_Store
 
-./server/config/API_Keys.js
+server/config/API_Keys.js

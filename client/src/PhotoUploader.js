@@ -67,6 +67,10 @@ class PhotoUploader extends Component {
     console.log('PHOTOURL', this.state.userPhoto, this.props.userPhoto)
     return (
      <div className="profilePhoto">
+        <div className="profilePhotoImage">
+          {this.props.user.photo_url ? <img src={this.props.user.photo_url} alt="Profile" className="image"/> : <FaUser className="image"/>}
+        </div>
+
         <FieldGroup
           className="profilePhotoUpload"
           id="formControlsFile"
@@ -75,10 +79,6 @@ class PhotoUploader extends Component {
           ref="fileUpload"
           onChange={this.uploadProfilePhoto}
         />
-
-        <div className="profilePhotoImage">
-          {this.props.user.photo_url ? <img src={this.props.user.photo_url} alt="Profile" className="image"/> : <FaUser className="image"/>}
-        </div>
       </div>
     );
   }

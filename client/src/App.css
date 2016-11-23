@@ -207,26 +207,36 @@ h1 {
 }
 
 .profilePhoto {
-  margin: 30px;
-}
+  margin: 20px;
+  text-align: center;
+/*  border: 1px solid green;
+*/}
 
 .profilePhotoImage {
-  background: #f1f1f1;
+  background: #d5d5d5;
   border-radius: 50%;
-  height: 150px;
-  width: 150px;
-  position: relative;
+  height: 160px;
+  width: 160px;
   overflow: hidden;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  margin-left: 17%;
 }
 
 .image {
-  position: absolute;
-  top:25%; 
-  height:25%; 
-  margin-top:-15%;
+  object-fit: cover;
   width: 100%;
-  height: auto;
+  height: 100%;
   color: white;
+}
+
+.profilePhoto label {
+  font-weight: 400;
+  font-size: 16px;
+}
+
+input[type=file] {
+  margin-left: 15%;
 }
 
 .userProfile .loginButton {
@@ -234,7 +244,7 @@ h1 {
 }
 
 .profileField {
-  width: 75%;
+  width: 90%;
   height: 40px;
   padding-left: 100px;
   position: relative;

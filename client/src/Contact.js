@@ -14,17 +14,11 @@ class Contact extends Component {
   render () {
     return (
       <Header>
-        <div>
-          <img src={require('../public/ocean.jpg')} alt="Contact Page" className="contactPhoto" />
-          <div className="contactUsSection">
-
-            <Col xs={12} md={10} className="infoColumn">
-              <Panel header="Contact Us" bsStyle="primary">
-                <p>Email: support@AddUp.com</p>
-                <p>Phone: 510-555-5555</p>
-                <p>Address: 944 Market St. San Francisco, CA 94102</p>
-              </Panel>
-            </Col>
+        <div className="contactUsSection">
+          <div className='contact'>
+            <p>Email: support@AddUp.com</p>
+            <p>Phone: 510-555-5555</p>
+            <p>Address: 944 Market St. San Francisco, CA 94102</p>
           </div>
         </div>
       </Header>

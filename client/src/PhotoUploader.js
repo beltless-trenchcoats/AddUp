@@ -17,7 +17,8 @@ class PhotoUploader extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      userInfo: this.props.user,
+      user: this.props.user,
+      userPhoto: this.props.user.photo_url,
       loading: false
     }
     this.uploadProfilePhoto = this.uploadProfilePhoto.bind(this);
@@ -27,12 +28,10 @@ class PhotoUploader extends Component {
 
   uploadProfilePhoto() {
     const file = document.getElementById('formControlsFile').files[0];
-    console.log(file)
     file == null ? alert('No file selected.') : this.getSignedRequest(file);
   }
-
   getSignedRequest(file){
-    axios.get(`http://localhost:8080/sign-s3?file-name=${file.name}&file-type=${file.type}&userId=${this.props.user.id}`)
+    axios.get(`http://localhost:8080/sign-s3?file-name=${file.name}&file-type=${file.type}`) //&userId=${this.props.user.id}`)
     .then((res) => {
       this.uploadFile(file, res.data.signedRequest, res.data.url);
     })
@@ -41,7 +40,6 @@ class PhotoUploader extends Component {
       console.log(err);
     })
   }
-
   uploadFile(file, signedRequest, url) {
     console.log('UPLOADFILE', file, signedRequest, url)
     var options = {
@@ -51,7 +49,13 @@ class PhotoUploader extends Component {
     }
     axios.put(signedRequest, file, options)
     .then((res) => {
-      this.setState({ profilePhotoUrl: url})
+      this.setState({ userPhoto: url})
+      axios.post('http://localhost:8080/api/user/update', {
+        email: this.props.user.email,
+        photoUrl: url
+      })
+      .then((res) => {console.log('New image uploaded')})
+      .catch((err) => {console.log(err)})
     })
     .catch((err) => {
       alert('Could not upload file.');
@@ -60,6 +64,7 @@ class PhotoUploader extends Component {
   }
 
   render() {
+    console.log('PHOTOURL', this.state.userPhoto, this.props.userPhoto)
     return (
      <div className="profilePhoto">
         <FieldGroup
@@ -72,7 +77,7 @@ class PhotoUploader extends Component {
         />
 
         <div className="profilePhotoImage">
-        {this.state.profilePhotoUrl ? <div className="image"><img src={this.state.profilePhotoUrl} alt="Profile"/></div> : <FaUser className="image"/>}
+          {this.props.user.photo_url ? <img src={this.props.user.photo_url} alt="Profile" className="image"/> : <FaUser className="image"/>}
         </div>
       </div>
     );

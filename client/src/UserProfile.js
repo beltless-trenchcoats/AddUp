@@ -74,6 +74,7 @@ class UserProfile extends Component {
         'email': email
         })
         .then(res => {
+          console.log('userInfo', res.data)
           this.setState({
             userInfo: res.data,
             bankInfo: {
@@ -190,7 +191,7 @@ class UserProfile extends Component {
 
   setMontlyLimit(e) {
     e.preventDefault();
-    axios.post('http://localhost:8080/api/user/update/limit', {
+    axios.post('http://localhost:8080/api/user/update', {
       email: this.state.userSession.email,
       limit: this.state.newMonthlyLimit
     }).then(() => {

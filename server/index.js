@@ -14,6 +14,8 @@ var Transactions = require('./db/controllers/transactions');
 var userCharitiesDB = require('./db/controllers/usersCharities');
 var charitiesDB = require('./db/controllers/charities');
 var helperFunctions = require('./helpers');
+var aws = require('aws-sdk');
+var S3_BUCKET = process.env.S3_BUCKET || 'addupp-profile-photos';
 
 var app = express();
 var port = process.env.PORT || 8080;
@@ -411,25 +413,35 @@ app.post('/api/user/update', function(req, res) {
   var email = req.body.email;
   var newEmail = req.body.newEmail;
   var newPassword = req.body.newPassword;
-  if(newEmail === undefined) {
-    db.updateUser(email, {password: newPassword}, function(result) {
-      res.send(result);
-    })
-  } else {
+  var newPhotoUrl = req.body.photoUrl;
+  var newLimit = req.body.limit;
+  if(newEmail) {
     db.updateUser(email, {email: newEmail}, function(result) {
       res.send(result);
     })
+  } else if (newPassword) {
+    db.updateUser(email, {password: newPassword}, function(result) {
+      res.send(result);
+    })
+  } else if (newPhotoUrl) {
+    db.updateUser(email, {photo_url: newPhotoUrl}, function(result) {
+      res.send(result);
+    })
+  } else {
+    db.updateUser(email, {monthly_limit: newLimit}, function(result) {
+      res.send(result);
+    });
   }
 })
 
-//NOTE: This should be refactored into the same route as the one above...Ill do that post-MVP (Karina)
-app.post('/api/user/update/limit', function(req, res) {
-  var email = req.body.email;
-  var newLimit = req.body.limit;
-  db.updateUser(email, {monthly_limit: newLimit}, function(result) {
-    res.send(result);
-  });
-})
+// //NOTE: This should be refactored into the same route as the one above...Ill do that post-MVP (Karina)
+// app.post('/api/user/update/limit', function(req, res) {
+//   var email = req.body.email;
+//   var newLimit = req.body.limit;
+//   db.updateUser(email, {monthly_limit: newLimit}, function(result) {
+//     res.send(result);
+//   });
+// })
 
 
 app.post('/charityInfo', function (req, res) {
@@ -506,6 +518,37 @@ app.post('/api/customCause/transactions', function(req, res) {
 app.post('/api/charity/update', function(req, res) {
   charitiesDB.updateCharity(req.body.charityID, req.body.updateFields, function(result) {
     res.send(result);
+  });
+});
+
+
+app.get('/sign-s3', (req, res) => {
+  console.log('S3REQUEST!!!',req.query)
+  var s3 = new aws.S3({
+    accessKeyId: apiKeys.AWSAccessKeyId,
+    secretAccessKey: apiKeys.AWSSecretKey});
+  var fileName = req.query['file-name']
+  var fileType = req.query['file-type']
+  var s3Params = {
+    Bucket: S3_BUCKET,
+    Key: fileName,
+    Expires: 60,
+    ContentType: fileType,
+    ACL: 'public-read'
+  };
+
+  s3.getSignedUrl('putObject', s3Params, (err, data) => {
+    if(err){
+      console.log(err);
+      return res.end();
+    }
+    var returnData = {
+      signedRequest: data,
+      url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
+    };
+    console.log('RETURN DATA', returnData)
+    res.write(JSON.stringify(returnData));
+    res.end();
   });
 });
 

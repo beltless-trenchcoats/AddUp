@@ -135,7 +135,7 @@ class UserProfile extends Component {
                 January['Donated'] += transaction.amount;
               } else if(newMonth[1] === '02') {
                 February['Donated'] += transaction.amount;
-              } else if(newMonth[1] === '03') {
+              } else if(newMonth[1] === '02') {
                 March['Donated'] += transaction.amount;
               } else if(newMonth[1] === '04') {
                 April['Donated'] += transaction.amount;
@@ -157,6 +157,19 @@ class UserProfile extends Component {
                 December['Donated'] += transaction.amount;
               }
             })
+            January['Donated'] = Math.floor(January['Donated'] * 100) / 100;
+            February['Donated'] = Math.floor(February['Donated'] * 100) / 100;
+            March['Donated'] = Math.floor(March['Donated'] * 100) / 100;
+            April['Donated'] = Math.floor(April['Donated'] * 100) / 100;
+            May['Donated'] = Math.floor(May['Donated'] * 100) / 100;
+            June['Donated'] = Math.floor(June['Donated'] * 100) / 100;
+            July['Donated'] = Math.floor(July['Donated'] * 100) / 100;
+            August['Donated'] = Math.floor(August['Donated'] * 100) / 100;
+            September['Donated'] = Math.floor(September['Donated'] * 100) / 100;
+            October['Donated'] = Math.floor(October['Donated'] * 100) / 100;
+            November['Donated'] = Math.floor(November['Donated'] * 100) / 100;
+            December['Donated'] = Math.floor(December['Donated'] * 100) / 100;
+
             months.push(January);
             months.push(February);
             months.push(March);

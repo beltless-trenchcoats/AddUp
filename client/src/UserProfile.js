@@ -47,15 +47,6 @@ class UserProfile extends Component {
       charities: [],
       customCauses: [],
       showEditCharitiesModal: false,
-      newPassword1: undefined,
-      newPassword2: undefined,
-      newEmail1: undefined,
-      newEmail2: undefined,
-      newEmailMatch: true,
-      newPasswordMatch: true,
-      showCauseModal: false,
-      addCustomCauseFields: {},
-      causePrivacy: true
     }
     this.setCustomCauses = this.setCustomCauses.bind(this);
     this.setSession = this.setSession.bind(this);
@@ -268,16 +259,21 @@ class UserProfile extends Component {
 
   setMontlyLimit(e) {
     e.preventDefault();
-    axios.post('http://localhost:8080/api/user/update', {
-      email: this.state.userSession.email,
-      limit: this.state.newMonthlyLimit
-    }).then(() => {
-      $('#step2').removeClass('incomplete');
-      this.setState({
-        monthlyLimit: this.state.newMonthlyLimit,
-        monthlyLimitSet: true
+    if (this.state.newMonthlyLimit > 0) {
+      $('#limitInput').removeClass('invalidLimit');
+      axios.post('http://localhost:8080/api/user/update', {
+        email: this.state.userSession.email,
+        limit: this.state.newMonthlyLimit
+      }).then(() => {
+        $('#step2').removeClass('incomplete');
+        this.setState({
+          monthlyLimit: this.state.newMonthlyLimit,
+          monthlyLimitSet: true
+        });
       });
-    });
+    } else {
+      $('#limitInput').addClass('invalidLimit');
+    }
   }
 
   convertToReadableDate(date_time) {
@@ -319,29 +315,29 @@ class UserProfile extends Component {
       <Header>
         <div className="profilePage">
             <Row className='lessPadding'>
-              <Col xs={12} md={8}>
-                <div className="userProfile">
-                  <div className='welcome'>Welcome, {this.state.userSession.firstName} {this.state.userSession.lastName}</div>
-                  <div className='profileField'>
-                    <span className='label'>Email:</span>
-                    <span className='value'> {this.state.userSession.email}</span>
-                    <ChangeEmailModal session={this.state.userSession} setSession={this.setSession}/>
-                  </div>
-                  <div className='profileField'>
-                    <span className='label'>Password:</span>
-                    <span className='value'>*******</span>
-                    <ChangePasswordModal session={this.state.userSession}/>
-                  </div>
-                  <div className='profileField'>
-                    <span className='label'>Monthly Limit: </span>
-                    {this.state.monthlyLimit ? $ : null}
-                    <span className='value'>$ {this.state.monthlyLimit}</span>
-                  </div>
-                </div>
-              </Col>
-              <Col xs={6} md={4}>
-                <PhotoUploader user={this.state.userInfo}/>
-              </Col>
+              <div className="userProfile">
+                <Col xs={12} md={8}>
+                    <div className='welcome'>Welcome, {this.state.userSession.firstName} {this.state.userSession.lastName}</div>
+                    <div className='profileField'>
+                      <span className='label'>Email:</span>
+                      <span className='value'> {this.state.userSession.email}</span>
+                      <ChangeEmailModal session={this.state.userSession} setSession={this.setSession}/>
+                    </div>
+                    <div className='profileField'>
+                      <span className='label'>Password:</span>
+                      <span className='value'>*******</span>
+                      <ChangePasswordModal session={this.state.userSession}/>
+                    </div>
+                    <div className='profileField'>
+                      <span className='label'>Monthly Limit: </span>
+                      {this.state.monthlyLimit ? $ : null}
+                      <span className='value'>$ {this.state.monthlyLimit}</span>
+                    </div>
+                </Col>
+                <Col xs={6} md={4}>
+                  <PhotoUploader user={this.state.userInfo}/>
+                </Col>
+              </div>
             </Row>
           <Grid>
             <Row>

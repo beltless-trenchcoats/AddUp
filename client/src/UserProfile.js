@@ -114,9 +114,78 @@ class UserProfile extends Component {
         })
         .then(res => {
           this.setState({transactions: res.data});
-          res.data.map( (transaction) => {
-            transactionChartData.push({'name': transaction.name, 'Donated': transaction.amount});
-          })
+            var months = [];
+            var January = {'date': 'January', 'Donated': 0 };
+            var February = {'date': 'February', 'Donated': 0 };
+            var March = {'date': 'March', 'Donated': 0 };
+            var April = {'date': 'April', 'Donated': 0 };
+            var May = {'date': 'May', 'Donated': 0 };
+            var June = {'date': 'June', 'Donated': 0 };
+            var July = {'date': 'July', 'Donated': 0 };
+            var August = {'date': 'August', 'Donated': 0 };
+            var September = {'date': 'September', 'Donated': 0 };
+            var October = {'date': 'October', 'Donated': 0 };
+            var November = {'date': 'November', 'Donated': 0 };
+            var December = {'date': 'December', 'Donated': 0 };
+          for(var i = 0; i < 1; i++) {
+            res.data.map( (transaction) => {
+              var newDate = transaction.date_time.split('T');
+              var newMonth = newDate[0].split('-');
+              if(newMonth[1] === '01') {
+                January['Donated'] += transaction.amount;
+              } else if(newMonth[1] === '02') {
+                February['Donated'] += transaction.amount;
+              } else if(newMonth[1] === '02') {
+                March['Donated'] += transaction.amount;
+              } else if(newMonth[1] === '04') {
+                April['Donated'] += transaction.amount;
+              } else if(newMonth[1] === '05') {
+                May['Donated'] += transaction.amount;
+              } else if(newMonth[1] === '06') {
+                June['Donated'] += transaction.amount;
+              } else if(newMonth[1] === '07') {
+                July['Donated'] += transaction.amount;
+              } else if(newMonth[1] === '08') {
+                August['Donated'] += transaction.amount;
+              } else if(newMonth[1] === '09') {
+                September['Donated'] += transaction.amount;
+              } else if(newMonth[1] === '10') {
+                October['Donated'] += transaction.amount;
+              } else if(newMonth[1] === '11') {
+                November['Donated'] += transaction.amount;
+              } else {
+                December['Donated'] += transaction.amount;
+              }
+            })
+            January['Donated'] = Math.floor(January['Donated'] * 100) / 100;
+            February['Donated'] = Math.floor(February['Donated'] * 100) / 100;
+            March['Donated'] = Math.floor(March['Donated'] * 100) / 100;
+            April['Donated'] = Math.floor(April['Donated'] * 100) / 100;
+            May['Donated'] = Math.floor(May['Donated'] * 100) / 100;
+            June['Donated'] = Math.floor(June['Donated'] * 100) / 100;
+            July['Donated'] = Math.floor(July['Donated'] * 100) / 100;
+            August['Donated'] = Math.floor(August['Donated'] * 100) / 100;
+            September['Donated'] = Math.floor(September['Donated'] * 100) / 100;
+            October['Donated'] = Math.floor(October['Donated'] * 100) / 100;
+            November['Donated'] = Math.floor(November['Donated'] * 100) / 100;
+            December['Donated'] = Math.floor(December['Donated'] * 100) / 100;
+
+            months.push(January);
+            months.push(February);
+            months.push(March);
+            months.push(April);
+            months.push(May);
+            months.push(June);
+            months.push(July);
+            months.push(August);
+            months.push(September);
+            months.push(October);
+            months.push(November);
+            months.push(December);
+          }
+          for(var j = 0; j < months.length; j++) {
+            transactionChartData.push({ 'Date': months[j].date, 'Donated': months[j].Donated })
+          }
         });
 
       axios.post('http://localhost:8080/api/user/charities/info', {
@@ -433,7 +502,7 @@ class UserProfile extends Component {
         <div className="donationGraph">
           <AreaChart width={900} height={400} data={transactionChartData} syncId="anyId"
                 margin={{top: 10, right: 30, left: 0, bottom: 0}}>
-            <XAxis dataKey="name"/>
+            <XAxis dataKey="Date"/>
             <YAxis/>
             <CartesianGrid strokeDasharray="3 3"/>
             <Tooltip/>

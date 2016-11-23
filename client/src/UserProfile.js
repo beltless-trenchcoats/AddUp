@@ -316,7 +316,7 @@ class UserProfile extends Component {
         <div className="profilePage">
             <Row className='lessPadding'>
               <div className="userProfile">
-                <Col xs={12} md={8}>
+                <Col xs={7} md={7}>
                     <div className='welcome'>Welcome, {this.state.userSession.firstName} {this.state.userSession.lastName}</div>
                     <div className='profileField'>
                       <span className='label'>Email:</span>
@@ -334,7 +334,7 @@ class UserProfile extends Component {
                       <span className='value'>$ {this.state.monthlyLimit}</span>
                     </div>
                 </Col>
-                <Col xs={6} md={4}>
+                <Col xs={3} md={3}>
                   <PhotoUploader user={this.state.userInfo}/>
                 </Col>
               </div>

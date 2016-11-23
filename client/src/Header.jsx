@@ -28,7 +28,8 @@ class Header extends Component {
       password1: '',
       password2: '',
       firstname: '',
-      lastname: ''
+      lastname: '',
+      invalidPassword: false
     }
     this.closeLogin = this.closeLogin.bind(this)
     this.openLogin = this.openLogin.bind(this)
@@ -73,6 +74,7 @@ class Header extends Component {
     this.setState({ showSignupModal: false, validationError: false });
   }
   openSignup() {
+    this.setState({invalidPassword: false});
     this.setState({ showSignupModal: true });
   }
   closeLogout() {
@@ -91,7 +93,9 @@ class Header extends Component {
 
   signupUser (e) {
     e.preventDefault();
-    if(this.state.password1 === this.state.password2) {
+    if (!this.validatePassword(this.state.password1)) {
+      this.setState({invalidPassword: true});
+    } else if(this.state.password1 === this.state.password2) {
       axios.post('http://localhost:8080/api/session/signup', {
         email: this.state.email,
         password: this.state.password1,
@@ -120,7 +124,9 @@ class Header extends Component {
     }
   }
 
-
+  validatePassword(password) {
+    return (password.search(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!#%*?&])[A-Za-z\d$@$!#%*?&]{8,}/i) != -1)
+  }
 
   loginUser (e) {
     e.preventDefault();
@@ -169,7 +175,10 @@ class Header extends Component {
   }
 
   onPassword1Change (e) {
-    this.setState({password1: e.target.value})
+    console.log('everythings changing', e.target.value);
+    var invalidPassword = !this.validatePassword(e.target.value);
+    console.log('invalid password', invalidPassword);
+    this.setState({password1: e.target.value, invalidPassword: invalidPassword});
   }
 
   onPassword2Change (e) {
@@ -240,6 +249,9 @@ class Header extends Component {
                 placeholder="Enter Email*"
                 onChange={this.onEmailChange}
               />
+              {
+                this.state.invalidPassword ? <div className='error'>Password must be at least 8 digits and contain a character, number, and special character</div> : null
+              }
               <FieldGroup
                 id="formControlsPassword"
                 type="password"

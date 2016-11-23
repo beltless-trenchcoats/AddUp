@@ -10,7 +10,6 @@ exports.createCharity = Promise.promisify(function(values, callback) {
     var queryText = 'SELECT name, id FROM charities \
       WHERE name = \'' + values.name + '\';'
   }
-  // console.log(queryText);
   db.query({
     text: queryText
   }, 
@@ -55,21 +54,7 @@ exports.createCharity = Promise.promisify(function(values, callback) {
 });
 
 exports.updateCharity = function(charityID, updateFields, callback) {
-  var updateString = '';
-  for (var key in updateFields) {
-    if (typeof updateFields[key] === 'string') {
-      updateString +=  key + " = '" + updateFields[key] + "', "
-    } else {
-      updateString +=  key + ' = ' + updateFields[key] + ', '
-    }
-  }
-  updateString = updateString.slice(0, updateString.length - 2);
-  console.log('UPDATE charities SET ' + updateString + ' \
-      WHERE id = \'' + charityID + '\';');
-  db.query({
-    text: 'UPDATE charities SET ' + updateString + ' \
-      WHERE id = \'' + charityID + '\';'
-  }, function(err, rows) {
+  helpers.updateFields(updateFields, 'charities', {id: charityID}, function(err, result) {
     if (err) {
       callback(err);
     } else {
@@ -123,19 +108,6 @@ exports.getCharityFields = function(filterFields, callback) {
   });
 };
 
-// exports.searchByEIN = function(ein, callback) {
-//   db.query({
-//     text: 'SELECT * FROM charities WHERE ein = \'' + ein + '\';'
-//   },
-//   function(err, result) {
-//     if (err) {
-//       callback(err, null);
-//     } else {
-//       callback(null, result.rows);
-//     }
-//   });
-// };
-
 exports.searchCustomCauses = function(searchFields, callback) {
   var searchName = searchFields.name;
   delete searchFields.name;
@@ -183,7 +155,7 @@ exports.searchCustomCauses = function(searchFields, callback) {
 //   console.log(response);
 // });
 
-// exports.updateCharity(14, {category: 'F', mission_statement: 'PLS DONATE I NEED TO EAT MICE NOW THX', dollar_goal: 501}, function(response) {
+// exports.updateCharity(11, {category: 'F', mission_statement: 'PLS DONATE I NEED TO EAT MICE NOW THX', dollar_goal: 501}, function(response) {
 //   console.log(response);
 // });
 

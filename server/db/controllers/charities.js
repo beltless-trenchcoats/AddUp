@@ -34,17 +34,26 @@ exports.createCharity = Promise.promisify(function(values, callback) {
           } else {
             if (values.ein) {
               db.query({
-                text: 'SELECT id FROM charities WHERE ein = \'' + values.ein + '\';'
+                text: 'SELECT * FROM charities WHERE ein = \'' + values.ein + '\';'
               },
               function(err, result) {
                 if (err) {
                   callback(err, null);
                 } else {
-                  callback(null, result.rows);
+                  callback(null, result.rows[0]);
                 }
               });
             } else {
-              callback(err, 'success');
+              db.query({
+                text: 'SELECT * FROM charities WHERE name = \'' + values.name + '\';'
+              },
+              function(err, result) {
+                if (err) {
+                  callback(err, null);
+                } else {
+                  callback(null, result.rows[0]);
+                }
+              });
             }
           }
         });

@@ -96,7 +96,7 @@ class AddCauseModal extends Component {
           <Modal.Body>
             <p>Please provide detailed information so users will want to donate to your cause!</p>
 
-            <form>
+            <form onSubmit={this.submitCause}>
               <FieldGroup
                 id="formControlsCausename"
                 type="text"
@@ -105,6 +105,15 @@ class AddCauseModal extends Component {
                 placeholder="Cause Name"
                 onChange={this.onFieldChange.bind(this, 'name')}
                 defaultValue={this.props.charity ? this.props.charity.name : null}
+              />
+              <FieldGroup
+                id="formControlsEmail"
+                type="email"
+                required={true}
+                label="Email associated with your PayPal Account (to collect donations)*"
+                placeholder="example@gmailcom"
+                onChange={this.onFieldChange.bind(this, 'paypalemail')}
+                defaultValue={this.props.charity ? this.props.charity.paypalemail : null}
               />
               <FormGroup controlId="formControlsSelect">
                 <ControlLabel>Category</ControlLabel>
@@ -190,7 +199,7 @@ class AddCauseModal extends Component {
               <Button
                 className="modalButton"
                 bsStyle="primary"
-                onClick={this.submitCause}
+                type="submit"
                 >Save
               </Button>
               <Button className="modalButton" onClick={this.closeCause}>Cancel</Button>

@@ -16,6 +16,7 @@ var charitiesDB = require('./db/controllers/charities');
 var helperFunctions = require('./helpers');
 var aws = require('aws-sdk');
 var S3_BUCKET = process.env.S3_BUCKET || 'addupp-profile-photos';
+var paypalHelpers = require('./paypalHelpers');
 // var stripe = require("stripe")(
 //   "sk_test_eKJNtjs3Il6V1QZvyKs1dS6y"
 // );
@@ -59,6 +60,38 @@ var callWorker = new interval(900000, function(){
 })
 //calls interval function on worker file
 callWorker.run()
+
+var weeklyCausePayout = function() {
+  charitiesDB.getCharityFields({type: 'custom'}, function(err, results) {
+    if (err) {
+      console.log(err);
+    } else {
+      var paypalInput = [];
+      results.forEach(function(entry) {
+        if (entry.paypalemail && entry.balance_owed > 0) {
+          paypalInput.push({email: entry.paypalemail, value: entry.balance_owed});
+          //set balance owed back to 0
+          charitiesDB.updateCharity(entry.id, {balance_owed: 0}, function(response) {
+            console.log(response);
+          }); 
+        }
+      });
+      console.log('paypalInput', paypalInput);
+      if (paypalInput.length > 0) {
+        paypalHelpers.payoutCauses(paypalInput, function(err, result) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(JSON.stringify(result));
+          }
+        });
+      }
+    }
+  });
+}
+
+//pay out once per week
+setInterval(weeklyCausePayout, 604800000);
 
 app.use(parser.json(), function(req, res, next) {
   //allow cross origin requests from client, and Plaid API
@@ -551,6 +584,7 @@ app.post('/charityInfo', function (req, res) {
         if (!(req.body.charityId)) {
           res.send(result);
         } else {
+          console.log('sending pre', result[0]);
           var toSend = result[0];
           toSend.category = helperFunctions.convertCategoryToString(toSend.category);
           console.log(toSend);

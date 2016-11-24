@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Col, Panel } from 'react-bootstrap';
 import Header from './Header';
-import './App.css';
 
 class Contact extends Component {
   constructor(props) {

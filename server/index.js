@@ -449,7 +449,7 @@ app.post('/api/user/charities/update', function(req, res) {
 })
 
 app.post('/api/user/info', function(req, res) {
-  db.getUserFields(req.body.email, function(err, data) {
+  db.getUserFields(req.body.idOrEmail, function(err, data) {
     if (err) {
       res.send(err);
     } else {

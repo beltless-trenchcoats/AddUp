@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Col, Panel } from 'react-bootstrap';
 import { Link } from 'react-router';
 import Header from './Header';
-import './App.css';
 
 class About extends Component {
   constructor(props) {

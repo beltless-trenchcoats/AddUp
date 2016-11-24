@@ -70,7 +70,7 @@ class UserProfile extends Component {
       var email = this.state.userSession.email;
 
       axios.post('http://localhost:8080/api/user/info', {
-        'email': email
+        'idOrEmail': email
         })
         .then(res => {
           console.log('userInfo', res.data)

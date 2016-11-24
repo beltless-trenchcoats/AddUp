@@ -125,7 +125,7 @@ class Header extends Component {
   }
 
   validatePassword(password) {
-    return (password.search(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!#%*?&])[A-Za-z\d$@$!#%*?&]{8,}/i) != -1)
+    return (password.search(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!#%*?&])[A-Za-z\d$@$!#%*?&]{8,}/i) !== -1)
   }
 
   loginUser (e) {

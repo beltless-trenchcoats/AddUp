@@ -72,8 +72,12 @@ exports.updateUser = function(email, updateFields, callback) {
   });
 };
 
-exports.getUserFields = function(email, callback) {
-  var filterFields = email ? {email: email} : null;
+exports.getUserFields = function(input, callback) {
+  if (input) {
+    var filterFields = input.indexOf('@') > -1 ? {email: input} : {id: input};
+  } else {
+    var filterFields = null;
+  }
   helpers.getFields(['*'], 'users', filterFields, function(err, results) {
     if (err) {
       callback(err, null);

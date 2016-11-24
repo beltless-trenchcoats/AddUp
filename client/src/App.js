@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { Row, Button, Jumbotron, Col, Panel } from 'react-bootstrap';
 import axios from 'axios';
-import { AreaChart, Area, Cell, PieChart, Pie, XAxis, YAxis, LineChart, Line, Legend, Bar, CartesianGrid, Tooltip, BarChart} from 'recharts';
+import { XAxis, YAxis, LineChart, Line, CartesianGrid } from 'recharts';
 
 import './App.css';
 

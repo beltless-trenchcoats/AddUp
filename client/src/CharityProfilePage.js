@@ -4,7 +4,6 @@ import { Gmaps, Marker } from 'react-gmaps';
 import axios from 'axios';
 import _ from 'lodash';
 
-import apiKeys from '../../server/config/API_Keys';
 import Header from './Header';
 import CharityModal from './CharityModal';
 
@@ -14,6 +13,8 @@ class CharityProfilePage extends Component {
     this.state = {
       charityId: this.props.params.id,
       charity: {},
+      charityAuthor: {},
+      authorName: '',
       basicCharityInfo: {},
       showModal: false,
       selected: false //TODO: Add flag to change button depending on if charity is already selected
@@ -41,6 +42,24 @@ class CharityProfilePage extends Component {
           mission_statement: res.data.missionStatement || res.data.mission_statement
         }
       })
+    })
+    .then(() => {
+      if (this.state.charity.id_owner) {
+        axios.post('http://localhost:8080/api/user/info', {
+          idOrEmail: (this.state.charity.id_owner).toString()
+        })
+        .then((res) => {
+          let first = res.data.first_name;
+          let lastInitial = res.data.last_name[0]
+          this.setState({
+            charityAuthor: res.data,
+            authorName: first + ' ' + lastInitial + '.'
+          })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      }
     })
     .catch((err) => {
       console.log(err)
@@ -74,6 +93,7 @@ class CharityProfilePage extends Component {
           <Grid>
             <Row>
               <h2 className="charityName">{this.state.charity.name}</h2>
+              {this.state.charity.id_owner ? <h5 className="charityAuthor">Created by: {<a href={"/profile/" + this.state.charityAuthor.id}> {this.state.authorName}</a>}</h5> : null }
               <div className="charityType">{this.state.charity.nteeType}</div>
               <div className="charityType">{this.state.charity.category}</div>
               {

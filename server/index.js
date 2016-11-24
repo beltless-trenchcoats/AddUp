@@ -467,7 +467,7 @@ app.post('/api/user/charities/update', function(req, res) {
             if (err) {
               console.log(err);
             } else {
-              promises.push(userCharitiesDB.insert(userEmail, charityAdded[0].id, charity.percentage));
+              promises.push(userCharitiesDB.insert(userEmail, charityAdded.id, charity.percentage));
             }
           })
         } else { // If the charity is already in the db, check if the user is already linked to it

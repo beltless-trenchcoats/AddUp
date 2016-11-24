@@ -9,22 +9,23 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "2.x",
     "axios": "^0.15.2",
     "bcrypt": "^0.8.7",
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
     "dns": "^0.2.2",
+    "ejs": "2.x",
     "express": "^4.14.0",
     "express-session": "^1.14.2",
     "mocha": "^3.1.2",
     "mongoose": "^4.6.6",
     "nodemon": "^1.11.0",
+    "paypal-rest-sdk": "^1.7.0",
     "pg": "6.1.0",
     "plaid": "^1.1.0",
     "request": "^2.78.0",
-    "stripe": "^4.12.0",
-    "aws-sdk": "2.x",
-    "ejs": "2.x"
+    "stripe": "^4.12.0"
   },
   "devDependencies": {
     "chai": "^3.5.0"

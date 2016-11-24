@@ -101,7 +101,7 @@ exports.getUserFields = function(input, callback) {
 //   console.log(result);
 // });
 
-// exports.getUserFields('helga@gmail.com', function(err, data) {
+// exports.getUserFields(null, function(err, data) {
 //   if (err) {
 //     console.log(err);
 //   } else {

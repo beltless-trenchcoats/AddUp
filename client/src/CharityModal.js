@@ -30,6 +30,7 @@ class CharityModal extends Component {
         })
         .then((res) => {
           var usersCharities = res.data;
+          console.log('current charities', usersCharities);
           // If there is a current charity (if not, on user profile page)
           if (Object.keys(this.props.currentCharity).length) {
             this.props.currentCharity.percentage = 0;
@@ -37,7 +38,11 @@ class CharityModal extends Component {
               usersCharities = [this.props.currentCharity];
             } else {
               //test if current charity is already linked to user
-              (((usersCharities.filter((charity) => charity.ein === this.props.currentCharity.ein)).length > 0) ? null : usersCharities.push(this.props.currentCharity))
+              if (this.props.currentCharity.type === 'custom') {
+                (((usersCharities.filter((charity) => charity.id === this.props.currentCharity.id)).length > 0) ? null : usersCharities.push(this.props.currentCharity));
+              } else {
+                (((usersCharities.filter((charity) => charity.ein === this.props.currentCharity.ein)).length > 0) ? null : usersCharities.push(this.props.currentCharity));
+              }
             }
           }
           

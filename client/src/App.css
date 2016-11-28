@@ -555,6 +555,27 @@ a:hover .charityInfo{
   margin-top: 20px;
 }
 
+
+
+/*************** USER PUBLIC PROFILE PAGE ***************/
+
+
+.publicProfile {
+  top: 55px;
+  position: relative;
+}
+
+.publicProfile .userCharitiesContainer h1 {
+  width: 100%;
+  text-align: center;
+  margin-top: 0;
+}
+
+.publicProfile .charityInfo {
+  
+}
+
+
 /*************** SEARCH PAGE ***************/
 .searchPage {
   top: 55px;

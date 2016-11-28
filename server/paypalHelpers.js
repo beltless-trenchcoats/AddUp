@@ -2,8 +2,8 @@ var paypal = require('paypal-rest-sdk');
 
 paypal.configure({
   'mode': 'sandbox', //sandbox or live
-  'client_id': 'insert api key',
-  'client_secret': 'insert secret'
+  'client_id': 'AbKfqUOHESc5PY4gDXg48J1SWpFklwCmBT1iqR8XCIic7ERMSvTltHSl-vecHNjuJqDwSSAALKieI3UL',
+  'client_secret': 'EPov8thnjbKLZz2lyGTFo63gAS6TQ0OzbVJcs0eJDu75vKDctiI29F9NipaEgTO8NMYnLRZzwOfdPmf3'
 });
 
 exports.payoutCauses = function(payoutArray, callback) {

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Navbar, FormGroup, FormControl, Button, DropdownButton, MenuItem } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
+import $ from "jquery";
+import { browserHistory } from 'react-router';
 
 import Header from './Header';
 import CharitySearchResult from './CharitySearchResult';
@@ -24,14 +26,55 @@ class SearchPage extends Component {
       lastPage: 1,
       firstPageChange: false
     }
-    this.getResults = this.getResults.bind(this)
-    this.onSearchInput = this.onSearchInput.bind(this)
+    this.getResults = this.getResults.bind(this);
+    this.onSearchInput = this.onSearchInput.bind(this);
+    this.navigateBySearchTerms = this.navigateBySearchTerms.bind(this);
+    this.search = this.search.bind(this);
+  }
+
+  componentDidMount() {
+    this.getResults();
+    //if navigating between search results, re-render results
+    $(window).on('hashchange', () => this.getResults());
+  }
+
+  getResults() {
+    if (document.location.hash) {
+      this.setState({isLoading: true});
+      var searchTerms = {
+          eligible: 1,
+          type: this.state.type,
+          private: 'false'
+        };
+
+      var searchFields = document.location.hash.slice(1).split('&');
+      searchFields.forEach(pair => {
+        var keyVal = pair.split('=');
+        searchTerms[keyVal[0]] = keyVal[1];
+        this.setStateWithObj(keyVal[0], keyVal[1]);
+      });
+
+      axios.post('http://localhost:8080/api/charities/search', searchTerms)
+      .then((res) => {
+        this.setState({
+          searchResults: res.data,
+          isLoading: false
+        })
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    }
   }
 
   onSearchInput (type, e) {
-    var stateChange = {};
-    stateChange[type] = e.target.value;
-    this.setState(stateChange.toUpperCase());
+    this.setStateWithObj(type, e.target.value);
+  }
+
+  setStateWithObj(key, val) {
+    var obj = {};
+    obj[key] = val;
+    this.setState(obj);
   }
 
   handleSelect (evt,evtKey) {
@@ -47,38 +90,33 @@ class SearchPage extends Component {
     this.setState({type: evt});
   }
 
-  getResults() {
-    this.setState({isLoading: true});
-    var searchTerms = {
-      eligible: 1,
-      type: this.state.type,
-      private: 'false'
-    };
+  search() {
+    this.navigateBySearchTerms(true);
+  }
+
+  navigateBySearchTerms() {
     var options = ['searchTerm', 'city', 'state', 'zipCode', 'category', 'start'];
-    for (var i = 0; i < options.length; i ++) {
+    var queryStr = '';
+    for (var i = 0; i < options.length; i++) {
       if (this.state[options[i]] !== '') {
-        searchTerms[options[i]] = this.state[options[i]]
+        if (queryStr !== '') {
+          queryStr += '&';
+        }
+        //if this is a new search, start 'start' back at 0
+        if (options[i] === 'start' && arguments[0]) {
+          queryStr += options[i] + '=0';
+        }
+        else queryStr += options[i] + '=' + this.state[options[i]];
       }
     }
-
-    console.log('search terms', searchTerms);
-    axios.post('http://localhost:8080/api/charities/search', searchTerms)
-    .then((res) => {
-      console.log('search response', res.data);
-      this.setState({
-        searchResults: res.data,
-        isLoading: false
-      })
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+    browserHistory.push('/search#' + queryStr);
+    this.getResults();
   }
 
   //this function is called by ReactPaginate component
   pageSelect = (data) => {
     //previous start is what rows to request from the api
-    var previousStart = this.state.start;
+    var previousStart = parseInt(this.state.start);
     //activePage is the current selected page
     var activePage = data.selected;
     //lastActivePage is the last page the user selected
@@ -93,7 +131,7 @@ class SearchPage extends Component {
       this.setState({activePage: activePage += 1, start: previousStart += 20, firstPageChange: true},
         function() {
           //gets results from API
-          this.getResults.call(this);
+          this.navigateBySearchTerms();
           //maps over results and re renders them
           this.state.searchResults.map((charity, i) =>
           <CharitySearchResult key={i} info={charity} />)
@@ -108,7 +146,7 @@ class SearchPage extends Component {
         this.setState({activePage: activePage += pageDifference, start: previousStart += resultDifference,
           lastPage: lastActivePage += pageDifference},
           function() {
-            this.getResults.call(this);
+            this.navigateBySearchTerms();
             this.state.searchResults.map((charity, i) =>
             <CharitySearchResult key={i} info={charity} />)
           });
@@ -116,7 +154,7 @@ class SearchPage extends Component {
     } else if(activePage === lastActivePage) {
       this.setState({activePage: activePage -= 1, start: previousStart -= 20},
         function() {
-          this.getResults.call(this);
+          this.navigateBySearchTerms();
           this.state.searchResults.map((charity, i) =>
           <CharitySearchResult key={i} info={charity} />)
         });
@@ -128,7 +166,7 @@ class SearchPage extends Component {
       this.setState({activePage: activePage -= pageDifference, start: previousStart -= resultDifference,
          lastPage: lastActivePage -= pageDifference},
       function() {
-        this.getResults.call(this);
+        this.navigateBySearchTerms();
         this.state.searchResults.map((charity, i) =>
         <CharitySearchResult key={i} info={charity} />)
       });
@@ -147,6 +185,7 @@ class SearchPage extends Component {
                   <FormControl
                     type="text"
                     placeholder="Search"
+                    value={this.state.searchTerm}
                     onChange={this.onSearchInput.bind(this, 'searchTerm')}
                   />
                   <DropdownButton bsStyle={'default'} title={this.state.categoryName || 'Category'} id={'categoryDropdown'} onSelect={this.handleSelect.bind(this)}>
@@ -180,17 +219,20 @@ class SearchPage extends Component {
                   <FormControl
                     type="text"
                     placeholder="City"
+                    value={this.state.city}
                     onChange={this.onSearchInput.bind(this, 'city')}
                   />
                   <FormControl
                     type="text"
                     className='form-control'
                     placeholder="State (2 letter abbrev)"
+                    value={this.state.state}
                     onChange={this.onSearchInput.bind(this, 'state')}
                   />
                   <FormControl
                     type="text"
                     placeholder="Zip Code"
+                    value={this.state.zipCode}
                     onChange={this.onSearchInput.bind(this, 'zipCode')}
                   />
                   <DropdownButton bsStyle={'default'} title={this.state.type || 'Charity'} id={'typeDropdown'} onSelect={this.handleTypeSelect.bind(this)}>
@@ -201,7 +243,7 @@ class SearchPage extends Component {
                 <Button
                   type="submit"
                   disabled={this.state.isLoading}
-                  onClick={!this.state.isLoading ? this.getResults : null}>{this.state.isLoading ? 'Finding Causes...' : 'Find Cause'}
+                  onClick={!this.state.isLoading ? this.search : null}>{this.state.isLoading ? 'Finding Causes...' : 'Find Cause'}
                 </Button>
               </Navbar.Form>
             </Navbar.Collapse>

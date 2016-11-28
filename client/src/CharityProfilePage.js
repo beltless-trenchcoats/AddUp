@@ -8,6 +8,7 @@ import { browserHistory } from 'react-router';
 
 import Header from './Header';
 import CharityModal from './CharityModal';
+import apiKeys from '../../server/config/API_Keys';
 
 class CharityProfilePage extends Component {
   constructor(props) {

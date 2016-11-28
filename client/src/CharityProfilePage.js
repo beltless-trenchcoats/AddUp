@@ -3,6 +3,7 @@ import { Button, Grid, Col, Row } from 'react-bootstrap';
 import { Gmaps, Marker } from 'react-gmaps';
 import axios from 'axios';
 import _ from 'lodash';
+import apiKeys from '../../server/config/API_Keys';
 
 import Header from './Header';
 import CharityModal from './CharityModal';
@@ -163,7 +164,7 @@ class CharityProfilePage extends Component {
                     lat={this.state.charity.latitude}
                     lng={this.state.charity.longitude}
                     zoom={12}
-                    // params={{v: '3.exp', key: apiKeys.gmaps}}
+                    params={{v: '3.exp', key: apiKeys.gmaps}}
                     onMapCreated={this.onMapCreated}>
                     <Marker
                       lat={this.state.charity.latitude}

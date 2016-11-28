@@ -80,6 +80,7 @@ class CharityModal extends Component {
   }
 
   saveCharities () {
+    console.log('this is getting sent to the database', this.state.updatedCharities);
     this.setState( {charities: this.state.updatedCharities})
     axios.post('http://localhost:8080/api/user/charities/update', {
       email: this.state.userEmail,

@@ -21,10 +21,15 @@ exports.createCharity = Promise.promisify(function(values, callback) {
         console.log('charity already in database: ' + values.name);
         callback(null, results.rows);
       } else {
+        console.log('INSERT INTO charities(name, category, ein, donation_url, city, state, zip, balance_owed, total_donated, mission_statement, \
+            id_owner, dollar_goal, type, private, photo, paypalemail) \
+            VALUES(' + values.name + values.category + values.ein || null + values.donation_url || null + values.city + values.state + 
+            values.zip + 0 + 0 + values.mission_statement + values.id_owner || null + values.dollar_goal || null + values.type || 'charity' + 
+            values.private || null + values.photo || null + values.paypalemail || null + ');');
         db.query({
           text: 'INSERT INTO charities(name, category, ein, donation_url, city, state, zip, balance_owed, total_donated, mission_statement, \
             id_owner, dollar_goal, type, private, photo, paypalemail) \
-            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)',
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16);',
           values: [values.name, values.category, values.ein || null, values.donation_url || null, values.city, 
               values.state, values.zip, 0, 0, values.mission_statement, values.id_owner || null, values.dollar_goal || null, values.type || 'charity', values.private || null, values.photo || null, values.paypalemail || null]
         },

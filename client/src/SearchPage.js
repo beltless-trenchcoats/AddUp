@@ -38,6 +38,50 @@ class SearchPage extends Component {
     $(window).on('hashchange', () => this.getResults());
   }
 
+  onSearchInput(type, e) {
+    this.setStateWithObj(type, e.target.value);
+  }
+
+  setStateWithObj(key, val) {
+    var obj = {};
+    obj[key] = val;
+    this.setState(obj);
+  }
+
+  handleSelect(evt,evtKey) {
+    if(evt[1].split('').length > 25) {
+      evt[1] = evt[1].substring(0, 25) + '...';
+    }
+    this.setState({category: evt[0], categoryName: evt[1]});
+  }
+
+  handleTypeSelect(evt) {
+    this.setState({type: evt});
+  }
+
+  search() {
+    this.navigateBySearchTerms(true);
+  }
+
+  navigateBySearchTerms() {
+    var options = ['searchTerm', 'city', 'state', 'zipCode', 'category', 'start'];
+    var queryStr = '';
+    for (var i = 0; i < options.length; i++) {
+      if (this.state[options[i]] !== '') {
+        if (queryStr !== '') {
+          queryStr += '&';
+        }
+        //if this is a new search, start 'start' back at 0
+        if (options[i] === 'start' && arguments[0]) {
+          queryStr += options[i] + '=0';
+        }
+        else queryStr += options[i] + '=' + this.state[options[i]].toUpperCase();
+      }
+    }
+    browserHistory.push('/search#' + queryStr);
+    this.getResults();
+  }
+
   getResults() {
     if (document.location.hash) {
       this.setState({isLoading: true});
@@ -65,52 +109,6 @@ class SearchPage extends Component {
         console.log(err)
       })
     }
-  }
-
-  onSearchInput (type, e) {
-    this.setStateWithObj(type, e.target.value);
-  }
-
-  setStateWithObj(key, val) {
-    var obj = {};
-    obj[key] = val;
-    this.setState(obj);
-  }
-
-  handleSelect (evt,evtKey) {
-      // what am I suppose to write in there to get the value?
-    console.log('EVENT', evt);
-    if(evt[1].split('').length > 25) {
-      evt[1] = evt[1].substring(0, 25) + '...';
-    }
-    this.setState({category: evt[0], categoryName: evt[1]});
-  }
-
-  handleTypeSelect (evt) {
-    this.setState({type: evt});
-  }
-
-  search() {
-    this.navigateBySearchTerms(true);
-  }
-
-  navigateBySearchTerms() {
-    var options = ['searchTerm', 'city', 'state', 'zipCode', 'category', 'start'];
-    var queryStr = '';
-    for (var i = 0; i < options.length; i++) {
-      if (this.state[options[i]] !== '') {
-        if (queryStr !== '') {
-          queryStr += '&';
-        }
-        //if this is a new search, start 'start' back at 0
-        if (options[i] === 'start' && arguments[0]) {
-          queryStr += options[i] + '=0';
-        }
-        else queryStr += options[i] + '=' + this.state[options[i]];
-      }
-    }
-    browserHistory.push('/search#' + queryStr);
-    this.getResults();
   }
 
   //this function is called by ReactPaginate component

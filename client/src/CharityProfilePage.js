@@ -4,6 +4,7 @@ import { Gmaps, Marker } from 'react-gmaps';
 import axios from 'axios';
 import _ from 'lodash';
 import apiKeys from '../../server/config/API_Keys';
+import { browserHistory } from 'react-router';
 
 import Header from './Header';
 import CharityModal from './CharityModal';
@@ -92,7 +93,7 @@ class CharityProfilePage extends Component {
     return (
       <Header>
         <div className="charityProfilePage">
-
+          <button onClick={browserHistory.goBack}>Back To Search Results</button>
           <Grid>
             <Row>
               <h2 className="charityName">{this.state.charity.name}</h2>

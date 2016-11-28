@@ -38,7 +38,11 @@ class AddCauseModal extends Component {
 
   onFieldChange(type, e) {
     var fields = this.state.addCustomCauseFields;
-    fields[type] = e.target.value;
+    if (typeof e.target.value === 'string') {
+      fields[type] = e.target.value.replace("'", "");
+    } else {
+      fields[type] = e.target.value;
+    }
     this.setState({addCustomCauseFields: fields});
   }
 

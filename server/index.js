@@ -448,13 +448,19 @@ app.post('/api/user/charities/update', function(req, res) {
   var userEmail = req.body.email;
   var promises = [];
   req.body.charities.forEach(function (charity) {
+    console.log('this charity is', charity);
     // Remove any charities that the user has marked to remove
     if (charity.remove) {
       userCharitiesDB.remove(userEmail, charity.id, function (err, charityRemoved) {
         err ? console.log(err) : null;
       });
     } else { // Check if the current charity has already been saved to the database
-      charitiesDB.getCharityFields({ein: charity.ein}, function (err, results) {
+      if (charity.type === 'custom') {
+        var searchField = {id: charity.id};
+      } else {
+        var searchField = {ein: charity.ein};
+      }
+      charitiesDB.getCharityFields(searchField, function (err, results) {
         // If it is not in db, add and also add entry to userscharities to link user to charity
         if (results.length === 0) {
           charitiesDB.createCharity(charity, function (err, charityAdded) {

@@ -39,7 +39,9 @@ class CharityProfilePage extends Component {
           state: res.data.state,
           zip: res.data.zipCode || res.data.zip,
           donation_url: res.data.donationUrl || res.data.donation_url,
-          mission_statement: res.data.missionStatement || res.data.mission_statement
+          mission_statement: res.data.missionStatement || res.data.mission_statement,
+          id: res.data.id,
+          type: res.data.type || 'charity'
         }
       })
     })

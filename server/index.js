@@ -195,7 +195,7 @@ app.post('/api/session/signup', function(req, res) {
           password: password
         })
         .then(function(resp) {
-          res.status(200).send(resp.data);
+          res.status(201).send(resp.data);
         })
         .catch(function(err) {
           console.log(err);
@@ -246,24 +246,12 @@ app.post('/api/session/login', function(req, res) {
   })
 });
 
-
-app.get('/api/session', function(req, res) {
-  // req.session.reload(function(err) {
-    res.send(JSON.stringify(userSession));
-  //   // session updated
-  // })
-  // res.send(req.session);
-});
-
-
-
 //replace session email and currentUser with undefined
 app.get('/api/session/logout', function(req, res) {
   currentUser = undefined;
   userSession = {};
   req.session.destroy(function(err) {
     // cannot access session here
-    // console.log('session after logout', req.session);
     if (err) {
       console.log(err);
     }

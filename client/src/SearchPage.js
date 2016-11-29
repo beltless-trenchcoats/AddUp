@@ -74,8 +74,10 @@ class SearchPage extends Component {
         //if this is a new search, start 'start' back at 0
         if (options[i] === 'start' && arguments[0]) {
           queryStr += options[i] + '=0';
+        } else if (options[i] === 'state') {
+          queryStr += options[i] + '=' + this.state[options[i]].toUpperCase();
         }
-        else queryStr += options[i] + '=' + this.state[options[i]].toUpperCase();
+        else queryStr += options[i] + '=' + this.state[options[i]];
       }
     }
     browserHistory.push('/search#' + queryStr);

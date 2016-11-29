@@ -9,9 +9,10 @@ var plaid = require('plaid');
 var test_key = 'sk_test_eKJNtjs3Il6V1QZvyKs1dS6y';
 var stripe = require('stripe')(test_key);
 
-//TODO: These should not be public
-var client_id = '58224c96a753b9766d52bbd1';
-var secret = '04137ebffb7d68729f7182dd0a9e71';
+var apiKeys = require('./config/API_Keys');
+
+var client_id = apiKeys.PlaidClientId;
+var secret = apiKeys.PlaidSecret;
 
 var plaidClient = new plaid.Client(client_id, secret, plaid.environments.tartan);
 

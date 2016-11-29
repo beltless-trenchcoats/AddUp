@@ -17,9 +17,6 @@ var helperFunctions = require('./helpers');
 var aws = require('aws-sdk');
 var S3_BUCKET = process.env.S3_BUCKET || 'addupp-profile-photos';
 var paypalHelpers = require('./paypalHelpers');
-// var stripe = require("stripe")(
-//   "sk_test_eKJNtjs3Il6V1QZvyKs1dS6y"
-// );
 
 var app = express();
 var port = process.env.PORT || 8080;
@@ -178,65 +175,6 @@ app.post('/api/plaid/transactions', function(req, res) {
     .catch(err => console.log('error pinging plaid', err));
 });
 
-// THIS IS FOR LETTINGS USERS WHO CREATED A CUSTOM CAUSE SET UP A STRIPE ACCOUNT. UNCOMMENT WHEN STRIPE EMAILS ME BACK
-// app.post("/oauth/callback", function(req, res) {
-
-//   var code = req.body.code;
-
-//   // Make /oauth/token endpoint POST request
-//   request.post({
-//     url: 'https://connect.stripe.com/oauth/token',
-//     form: {
-//       grant_type: "authorization_code",
-//       client_id: 'ca_9bfGnqU5JGVlcbNEJfmcmCCDAewlhQP7',
-//       code: code,
-//       client_secret: 'sk_test_eKJNtjs3Il6V1QZvyKs1dS6y'
-//     }
-//   }, function(err, r, body) {
-//     if (err) {
-//       console.log(err);
-//     }
-//     console.log('STRIPE BODY', body);
-//     var accessToken = JSON.parse(body).access_token;
-//     var stripeUserID = JSON.parse(body).stripe_user_id;
-
-//     // var stripe = require("stripe")(
-//     //   "sk_test_eKJNtjs3Il6V1QZvyKs1dS6y"
-//     // );
-
-//     // stripe.tokens.create({
-//     //   card: {
-//     //     "number": '4242424242424242',
-//     //     "exp_month": 12,
-//     //     "exp_year": 2017,
-//     //     "cvc": '123'
-//     //   }
-//     // }, function(err, token) {
-//     //   // asynchronously called
-//     // });
-
-//     // Do something with your accessToken
-//     stripe.charges.create({
-//       amount: .01,
-//       currency: "usd",
-//       source: accessToken, // obtained with Stripe.js
-//       description: "TEST CHARGE"
-//     }, {
-//       stripe_account: stripeUserID
-//     }, function(err, charge) {
-//       // asynchronously called
-//       if (err) {
-//         console.log(err);
-//       }
-//       console.log('IT CHARGED', charge);
-//     });
-
-//     // For demo"s sake, output in response:
-//     res.send({ "Your Token": accessToken });
-
-//   });
-// });
-
 //signup new users to our local db
 app.post('/api/session/signup', function(req, res) {
   var email = req.body.email;
@@ -285,6 +223,7 @@ app.post('/api/session/login', function(req, res) {
             req.session.email = email;
             req.session.firstName = data[0].first_name;
             req.session.lastName = data[0].last_name;
+            // console.log('session', req.session);
             userSession = {
               email: email,
               firstName: data[0].first_name,
@@ -305,6 +244,7 @@ app.post('/api/session/login', function(req, res) {
 
 app.get('/api/session', function(req, res) {
   req.session.reload(function(err) {
+    // console.log('session', req.session);
     res.send(JSON.stringify(userSession));
     // session updated
   })
@@ -318,6 +258,7 @@ app.get('/api/session/logout', function(req, res) {
   userSession = {};
   req.session.destroy(function(err) {
     // cannot access session here
+    // console.log('session after logout', req.session);
     if (err) {
       console.log(err);
     }

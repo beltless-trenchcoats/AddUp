@@ -1,18 +1,20 @@
 var express = require('express');
 var parser = require('body-parser');
-var plaid = require('plaid');
 var request = require('request');
 var session = require('express-session');
-var db = require('./db/controllers/users');
-var dbHelpers = require('./db/controllers/helpers');
-var dbConfig = require('./db/config/db');
+
 var axios = require('axios');
-var worker = require('./worker');
 var bcrypt = require('bcrypt');
+
+var db = require('./db/config/db');
+var Users = require('./db/controllers/users');
 var Transactions = require('./db/controllers/transactions');
-var userCharitiesDB = require('./db/controllers/usersCharities');
-var charitiesDB = require('./db/controllers/charities');
-var helperFunctions = require('./helpers');
+var UserCharities = require('./db/controllers/usersCharities');
+var Charities = require('./db/controllers/charities');
+var helper = require('./helpers');
+var worker = require('./worker');
+
+var plaid = require('plaid');
 var aws = require('aws-sdk');
 var S3_BUCKET = process.env.S3_BUCKET || 'addupp-profile-photos';
 var paypalHelpers = require('./paypalHelpers');
@@ -22,6 +24,17 @@ var port = process.env.PORT || 8080;
 
 var currentUser = undefined;
 var userSession = {};
+
+
+
+app.use(parser.json(), function(req, res, next) {
+  //allow cross origin requests from client, and Plaid API
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+app.use(session({secret: 'test'}));
 
 //accurate interval timer +- 1ms
 function interval(duration, fn){
@@ -58,7 +71,7 @@ var callWorker = new interval(900000, function(){
 callWorker.run()
 
 var weeklyCausePayout = function() {
-  charitiesDB.getCharityFields({type: 'custom'}, function(err, results) {
+  Charities.getCharityFields({type: 'custom'}, function(err, results) {
     if (err) {
       console.log(err);
     } else {
@@ -67,7 +80,7 @@ var weeklyCausePayout = function() {
         if (entry.paypalemail && entry.balance_owed > 0) {
           paypalInput.push({email: entry.paypalemail, value: entry.balance_owed});
           //set balance owed back to 0
-          charitiesDB.updateCharity(entry.id, {balance_owed: 0}, function(response) {
+          Charities.updateCharity(entry.id, {balance_owed: 0}, function(response) {
             // console.log(response);
           }); 
         }
@@ -88,22 +101,9 @@ var weeklyCausePayout = function() {
 //pay out once per week
 setInterval(weeklyCausePayout, 604800000);
 
-app.use(parser.json(), function(req, res, next) {
-  //allow cross origin requests from client, and Plaid API
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-}, session({
-  secret: 'test',
-  resave: true,
-  saveUnintialized: true
-}));
-
-//remove client_id and secret from this file and save them in ENV for deployment
-var client_id = '58224c96a753b9766d52bbd1';
-var secret = '04137ebffb7d68729f7182dd0a9e71';
-
 //create your new user with Plaid
+var client_id = process.env.PLAID_CLIENT_ID;
+var secret = process.env.PLAID_SECRET;
 var plaidClient = new plaid.Client(client_id, secret, plaid.environments.tartan);
 
 //send a POST to Plaid's API to authenticate your user's credentials on
@@ -144,7 +144,7 @@ app.post('/api/plaid/authenticate', function(req, res) {
           }
           index++;
         }
-        db.updateUser(userSession.email, {
+        Users.updateUser(userSession.email, {
           plaid_account_id: account_id,
           plaid_access_token: access_token,
           plaid_public_token: public_token,
@@ -179,7 +179,7 @@ app.post('/api/session/signup', function(req, res) {
   var password = req.body.password;
   var firstName = req.body.firstname;
   var lastName = req.body.lastname;
-  db.createUser(email, password, firstName, lastName)
+  Users.createUser(email, password, firstName, lastName)
     .then(function(success) {
       if (success) {
         axios.post('https://beltless-trenchcoats.herokuapp.com/api/session/login', {
@@ -202,16 +202,16 @@ app.post('/api/session/signup', function(req, res) {
 app.post('/api/session/login', function(req, res) {
   var email = req.body.email;
   var password = req.body.password;
-  db.loginUser(email, password, function(response) {
+  Users.loginUser(email, password, function(response) {
     //if response is true continue with login
     if(response) {
       //update currentUser
       bcrypt.hash(email, 10, function(error, hash) {
         currentUser = hash;
-      })
-      req.session.email = req.body.email
+      });
+      // req.session.email = req.body.email;
       //gets user info to send back to client for dynamic loading such as "Hello, X!"
-      db.getUserFields(email, function(err, data) {
+      Users.getUserFields(email, function(err, data) {
         if(err) {
           //if error send error to client
           res.send('Error in User Login');
@@ -241,11 +241,12 @@ app.post('/api/session/login', function(req, res) {
 
 
 app.get('/api/session', function(req, res) {
-  req.session.reload(function(err) {
-    // console.log('session', req.session);
+  // req.session.reload(function(err) {
+    console.log('THIS IS THE SESSION', req.session);
     res.send(JSON.stringify(userSession));
-    // session updated
-  })
+  //   // session updated
+  // })
+  // res.send(req.session);
 });
 
 
@@ -260,7 +261,7 @@ app.get('/api/session/logout', function(req, res) {
     if (err) {
       console.log(err);
     }
-    res.send('sucess');
+    res.send('success');
   });
   //call the function that destroys the user's token
 });
@@ -288,7 +289,7 @@ app.post('/api/charities/search', function(req, res) {
         searchBody[keyWordMap[key]] = req.body[key];
       }
     }
-    charitiesDB.searchCustomCauses(searchBody, function(err, results) {
+    Charities.searchCustomCauses(searchBody, function(err, results) {
       if (err) {
         console.log(err);
         res.send(err);
@@ -302,7 +303,7 @@ app.post('/api/charities/search', function(req, res) {
           delete item.zip;
           item.missionStatement = item.mission_statement;
           delete item.mission_statement;
-          item.category = helperFunctions.convertCategoryToString(item.category);
+          item.category = helper.convertCategoryToString(item.category);
         });
         res.send(results);
       };
@@ -326,7 +327,7 @@ app.post('/api/charities/search', function(req, res) {
 });
 
 app.get('/api/transactions/all', function(req, res) {
-  dbConfig.query('SELECT * FROM transactions;', function(err, results) {
+  db.query('SELECT * FROM transactions;', function(err, results) {
     if (err) {
       console.log(err);
     } else {
@@ -349,7 +350,7 @@ app.post('/api/charity', function (req, res) {
         console.log(err);
         res.send(err);
       } else {
-        charitiesDB.getCharityFields({ein: req.body.charityId}, function(err, result) {
+        Charities.getCharityFields({ein: req.body.charityId}, function(err, result) {
           if (err) {
             console.log(err);
           } else {
@@ -361,12 +362,12 @@ app.post('/api/charity', function (req, res) {
       }
     });
   } else {
-    charitiesDB.getCharityFields({id: req.body.charityId}, function(err, result) {
+    Charities.getCharityFields({id: req.body.charityId}, function(err, result) {
       if (err) {
         console.log(err);
       } else {
         var toSend = result[0];
-        toSend.category = helperFunctions.convertCategoryToString(toSend.category);
+        toSend.category = helper.convertCategoryToString(toSend.category);
         res.send(toSend);
       }
     });
@@ -374,7 +375,7 @@ app.post('/api/charity', function (req, res) {
 });
 
 app.post('/api/charity/savedInfo', function (req, res) {
-  charitiesDB.getCharityFields({ein: req.body.ein}, function (err, data) {
+  Charities.getCharityFields({ein: req.body.ein}, function (err, data) {
     if (err) {
       res.send(err)
     } else {
@@ -389,7 +390,7 @@ app.post('/api/user/charities/update', function(req, res) {
   req.body.charities.forEach(function (charity) {
     // Remove any charities that the user has marked to remove
     if (charity.remove) {
-      userCharitiesDB.remove(userEmail, charity.id, function (err, charityRemoved) {
+      UserCharities.remove(userEmail, charity.id, function (err, charityRemoved) {
         err ? console.log(err) : null;
       });
     } else { // Check if the current charity has already been saved to the database
@@ -398,24 +399,24 @@ app.post('/api/user/charities/update', function(req, res) {
       } else {
         var searchField = {ein: charity.ein};
       }
-      charitiesDB.getCharityFields(searchField, function (err, results) {
+      Charities.getCharityFields(searchField, function (err, results) {
         // If it is not in db, add and also add entry to userscharities to link user to charity
         if (results.length === 0) {
-          charitiesDB.createCharity(charity, function (err, charityAdded) {
+          Charities.createCharity(charity, function (err, charityAdded) {
             if (err) {
               console.log(err);
             } else {
-              promises.push(userCharitiesDB.insert(userEmail, charityAdded.id, charity.percentage));
+              promises.push(UserCharities.insert(userEmail, charityAdded.id, charity.percentage));
             }
           })
         } else { // If the charity is already in the db, check if the user is already linked to it
           var charityId = results[0].id;
-          userCharitiesDB.getUserCharityFields(userEmail, charityId, function (err, results) {
+          UserCharities.getUserCharityFields(userEmail, charityId, function (err, results) {
             if (results === null) {
               // If the user is not linked to the charity, add entry to db
-              promises.push(userCharitiesDB.insert(userEmail, charityId, charity.percentage));
+              promises.push(UserCharities.insert(userEmail, charityId, charity.percentage));
             } else { //If they are already linked, just update the percentage
-              promises.push(userCharitiesDB.updatePercentage(userEmail, charityId, charity.percentage));
+              promises.push(UserCharities.updatePercentage(userEmail, charityId, charity.percentage));
             }
           });
         }
@@ -426,7 +427,7 @@ app.post('/api/user/charities/update', function(req, res) {
 })
 
 app.post('/api/user/info', function(req, res) {
-  db.getUserFields(req.body.idOrEmail, function(err, data) {
+  Users.getUserFields(req.body.idOrEmail, function(err, data) {
     if (err) {
       res.send(err);
     } else {
@@ -450,7 +451,7 @@ app.post('/api/user/transactions', function(req, res) {
 })
 
 app.post('/api/user/charities/info', function(req, res) {
-  userCharitiesDB.getUsersCharityDonationsInfo(req.body.email, function(err, data) {
+  UserCharities.getUsersCharityDonationsInfo(req.body.email, function(err, data) {
     if (err) {
       res.send(err);
     } else {
@@ -466,19 +467,19 @@ app.post('/api/user/update', function(req, res) {
   var newPhotoUrl = req.body.photoUrl;
   var newLimit = req.body.limit;
   if(newEmail) {
-    db.updateUser(email, {email: newEmail}, function(result) {
+    Users.updateUser(email, {email: newEmail}, function(result) {
       res.send(result);
     })
   } else if (newPassword) {
-    db.updateUser(email, {password: newPassword}, function(result) {
+    Users.updateUser(email, {password: newPassword}, function(result) {
       res.send(result);
     })
   } else if (newPhotoUrl) {
-    db.updateUser(email, {photo_url: newPhotoUrl}, function(result) {
+    Users.updateUser(email, {photo_url: newPhotoUrl}, function(result) {
       res.send(result);
     })
   } else {
-    db.updateUser(email, {monthly_limit: newLimit}, function(result) {
+    Users.updateUser(email, {monthly_limit: newLimit}, function(result) {
       res.send(result);
     });
   }
@@ -488,7 +489,7 @@ app.post('/api/user/update', function(req, res) {
 // app.post('/api/user/update/limit', function(req, res) {
 //   var email = req.body.email;
 //   var newLimit = req.body.limit;
-//   db.updateUser(email, {monthly_limit: newLimit}, function(result) {
+//   Users.updateUser(email, {monthly_limit: newLimit}, function(result) {
 //     res.send(result);
 //   });
 // })
@@ -507,7 +508,7 @@ app.post('/charityInfo', function (req, res) {
         console.log(err);
         res.send(err);
       } else {
-        charitiesDB.getCharityFields({ein: req.body.charityId}, function(err, result) {
+        Charities.getCharityFields({ein: req.body.charityId}, function(err, result) {
           if (err) {
             console.log(err);
           } else {
@@ -521,7 +522,7 @@ app.post('/charityInfo', function (req, res) {
   } else {
     if (req.body.charityId) { var filterFields = {id: req.body.charityId}; }
     else { var filterFields = null; }
-    charitiesDB.getCharityFields(filterFields, function(err, result) {
+    Charities.getCharityFields(filterFields, function(err, result) {
       if (err) {
         console.log(err);
       } else {
@@ -529,7 +530,7 @@ app.post('/charityInfo', function (req, res) {
           res.send(result);
         } else {
           var toSend = result[0];
-          toSend.category = helperFunctions.convertCategoryToString(toSend.category);
+          toSend.category = helper.convertCategoryToString(toSend.category);
           res.send(toSend);
         }
       }
@@ -540,7 +541,7 @@ app.post('/charityInfo', function (req, res) {
 
 //===================CUSTOM CAUSES=====================
 app.post('/api/customCause/add', function(req, res) {
-  charitiesDB.createCharity(req.body, function(err, result) {
+  Charities.createCharity(req.body, function(err, result) {
     if (err) {
       console.log(err);
       res.send(err);
@@ -552,7 +553,7 @@ app.post('/api/customCause/add', function(req, res) {
 
 
 app.post('/api/customCause/search', function(req, res) {
-  charitiesDB.searchCustomCauses(req.body, function(err, result) {
+  Charities.searchCustomCauses(req.body, function(err, result) {
     if (err) {
       console.log(err);
       res.send(err);
@@ -573,7 +574,7 @@ app.post('/api/customCause/transactions', function(req, res) {
 });
 
 app.post('/api/charity/update', function(req, res) {
-  charitiesDB.updateCharity(req.body.charityID, req.body.updateFields, function(result) {
+  Charities.updateCharity(req.body.charityID, req.body.updateFields, function(result) {
     res.send(result);
   });
 });

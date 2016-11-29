@@ -120,20 +120,19 @@ class SearchPage extends Component {
           this.state.searchResults.map((charity, i) => {
             <CharitySearchResult key={i} info={charity} />
           }))
-      })
+        }
+      }
       .catch((err) => {
         console.log(err)
       })
     }
   }
-
   //this function is called by ReactPaginate component
   pageSelect = (data) => {
     //previous start is what rows to request from the api
     var previousStart = parseInt(this.state.start);
     //array of previous results
     let previousResults = this.state.lastPageContents;
->>>>>>> pagination clicks work
     //activePage is the current selected page
     let activePage = data.selected;
     //lastActivePage is the last page the user selected
@@ -153,11 +152,11 @@ class SearchPage extends Component {
         })
     //gets called when the user increments up in numbers like 1 -> 2
     } else if(activePage >= lastActivePage && this.state.firstPageChange === false) {
-      console.log('2nd else');
       pageDifference = activePage - lastActivePage;
       this.setState({activePage: activePage += pageDifference, start: previousStart += (activePage - lastActivePage) * 20,
       firstPageChange: true},
         function() {
+            this.navigateBySearchTerms();
             this.getResults.call(this);
         })
     } else if(activePage > lastActivePage) {
@@ -166,11 +165,11 @@ class SearchPage extends Component {
       pageDifference = activePage - lastActivePage;
       //resultDifference uses pageDifference and multiplies it by 20
       resultDifference = (pageDifference * 20);
-      console.log('pageDifference ', resultDifference, pageDifference);
       if(pageDifference >= 2) {
         this.setState({activePage: activePage += pageDifference, start: previousStart += resultDifference - 20,
           lastPage: lastActivePage += pageDifference},
           function() {
+            this.navigateBySearchTerms();
             this.getResults.call(this);
           });
       } else {

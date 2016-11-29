@@ -4,8 +4,6 @@ var Promise = require('bluebird');
 
 exports.insert = Promise.promisify(function(email, id_charities, percentage, callback) {
   helpers.getUserID(email, function(id_users) {
-    // console.log('SELECT * FROM usersCharities \
-    //     WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';');
     db.query({
       text: 'SELECT * FROM usersCharities \
         WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';'
@@ -16,7 +14,6 @@ exports.insert = Promise.promisify(function(email, id_charities, percentage, cal
       } else if (rows.rowCount > 0) {
         callback(null, 'email and charity are already in database');
       } else {
-        // console.log('INSERT INTO usersCharities(percentage, id_users, id_charities) VALUES(...)');
         db.query({
           text: 'INSERT INTO usersCharities(percentage, id_users, id_charities) \
             VALUES($1, $2, $3)',
@@ -36,8 +33,6 @@ exports.insert = Promise.promisify(function(email, id_charities, percentage, cal
 
 exports.remove = function(email, id_charities, callback) {
   helpers.getUserID(email, function(id_users) {
-    // console.log('DELETE FROM usersCharities \
-    //   WHERE id_users =' + id_users + ' AND id_charities = ' + id_charities + ';');
     db.query({
       text: 'DELETE FROM usersCharities \
       WHERE id_users =' + id_users + ' AND id_charities = ' + id_charities + ';'
@@ -54,8 +49,6 @@ exports.remove = function(email, id_charities, callback) {
 
 exports.updatePercentage = Promise.promisify(function(email, id_charities, percentage, callback) {
   helpers.getUserID(email, function(id_users) {
-    // console.log('SELECT * FROM usersCharities \
-    //     WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';');
     db.query({
       text: 'SELECT * FROM usersCharities \
         WHERE id_users = ' + id_users + ' AND id_charities = ' + id_charities + ';'
@@ -105,7 +98,6 @@ exports.getUserCharityFields = function(email, id_charities, callback) {
     } else {
       queryString += 'SELECT * FROM usersCharities WHERE id_users = \'' + id_users + '\' AND id_charities = \'' + id_charities + '\';'
     }
-    // console.log(queryString);
     db.query({
       text: queryString
     }, 
@@ -123,14 +115,6 @@ exports.getUserCharityFields = function(email, id_charities, callback) {
 
 exports.getUsersCharityDonationsInfo = function(email, callback) {
   helpers.getUserID(email, function(id_users) {
-    // console.log('SELECT charities.id, name, percentage, ein, type, \
-    //       (SELECT SUM(amount) FROM transactions WHERE id_users=\'' + id_users + '\' AND id_charities=charities.id) \
-    //         AS total_donated, \
-    //       (SELECT MIN(date_time) FROM transactions WHERE id_users=\'' + id_users + '\' AND id_charities=charities.id) \
-    //         AS initial_date, \
-    //       (CASE WHEN dollar_goal >= total_donated THEN '1' ELSE '0' END) \
-    //         AS goal_reached \
-    //       FROM userscharities INNER JOIN charities ON userscharities.id_charities=charities.id WHERE id_users=\'' + id_users + '\';');
     db.query({
         text: 'SELECT charities.id, name, percentage, ein, type, \
           (SELECT SUM(amount) FROM transactions WHERE id_users=\'' + id_users + '\' AND id_charities=charities.id) \

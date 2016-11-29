@@ -52,7 +52,7 @@ class ChangePasswordModal extends Component {
     if(this.state.newPassword1 === this.state.newPassword2) {
       this.setState({ newPasswordMatch: true});
       this.closePassword();
-      axios.post('http://localhost:8080/api/user/update', {
+      axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/update', {
         email: this.props.session.email,
         newPassword: this.state.newPassword1
       })

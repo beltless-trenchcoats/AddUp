@@ -50,7 +50,7 @@ class Header extends Component {
   }
 
   componentWillMount() {
-    axios.get('http://localhost:8080/api/session')
+    axios.get('https://beltless-trenchcoats.herokuapp.com/api/session')
     .then((res) => {
       this.setState({
         email: res.data.email || '',
@@ -96,7 +96,7 @@ class Header extends Component {
     if (!this.validatePassword(this.state.password1)) {
       this.setState({invalidPassword: true});
     } else if(this.state.password1 === this.state.password2) {
-      axios.post('http://localhost:8080/api/session/signup', {
+      axios.post('https://beltless-trenchcoats.herokuapp.com/api/session/signup', {
         email: this.state.email,
         password: this.state.password1,
         firstname: this.state.firstname,
@@ -130,7 +130,7 @@ class Header extends Component {
 
   loginUser (e) {
     e.preventDefault();
-    axios.post('http://localhost:8080/api/session/login', {
+    axios.post('https://beltless-trenchcoats.herokuapp.com/api/session/login', {
       email: this.state.email,
       password: this.state.password1
     })
@@ -156,7 +156,7 @@ class Header extends Component {
   }
 
   logoutUser () {
-    axios.get('http://localhost:8080/api/session/logout')
+    axios.get('https://beltless-trenchcoats.herokuapp.com/api/session/logout')
     .then((res) => {
       console.log(res);
       this.setState({

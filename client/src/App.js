@@ -21,7 +21,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    axios.get('http://localhost:8080/api/session')
+    axios.get('https://beltless-trenchcoats.herokuapp.com/api/session')
     .then((res) => {
       console.log('userSession', res.data);
       this.setState({
@@ -32,7 +32,7 @@ class App extends Component {
       console.log(err);
     });
 
-    axios.get('http://localhost:8080/api/transactions/all')
+    axios.get('https://beltless-trenchcoats.herokuapp.com/api/transactions/all')
     .then((res) => {
       var transactions = res.data;
       var daysData = [];

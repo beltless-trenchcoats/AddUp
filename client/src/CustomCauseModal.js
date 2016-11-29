@@ -57,9 +57,9 @@ class AddCauseModal extends Component {
     if (this.props.purpose === 'add') {
       fields.id_owner = Number(this.props.session.id);
       fields.dollar_goal = Number(fields.dollar_goal);
-      axios.post('http://localhost:8080/api/customCause/add', fields)
+      axios.post('https://beltless-trenchcoats.herokuapp.com/api/customCause/add', fields)
         .then(res => {
-          axios.post('http://localhost:8080/api/charities/search', {
+          axios.post('https://beltless-trenchcoats.herokuapp.com/api/charities/search', {
             'id_owner': fields.id_owner,
             'type': 'Custom Cause'
             })
@@ -70,9 +70,9 @@ class AddCauseModal extends Component {
     } else {
       var charityID = this.props.charity.id;
       if (fields.dollar_goal) { fields.dollar_goal = Number(fields.dollar_goal); }
-      axios.post('http://localhost:8080/api/charity/update', {charityID: charityID, updateFields: fields})
+      axios.post('https://beltless-trenchcoats.herokuapp.com/api/charity/update', {charityID: charityID, updateFields: fields})
         .then(res => {
-          axios.post('http://localhost:8080/api/customCause/search', {
+          axios.post('https://beltless-trenchcoats.herokuapp.com/api/customCause/search', {
             'id': charityID
             })
             .then(response => {

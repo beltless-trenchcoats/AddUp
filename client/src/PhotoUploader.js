@@ -31,7 +31,7 @@ class PhotoUploader extends Component {
     file == null ? alert('No file selected.') : this.getSignedRequest(file);
   }
   getSignedRequest(file){
-    axios.get(`http://localhost:8080/sign-s3?file-name=${file.name}&file-type=${file.type}`) //&userId=${this.props.user.id}`)
+    axios.get(`https://beltless-trenchcoats.herokuapp.com/sign-s3?file-name=${file.name}&file-type=${file.type}`) //&userId=${this.props.user.id}`)
     .then((res) => {
       this.uploadFile(file, res.data.signedRequest, res.data.url);
     })
@@ -50,7 +50,7 @@ class PhotoUploader extends Component {
     axios.put(signedRequest, file, options)
     .then((res) => {
       this.setState({ userPhoto: url})
-      axios.post('http://localhost:8080/api/user/update', {
+      axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/update', {
         email: this.props.user.email,
         photoUrl: url
       })

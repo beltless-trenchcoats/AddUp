@@ -4,7 +4,10 @@ import { Gmaps, Marker } from 'react-gmaps';
 import axios from 'axios';
 import _ from 'lodash';
 import apiKeys from '../../server/config/API_Keys';
+<<<<<<< HEAD
 import { browserHistory } from 'react-router';
+=======
+>>>>>>> pagination clicks work
 
 import Header from './Header';
 import CharityModal from './CharityModal';

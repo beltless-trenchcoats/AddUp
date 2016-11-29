@@ -9,8 +9,6 @@ var plaid = require('plaid');
 var test_key = 'sk_test_eKJNtjs3Il6V1QZvyKs1dS6y';
 var stripe = require('stripe')(test_key);
 
-// var apiKeys = require('./config/API_Keys');
-
 var client_id = process.env.PLAID_CLIENT_ID;
 var secret = process.env.PLAID_SECRET;
 

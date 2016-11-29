@@ -11,16 +11,23 @@ class CharitySearchResult extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      charityId: nextProps.info.ein || Number(nextProps.info.id),
+      type: nextProps.info.type || 'charity'
+    });
+  }
+
   render() {
     return (
      <div>
      {/* {console.log("charity", this.props.info)} */}
-      <Panel className="charityCard" header={<a href={"/" + this.state.type + '/' + this.props.info.ein}>{this.props.info.charityName}</a>} bsStyle="info">
-        <p className="category">{this.props.info.category + ' type:' + this.props.info.type}</p>
+      <Panel className="charityCard" header={<a href={"/" + this.state.type + '/' + this.state.charityId}>{this.props.info.charityName}</a>} bsStyle="info">
+        <p className="category">{this.props.info.category}</p>
         <p className="missionStatement"><span className="missionStatementTitle">Mission Statement: </span>{this.props.info.missionStatement}</p>
         <p className="location">{this.props.info.city}, {this.props.info.state}</p>
         <p className="website">{this.props.info.website}</p>
-        <a href={"/" + this.state.type + '/' + this.props.info.ein}><Button bsStyle="primary">Learn More and Donate</Button></a>
+        <a href={"/" + this.state.type + '/' + this.state.charityId}><Button bsStyle="primary">Learn More and Donate</Button></a>
       </Panel>
      </div>
     );

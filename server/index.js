@@ -216,7 +216,7 @@ app.post('/api/session/login', function(req, res) {
           //if error send error to client
           res.send('Error in User Login');
         } else {
-          req.session.regenerate(function(err) {
+          // req.session.regenerate(function(err) {
             // will have a new session here
             req.session.email = email;
             req.session.firstName = data[0].first_name;
@@ -227,7 +227,7 @@ app.post('/api/session/login', function(req, res) {
               firstName: data[0].first_name,
               lastName: data[0].last_name
             };
-          });
+          // });
           console.log('JUST AFTER SETTING THE SESSION', req.session);
           //send response to client with first_name, last_name, and email
           res.send({"first_name": data[0].first_name, "last_name": data[0].last_name,

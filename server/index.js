@@ -6,7 +6,6 @@ var session = require('express-session');
 var db = require('./db/controllers/users');
 var dbHelpers = require('./db/controllers/helpers');
 var dbConfig = require('./db/config/db');
-// var apiKeys = require('./config/API_Keys');
 var axios = require('axios');
 var worker = require('./worker');
 var bcrypt = require('bcrypt');

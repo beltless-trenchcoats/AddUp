@@ -3,7 +3,6 @@ import { Button, Grid, Col, Row } from 'react-bootstrap';
 import { Gmaps, Marker } from 'react-gmaps';
 import axios from 'axios';
 import _ from 'lodash';
-// import apiKeys from '../../server/config/API_Keys';
 import { browserHistory } from 'react-router';
 
 import Header from './Header';

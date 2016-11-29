@@ -1,5 +1,4 @@
 var paypal = require('paypal-rest-sdk');
-// var apiKeys = require('./config/API_Keys');
 
 paypal.configure({
   'mode': 'sandbox', //sandbox or live

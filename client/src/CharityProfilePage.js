@@ -92,9 +92,13 @@ class CharityProfilePage extends Component {
     return (
       <Header>
         <div className="charityProfilePage">
-          <button onClick={browserHistory.goBack}>Back To Search Results</button>
+          <button className='backButton' onClick={browserHistory.goBack}>&#x2190; Back To Search Results</button>
           <Grid>
             <Row>
+              {
+                this.state.selected ?
+                  <Button onClick={this.openModal} className="removeCharity" bsStyle="primary">Remove from My Charities</Button>
+                : <Button onClick={this.openModal} className="addCharity" bsStyle="primary">Add to My Charities</Button>}
               <h2 className="charityName">{this.state.charity.name}</h2>
               {this.state.charity.id_owner ? <h5 className="charityAuthor">Created by: {<a href={"/profile/" + this.state.charityAuthor.id}> {this.state.authorName}</a>}</h5> : null }
               <div className="charityType">{this.state.charity.nteeType}</div>
@@ -127,10 +131,7 @@ class CharityProfilePage extends Component {
                   <h3> Fundraising Goal: ${this.state.charity.dollar_goal}</h3>
                 : null
               }
-              {
-                this.state.selected ?
-                  <Button onClick={this.openModal} className="removeCharity" bsStyle="primary">Remove from My Charities</Button>
-                : <Button onClick={this.openModal} className="addCharity" bsStyle="primary">Add to My Charities</Button>}
+              
             </Row>
 
             <Row>

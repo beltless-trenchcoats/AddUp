@@ -6,7 +6,7 @@ var session = require('express-session');
 var db = require('./db/controllers/users');
 var dbHelpers = require('./db/controllers/helpers');
 var dbConfig = require('./db/config/db');
-var apiKeys = require('./config/API_Keys');
+// var apiKeys = require('./config/API_Keys');
 var axios = require('axios');
 var worker = require('./worker');
 var bcrypt = require('bcrypt');
@@ -314,7 +314,7 @@ app.post('/api/charities/search', function(req, res) {
       method: 'post',
       body: req.body,
       json: true,
-      url: 'http://data.orghunter.com/v1/charitysearch?user_key=' + apiKeys.orgHunter
+      url: 'http://data.orghunter.com/v1/charitysearch?user_key=' + process.env.ORGHUNTER_KEY
     };
     request(options, function (err, result, body) {
       if (err) {
@@ -344,7 +344,7 @@ app.post('/api/charity', function (req, res) {
       method: 'post',
       body: {charityId: req.body.charityId},
       json: true,
-      url: 'http://data.orghunter.com/v1/charitypremium?user_key=' + apiKeys.orgHunter + '&ein=' + req.body.charityId
+      url: 'http://data.orghunter.com/v1/charitypremium?user_key=' + process.env.ORGHUNTER_KEY + '&ein=' + req.body.charityId
     };
     request(options, function (err, result, body) {
       if (err) {
@@ -503,7 +503,7 @@ app.post('/charityInfo', function (req, res) {
       method: 'post',
       body: {charityId: req.body.charityId},
       json: true,
-      url: 'http://data.orghunter.com/v1/charitypremium?user_key=' + apiKeys.orgHunter + '&ein=' + req.body.charityId
+      url: 'http://data.orghunter.com/v1/charitypremium?user_key=' + process.env.ORGHUNTER_KEY + '&ein=' + req.body.charityId
     };
     request(options, function (err, result, body) {
       if (err) {
@@ -587,8 +587,8 @@ app.post('/api/charity/update', function(req, res) {
 app.get('/sign-s3', (req, res) => {
   console.log('S3REQUEST!!!',req.query)
   var s3 = new aws.S3({
-    accessKeyId: apiKeys.AWSAccessKeyId,
-    secretAccessKey: apiKeys.AWSSecretKey});
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY});
   var fileName = req.query['file-name']
   var fileType = req.query['file-type']
   var s3Params = {

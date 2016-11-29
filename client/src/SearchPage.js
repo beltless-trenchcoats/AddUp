@@ -32,7 +32,6 @@ class SearchPage extends Component {
     this.search = this.search.bind(this);
   }
 
-<<<<<<< HEAD
   componentDidMount() {
     this.getResults();
     //if navigating between search results, re-render results

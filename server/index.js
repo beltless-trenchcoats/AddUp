@@ -68,17 +68,16 @@ var weeklyCausePayout = function() {
           paypalInput.push({email: entry.paypalemail, value: entry.balance_owed});
           //set balance owed back to 0
           charitiesDB.updateCharity(entry.id, {balance_owed: 0}, function(response) {
-            console.log(response);
+            // console.log(response);
           }); 
         }
       });
-      console.log('paypalInput', paypalInput);
       if (paypalInput.length > 0) {
         paypalHelpers.payoutCauses(paypalInput, function(err, result) {
           if (err) {
             console.log(err);
           } else {
-            console.log(JSON.stringify(result));
+            // console.log(JSON.stringify(result));
           }
         });
       }
@@ -388,7 +387,6 @@ app.post('/api/user/charities/update', function(req, res) {
   var userEmail = req.body.email;
   var promises = [];
   req.body.charities.forEach(function (charity) {
-    console.log('this charity is', charity);
     // Remove any charities that the user has marked to remove
     if (charity.remove) {
       userCharitiesDB.remove(userEmail, charity.id, function (err, charityRemoved) {
@@ -530,10 +528,8 @@ app.post('/charityInfo', function (req, res) {
         if (!(req.body.charityId)) {
           res.send(result);
         } else {
-          console.log('sending pre', result[0]);
           var toSend = result[0];
           toSend.category = helperFunctions.convertCategoryToString(toSend.category);
-          console.log(toSend);
           res.send(toSend);
         }
       }
@@ -584,7 +580,6 @@ app.post('/api/charity/update', function(req, res) {
 
 
 app.get('/sign-s3', (req, res) => {
-  console.log('S3REQUEST!!!',req.query)
   var s3 = new aws.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY});
@@ -607,7 +602,6 @@ app.get('/sign-s3', (req, res) => {
       signedRequest: data,
       url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
     };
-    console.log('RETURN DATA', returnData)
     res.write(JSON.stringify(returnData));
     res.end();
   });

@@ -30,7 +30,6 @@ exports.payoutCauses = function(payoutArray, callback) {
       "sender_item_id": "item_" + i
     });
   }
-  console.log('sending', create_payout_json);
 
   paypal.payout.create(create_payout_json, function (error, payout) {
     if (error) {

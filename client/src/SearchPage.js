@@ -153,8 +153,10 @@ class SearchPage extends Component {
         })
     //gets called when the user increments up in numbers like 1 -> 2
     } else if(activePage >= lastActivePage && this.state.firstPageChange === false) {
-      //sets activePage state to activePage -
-      this.setState({activePage: activePage += 1, start: previousStart += (activePage - lastActivePage) * 20, firstPageChange: true},
+      console.log('2nd else');
+      pageDifference = activePage - lastActivePage;
+      this.setState({activePage: activePage += pageDifference, start: previousStart += (activePage - lastActivePage) * 20,
+      firstPageChange: true},
         function() {
             this.getResults.call(this);
         })
@@ -163,13 +165,22 @@ class SearchPage extends Component {
       //start the API call
       pageDifference = activePage - lastActivePage;
       //resultDifference uses pageDifference and multiplies it by 20
-      resultDifference = pageDifference * 20;
+      resultDifference = (pageDifference * 20);
+      console.log('pageDifference ', resultDifference, pageDifference);
+      if(pageDifference >= 2) {
+        this.setState({activePage: activePage += pageDifference, start: previousStart += resultDifference - 20,
+          lastPage: lastActivePage += pageDifference},
+          function() {
+            this.getResults.call(this);
+          });
+      } else {
         this.setState({activePage: activePage += pageDifference, start: previousStart += resultDifference,
           lastPage: lastActivePage += pageDifference},
           function() {
             this.navigateBySearchTerms();
             this.getResults.call(this);
           });
+      }
     //this route is for when users go down 1 by 1, eventually lastActivePage and activePage will be =
     } else if(activePage === lastActivePage) {
       this.setState({activePage: activePage -= 1, start: previousStart -= 20},

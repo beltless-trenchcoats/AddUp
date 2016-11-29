@@ -69,7 +69,7 @@ class SearchPage extends Component {
   }
 
   navigateBySearchTerms() {
-    var options = ['searchTerm', 'city', 'state', 'zipCode', 'category', 'start'];
+    var options = ['searchTerm', 'city', 'state', 'zipCode', 'category', 'type', 'start'];
     var queryStr = '';
     for (var i = 0; i < options.length; i++) {
       if (this.state[options[i]] !== '') {

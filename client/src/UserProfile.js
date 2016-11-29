@@ -5,6 +5,7 @@ import { Col, Row, Grid, Table, Button, FormControl } from 'react-bootstrap';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell } from 'recharts';
 import axios from 'axios';
 import $ from "jquery";
+import cookie from 'react-cookie';
 import fileDownload from 'react-file-download';
 
 import server from '../../server/config/config';
@@ -65,25 +66,31 @@ class UserProfile extends Component {
     //     console.log('stripe info', res.data);
     //   });
     // }
-    axios.get(server + '/api/session')
-    .then(res => {
-      this.setState({
-        userSession: res.data
-      });
+    var cookieSession = {
+      email: cookie.load('email'),
+      firstName: cookie.load('firstname'),
+      lastName: cookie.load('lastname')
+    };
+    // axios.get('http://localhost:8080/api/session')
+    // .then(res => {
+    this.setState({
+      userSession: cookieSession
+    });
 
-      var email = this.state.userSession.email;
+    var email = cookie.load('email');
 
-      axios.post(server + '/api/user/info', {
-        'idOrEmail': email
-        })
-        .then(res => {
-          this.setState({
-            userInfo: res.data,
-            bankInfo: {
-              bank_name: res.data.bank_name,
-              bank_digits: res.data.bank_digits
-            },
-            monthlyLimit: res.data.monthly_limit || '--'
+    axios.post(server + '/api/user/info', {
+      'idOrEmail': email
+      })
+      .then(res => {
+        console.log('userInfo', res.data)
+        this.setState({
+          userInfo: res.data,
+          bankInfo: {
+            bank_name: res.data.bank_name,
+            bank_digits: res.data.bank_digits
+          },
+          monthlyLimit: res.data.monthly_limit || '--'
           });
           if (this.state.monthlyLimit && this.state.monthlyLimit !== '--') {
             this.setState({monthlyLimitSet: true});
@@ -191,23 +198,23 @@ class UserProfile extends Component {
         });
 
       axios.post(server + '/api/user/charities/info', {
-        'email': email
-        })
-        .then(res => {
-          this.setState({charities: res.data});
-          if (this.state.charities.length) {
-            this.setState({charitiesSelected: true});
-            $('#step3').removeClass('incomplete');
-          } else {
-            $('#step3').addClass('incomplete');
+      'email': email
+      })
+      .then(res => {
+        this.setState({charities: res.data});
+        if (this.state.charities.length) {
+          this.setState({charitiesSelected: true});
+          $('#step3').removeClass('incomplete');
+        } else {
+          $('#step3').addClass('incomplete');
+        }
+        res.data.map( (charity) => {
+          if(charity.percentage > 0) {
+            charityPieChartData.push({'name': charity.name, 'value': charity.percentage})
           }
-          res.data.map( (charity) => {
-            if(charity.percentage > 0) {
-              charityPieChartData.push({'name': charity.name, 'value': charity.percentage})
-            }
-          })
-        });
-    })
+        })
+      });
+    // })
   }
 
   componentDidMount() {

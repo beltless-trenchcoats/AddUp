@@ -1,9 +1,10 @@
 var paypal = require('paypal-rest-sdk');
+var apiKeys = require('./config/API_Keys');
 
 paypal.configure({
   'mode': 'sandbox', //sandbox or live
-  'client_id': 'insert api keys',
-  'client_secret': 'insert api keys'
+  'client_id': apiKeys.payPalClientID,
+  'client_secret': apiKeys.payPalSecret
 });
 
 exports.payoutCauses = function(payoutArray, callback) {
@@ -54,7 +55,7 @@ exports.getPayoutResult = function(payout_batch_id, callback) {
 };
 
 //EXAMPLE USE
-//var testArray = [{email: "helga@gmail.com", value: 0.95}, {email: "adduptestaccount@gmail.com", value: 0.92}];
+// var testArray = [{email: "helga@gmail.com", value: 0.95}, {email: "adduptestaccount@gmail.com", value: 0.92}];
 // exports.payoutCauses(testArray, function(err, result) {
 //   if (err) {
 //     console.log(err);
@@ -62,7 +63,7 @@ exports.getPayoutResult = function(payout_batch_id, callback) {
 //     console.log(JSON.stringify(result));
 //   }
 // })
-// exports.getPayoutResult('KUETXR24UAHG6', function(err, result) {
+// exports.getPayoutResult('UQ2XG9PVD3FGQ', function(err, result) {
 //   if (err) { console.log(err); }
 //   else {
 //     console.log(JSON.stringify(result));

@@ -20,7 +20,7 @@ var processDailyTransactions = function() {
     users.forEach(user => {
       //If the user has linked a bank account through plaid
       if (user.plaid_access_token && user.plaid_public_token) { 
-        axios.post('http://localhost:8080/api/plaid/transactions', {
+        axios.post('https://beltless-trenchcoats.herokuapp.com/api/plaid/transactions', {
             'access_token': user.plaid_access_token
           })
           .then(resp => {

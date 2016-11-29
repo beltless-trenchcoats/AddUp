@@ -110,7 +110,7 @@ class SearchPage extends Component {
         this.setStateWithObj(keyVal[0], keyVal[1]);
       });
 
-      axios.post('http://localhost:8080/api/charities/search', searchTerms)
+      axios.post('https://beltless-trenchcoats.herokuapp.com/api/charities/search', searchTerms)
       .then((res) => {
         this.setState({
           searchResults: res.data,

@@ -64,7 +64,7 @@ class App extends Component {
     });
   }
 
-  
+
 
   render() {
     return (
@@ -99,11 +99,6 @@ class App extends Component {
               </Panel>
             </Col>
 
-
-            <div className="footer">
-              
-            </div>
-
           </div>
 
 
@@ -118,6 +113,10 @@ class App extends Component {
               <Line type="monotone" dataKey="Amount Donated" stroke="#8884d8" />
             </LineChart>
             </Row>
+            <img className="creditCardHand" src={require('../assets/images/creditCardHand.png')} />
+            <img className="heartHandShake" src={require('../assets/images/Heart-hand-shake.png')} />
+            <img className="coinStack" src={require('../assets/images/coinsStacking.png')} />
+
         </div>
       </Header>
     );

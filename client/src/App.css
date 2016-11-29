@@ -3,7 +3,7 @@ body {
   padding: 0;
   font-family: sans-serif;
   font-weight: 300;
-  
+
 }
 
 .App::after {
@@ -572,7 +572,7 @@ a:hover .charityInfo{
 }
 
 .publicProfile .charityInfo {
-  
+
 }
 
 
@@ -728,4 +728,25 @@ a:hover .charityInfo{
 .pieChart {
   position: relative;
   left: 40%;
+}
+
+
+/************ Icons **************/
+
+.creditCardHand {
+  position: absolute;
+  left: 15%;
+  height: 17%;
+}
+
+.heartHandShake {
+  position: absolute;
+  height: 12%;
+  left: 45.5%;
+}
+
+.coinStack {
+  position: absolute;
+  height: 15%;
+  left: 70%;
 }

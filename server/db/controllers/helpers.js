@@ -20,7 +20,6 @@ exports.getFields = function(searchFields, table, filterFields, callback) {
     queryString = queryString.slice(0, queryString.length - 5);
   }
   queryString += ';'
-  // console.log(queryString);
   db.query(queryString, function(err, rows) {
     if (err) {
       callback(err, null);
@@ -53,7 +52,6 @@ exports.updateFields = function(updateFields, table, filterFields, callback) {
     filterString = filterString.slice(0, filterString.length - 5);
   }
 
-  console.log('UPDATE ' + table + ' SET ' + updateString + filterString + ';');
   db.query({
     text: 'UPDATE ' + table + ' SET ' + updateString + filterString + ';'
   }, function(err, result) {

@@ -6,8 +6,6 @@ exports.insert = function(id_users, id_charities, amount, callback) {
   var month = (today.getMonth() + 1) < 10 ? '' + 0 + (today.getMonth() + 1) : '' + (today.getMonth() + 1);
   var day = today.getDate() < 10 ? '' + 0 + today.getDate() : '' + today.getDate();
   var date = '' + today.getFullYear() + '-' + month + '-' + day;
-  console.log('INSERT INTO transactions(id_users, id_charities, amount, date_time) \
-      VALUES(' + id_users + ',' +  id_charities + ',' + amount + ',' + date + ')');
   db.query({
     text: 'INSERT INTO transactions(id_users, id_charities, amount, date_time) \
       VALUES($1, $2, $3, $4)',
@@ -24,9 +22,6 @@ exports.insert = function(id_users, id_charities, amount, callback) {
 
 exports.getTransactions = function(email, callback) {
   helpers.getUserID(email, function(id_users) {
-    console.log('SELECT date_time, amount, name FROM transactions INNER JOIN charities \
-      ON charities.id = transactions.id_charities \
-      WHERE id_users= \'' + id_users + '\' ORDER BY date_time ASC;');
     db.query({
       text: 'SELECT date_time, amount, name FROM transactions INNER JOIN charities \
       ON charities.id = transactions.id_charities \
@@ -43,12 +38,6 @@ exports.getTransactions = function(email, callback) {
 };
 
 exports.getTransactionsForCharity = function(id_charities, callback) {
-  // console.log('SELECT users_id, date_time, amount, name, email, first_name, last_name FROM (SELECT date_time, amount, users_id, name FROM (SELECT * FROM transactions WHERE id_charities = \'' + id_charities + '\') AS t \
-  //   INNER JOIN charities ON charities.id = t.id_charities) as c INNER JOIN users ON c.users_id = users.id;');
-  // console.log('SELECT date_time, amount, name FROM (SELECT * FROM transactions WHERE id_charities = \'' + id_charities + '\') AS t \
-  //   INNER JOIN charities ON charities.id = t.id_charities;');
-  console.log('SELECT date_time, amount, name, id_charities, id_users, id_owner, first_name, last_name, email FROM (SELECT date_time, amount, name, id_charities, id_users, id_owner FROM (SELECT * FROM transactions WHERE id_charities = \'' + id_charities + '\') AS t \
-     INNER JOIN charities ON charities.id = t.id_charities) as c INNER JOIN users ON c.id_users = users.users_id;');
   db.query({
     text: 'SELECT date_time, amount, name, id_charities, id_users, id_owner, first_name, last_name, email FROM (SELECT date_time, amount, name, id_charities, id_users, id_owner FROM (SELECT * FROM transactions WHERE id_charities = \'' + id_charities + '\') AS t \
      INNER JOIN charities ON charities.id = t.id_charities) as c INNER JOIN users ON c.id_users = users.id;'

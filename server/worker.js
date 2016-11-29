@@ -132,7 +132,6 @@ var distributeDonation = function(user, amount) {
         Charities.updateBalance(charity_id, {total_donated: amountForCharity, balance_owed: amountForCharity}, () => {
           if (userCharity.type === 'custom' && userCharity.total_donated >= userCharity.dollar_goal) {
             UsersCharities.updatePercentage(user.email, userCharity.name, 0, function(response) {
-              console.log(response);
             });
           };
         });

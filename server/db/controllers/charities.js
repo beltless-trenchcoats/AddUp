@@ -18,14 +18,8 @@ exports.createCharity = Promise.promisify(function(values, callback) {
       callback(err, null);
     } else {
       if (results.rowCount > 0) {
-        console.log('charity already in database: ' + values.name);
         callback(null, results.rows[0]);
       } else {
-        console.log('INSERT INTO charities(name, category, ein, donation_url, city, state, zip, balance_owed, total_donated, mission_statement, \
-            id_owner, dollar_goal, type, private, photo, paypalemail) \
-            VALUES(' + values.name + values.category + values.ein || null + values.donation_url || null + values.city + values.state + 
-            values.zip + 0 + 0 + values.mission_statement + values.id_owner || null + values.dollar_goal || null + values.type || 'charity' + 
-            values.private || null + values.photo || null + values.paypalemail || null + ');');
         db.query({
           text: 'INSERT INTO charities(name, category, ein, donation_url, city, state, zip, balance_owed, total_donated, mission_statement, \
             id_owner, dollar_goal, type, private, photo, paypalemail) \
@@ -92,8 +86,6 @@ exports.updateBalance = function(charityId, amountObj, callback) {
         var balance_owed_add = parseFloat(amountObj.balance_owed);
         var newBalance = results.rows[0].balance_owed + balance_owed_add;
         var newTotal = results.rows[0].total_donated + total_donated_add;
-        console.log('UPDATE charities SET balance_owed = ' + newBalance + ', total_donated= ' + newTotal + ' \
-            WHERE id = \'' + charityId + '\';');
         db.query({
           text: 'UPDATE charities SET balance_owed = ' + newBalance + ', total_donated= ' + newTotal + ' \
             WHERE id = \'' + charityId + '\';'
@@ -126,7 +118,6 @@ exports.searchCustomCauses = function(searchFields, callback) {
   var searchName = searchFields.name;
   delete searchFields.name;
   searchFields.type = 'custom';
-  console.log('search fields ', searchFields);
   helpers.getFields(['*'], 'charities', searchFields, function(err, result) {
     if (err) {
       callback(err, null);

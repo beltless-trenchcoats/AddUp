@@ -20,14 +20,16 @@ class SearchPage extends Component {
       state: '',
       zipCode: '',
       category: '',
-      start: 0,
+      start: Number(document.location.hash.split('=')[document.location.hash.split('=').length-1]) || 0,
       categoryName: '',
       type: 'Charity',
       searchResults: [],
-      activePage: 1,
-      lastPage: 1,
+      activePage: ((Number(document.location.hash.split('=')[document.location.hash.split('=').length-1]) + 20) / 20) || 1,
+      lastPage: ((Number(document.location.hash.split('=')[document.location.hash.split('=').length-1]) + 20) / 20) || 1,
       firstPageChange: false
     }
+    //finish tomorrow
+    // console.log('location', (Number(document.location.hash.split('=')[document.location.hash.split('=').length-1]) + 20) / 20);
     this.getResults = this.getResults.bind(this);
     this.onSearchInput = this.onSearchInput.bind(this);
     this.navigateBySearchTerms = this.navigateBySearchTerms.bind(this);
@@ -35,6 +37,7 @@ class SearchPage extends Component {
   }
 
   componentDidMount() {
+    console.log('active', this.state.activePage, 'start', this.state.start);
     this.getResults();
     //if navigating between search results, re-render results
     $(window).on('hashchange', () => this.getResults());
@@ -127,6 +130,7 @@ class SearchPage extends Component {
     var previousStart = parseInt(this.state.start, 10);
     //activePage is the current selected page
     let activePage = data.selected;
+    console.log('active page', activePage);
     //lastActivePage is the last page the user selected
     let lastActivePage = this.state.lastPage;
     //these two are set for future use in if statements

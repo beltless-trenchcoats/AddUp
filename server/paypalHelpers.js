@@ -1,10 +1,10 @@
 var paypal = require('paypal-rest-sdk');
-var apiKeys = require('./config/API_Keys');
+// var apiKeys = require('./config/API_Keys');
 
 paypal.configure({
   'mode': 'sandbox', //sandbox or live
-  'client_id': apiKeys.payPalClientID,
-  'client_secret': apiKeys.payPalSecret
+  'client_id': process.env.PAYPAL_CLIENT_ID,
+  'client_secret': process.env.PAYPAL_SECRET
 });
 
 exports.payoutCauses = function(payoutArray, callback) {

@@ -147,7 +147,6 @@ class SearchPage extends Component {
         function() {
           //gets results from API
           this.navigateBySearchTerms();
-            this.getResults.call(this);
         })
     //gets called when the user increments up in numbers like 1 -> 2
     } else if(activePage >= lastActivePage && this.state.firstPageChange === false) {
@@ -155,9 +154,8 @@ class SearchPage extends Component {
       this.setState({activePage: activePage += pageDifference, start: previousStart += (activePage - lastActivePage) * 20,
       firstPageChange: true},
         function() {
-            this.navigateBySearchTerms();
-            this.getResults.call(this);
-        })
+          this.navigateBySearchTerms();
+        });
     } else if(activePage > lastActivePage) {
       //pageDifference is if the user skips from 1 -> 9 so we can Calculate where to
       //start the API call
@@ -169,14 +167,12 @@ class SearchPage extends Component {
           lastPage: lastActivePage += pageDifference},
           function() {
             this.navigateBySearchTerms();
-            this.getResults.call(this);
           });
       } else {
         this.setState({activePage: activePage += pageDifference, start: previousStart += resultDifference,
           lastPage: lastActivePage += pageDifference},
           function() {
             this.navigateBySearchTerms();
-            this.getResults.call(this);
           });
       }
     //this route is for when users go down 1 by 1, eventually lastActivePage and activePage will be =
@@ -184,7 +180,6 @@ class SearchPage extends Component {
       this.setState({activePage: activePage -= 1, start: previousStart -= 20},
         function() {
           this.navigateBySearchTerms();
-          this.getResults.call(this);
         });
     //else if the user is making steps down 5 -> 4, etc...
     } else {
@@ -195,7 +190,6 @@ class SearchPage extends Component {
          lastPage: lastActivePage -= pageDifference},
       function() {
         this.navigateBySearchTerms();
-        this.getResults.call(this);
       });
     }
 }

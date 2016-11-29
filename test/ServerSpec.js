@@ -10,6 +10,13 @@ describe('Server routes', function() {
 
 
     describe('User login', function() {
+
+      before(function() {
+        Users.createUser('test@test.com', 'test', 'Test', 'Test').then(() => {
+          Users.updateUser('test@test.com', {plaid_access_token: 'test_wells', plaid_public_token: 'btok_9YDoZt3NHiIjun'}, () => {});
+        });
+      });
+
       it('should send response with user data for a user who exists in the db', function(done) {
         axios.post('http://localhost:8080/api/session/login',
         {
@@ -25,7 +32,7 @@ describe('Server routes', function() {
       });
 
       it('should not send response for user that does not exist in the db', function(done) {
-        axios.post('http://localhost:8080/login',
+        axios.post('http://localhost:8080/api/session/login',
         {
           email: 'invalid@gmail.com',
           password: 'test'
@@ -47,7 +54,7 @@ describe('Server routes', function() {
       before(function() {
         db.query({
           text: 'DELETE FROM users WHERE email=\'notarealemail@test.com\';'
-        })
+        }).then(() => setTimeout(() => {}, 100));
       });
 
       it('should log in a user upon successful sign up', function(done) {
@@ -59,7 +66,7 @@ describe('Server routes', function() {
           lastname: 'Test',
         })
         .then(res => {
-          expect(res.status).to.equal(201);
+          expect(res.status).to.equal(200);
           expect(res.data.email).to.equal('notarealemail@test.com');
           done();
         });

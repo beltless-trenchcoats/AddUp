@@ -251,7 +251,7 @@ app.post('/api/session/signup', function(req, res) {
           password: password
         })
         .then(function(resp) {
-          res.status(201).send(resp.data);
+          res.status(200).send(resp.data);
         })
         .catch(function(err) {
           console.log(err);

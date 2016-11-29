@@ -32,6 +32,7 @@ class SearchPage extends Component {
     this.search = this.search.bind(this);
   }
 
+<<<<<<< HEAD
   componentDidMount() {
     this.getResults();
     //if navigating between search results, re-render results
@@ -48,7 +49,17 @@ class SearchPage extends Component {
     this.setState(obj);
   }
 
-  handleSelect(evt,evtKey) {
+
+  onSearchInput (type, e) {
+    var stateChange = {};
+    stateChange[type] = e.target.value;
+    this.setState(stateChange);
+  }
+
+  handleSelect (evt,evtKey) {
+    // what am I suppose to write in there to get the value?
+    console.log('EVENT', evt);
+
     if(evt[1].split('').length > 25) {
       evt[1] = evt[1].substring(0, 25) + '...';
     }
@@ -105,7 +116,10 @@ class SearchPage extends Component {
         this.setState({
           searchResults: res.data,
           isLoading: false
-        })
+        }, function() {
+          this.state.searchResults.map((charity, i) => {
+            <CharitySearchResult key={i} info={charity} />
+          }))
       })
       .catch((err) => {
         console.log(err)
@@ -117,26 +131,33 @@ class SearchPage extends Component {
   pageSelect = (data) => {
     //previous start is what rows to request from the api
     var previousStart = parseInt(this.state.start);
+    //array of previous results
+    let previousResults = this.state.lastPageContents;
+>>>>>>> pagination clicks work
     //activePage is the current selected page
-    var activePage = data.selected;
+    let activePage = data.selected;
     //lastActivePage is the last page the user selected
-    var lastActivePage = this.state.lastPage;
+    let lastActivePage = this.state.lastPage;
     //these two are set for future use in if statements
-    var pageDifference = undefined;
-    var resultDifference = undefined;
+    let pageDifference = undefined;
+    let resultDifference = 0;
     //on first select if statement will be called, it moves activePage up but leaves
     //lastPage at 1 still
-    if(activePage >= lastActivePage && this.state.firstPageChange === false) {
+    if(activePage - lastActivePage === 0 && this.state.firstPageChange === false) {
       //sets activePage state up 1 and firstPageChange state to false
       this.setState({activePage: activePage += 1, start: previousStart += 20, firstPageChange: true},
         function() {
           //gets results from API
           this.navigateBySearchTerms();
-          //maps over results and re renders them
-          this.state.searchResults.map((charity, i) =>
-          <CharitySearchResult key={i} info={charity} />)
+            this.getResults.call(this);
         })
     //gets called when the user increments up in numbers like 1 -> 2
+    } else if(activePage >= lastActivePage && this.state.firstPageChange === false) {
+      //sets activePage state to activePage -
+      this.setState({activePage: activePage += 1, start: previousStart += (activePage - lastActivePage) * 20, firstPageChange: true},
+        function() {
+            this.getResults.call(this);
+        })
     } else if(activePage > lastActivePage) {
       //pageDifference is if the user skips from 1 -> 9 so we can Calculate where to
       //start the API call
@@ -147,16 +168,14 @@ class SearchPage extends Component {
           lastPage: lastActivePage += pageDifference},
           function() {
             this.navigateBySearchTerms();
-            this.state.searchResults.map((charity, i) =>
-            <CharitySearchResult key={i} info={charity} />)
+            this.getResults.call(this);
           });
     //this route is for when users go down 1 by 1, eventually lastActivePage and activePage will be =
     } else if(activePage === lastActivePage) {
       this.setState({activePage: activePage -= 1, start: previousStart -= 20},
         function() {
           this.navigateBySearchTerms();
-          this.state.searchResults.map((charity, i) =>
-          <CharitySearchResult key={i} info={charity} />)
+          this.getResults.call(this);
         });
     //else if the user is making steps down 5 -> 4, etc...
     } else {
@@ -167,8 +186,7 @@ class SearchPage extends Component {
          lastPage: lastActivePage -= pageDifference},
       function() {
         this.navigateBySearchTerms();
-        this.state.searchResults.map((charity, i) =>
-        <CharitySearchResult key={i} info={charity} />)
+        this.getResults.call(this);
       });
     }
 }

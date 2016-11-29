@@ -221,13 +221,14 @@ app.post('/api/session/login', function(req, res) {
             req.session.email = email;
             req.session.firstName = data[0].first_name;
             req.session.lastName = data[0].last_name;
-            // console.log('session', req.session);
+            console.log('JUST SET THE SESSION', req.session);
             userSession = {
               email: email,
               firstName: data[0].first_name,
               lastName: data[0].last_name
             };
           });
+          console.log('JUST AFTER SETTING THE SESSION', req.session);
           //send response to client with first_name, last_name, and email
           res.send({"first_name": data[0].first_name, "last_name": data[0].last_name,
           "email": data[0].email, currentUser: currentUser});

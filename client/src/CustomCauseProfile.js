@@ -21,7 +21,7 @@ class CustomCauseProfilePage extends Component {
 
   componentWillMount () {
     console.log('THIS IS THE CURRENT URL', this.props.location.pathname);
-    axios.get('http://localhost:8080/api/session')
+    axios.get('https://beltless-trenchcoats.herokuapp.com/api/session')
     .then(res => {
       this.setState({
         userSession: res.data
@@ -29,7 +29,7 @@ class CustomCauseProfilePage extends Component {
     });
     this.getCharityInfo();
 
-    axios.post('http://localhost:8080/api/customCause/transactions', {
+    axios.post('https://beltless-trenchcoats.herokuapp.com/api/customCause/transactions', {
       charityID: this.state.charityId
     })
     .then((res) => {
@@ -45,7 +45,7 @@ class CustomCauseProfilePage extends Component {
   }
 
   getCharityInfo () {
-    axios.post('http://localhost:8080/charityInfo', {
+    axios.post('https://beltless-trenchcoats.herokuapp.com/charityInfo', {
       charityId: this.state.charityId,
       type: 'custom'
     })

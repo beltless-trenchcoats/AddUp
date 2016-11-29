@@ -17,7 +17,7 @@ class PublicProfile extends Component {
   }
 
   componentWillMount () {
-    axios.post('http://localhost:8080/api/user/info', {
+    axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/info', {
       idOrEmail: this.props.params.id
     })
     .then((res) => {
@@ -26,7 +26,7 @@ class PublicProfile extends Component {
         lastInitial: res.data.last_name.charAt(0)
       }, () => {
         // console.log('profileinfo', this.state.profileInfo)
-        axios.post('http://localhost:8080/api/user/charities/info', {
+        axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/charities/info', {
           email: this.state.profileInfo.email
         })
         .then((res) => {
@@ -34,7 +34,7 @@ class PublicProfile extends Component {
             charities: res.data
           })
           // console.log('CHAIRITIES INFO', res.data)
-          axios.post('http://localhost:8080/api/charities/search', {
+          axios.post('https://beltless-trenchcoats.herokuapp.com/api/charities/search', {
             'id_owner': this.props.params.id,
             'type': 'Custom Cause'
             })

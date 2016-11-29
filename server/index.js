@@ -122,7 +122,7 @@ app.post('/api/plaid/authenticate', function(req, res) {
     } else {
       var access_token = exchangeTokenRes.access_token;
 
-      axios.post('http://localhost:8080/api/plaid/transactions', {
+      axios.post('https://beltless-trenchcoats.herokuapp.com/api/plaid/transactions', {
         access_token: access_token
       })
       .then(resp => {
@@ -183,7 +183,7 @@ app.post('/api/session/signup', function(req, res) {
   db.createUser(email, password, firstName, lastName)
     .then(function(success) {
       if (success) {
-        axios.post('http://localhost:8080/api/session/login', {
+        axios.post('https://beltless-trenchcoats.herokuapp.com/api/session/login', {
           email: email,
           password: password
         })

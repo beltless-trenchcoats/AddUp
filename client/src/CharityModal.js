@@ -22,10 +22,10 @@ class CharityModal extends Component {
   }
 
   componentDidMount () {
-    axios.get('http://localhost:8080/api/session')
+    axios.get('https://beltless-trenchcoats.herokuapp.com/api/session')
       .then((res) => {
         this.setState({ userEmail: res.data.email || '' });
-        axios.post('http://localhost:8080/api/user/charities/info', {
+        axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/charities/info', {
           email: this.state.userEmail
         })
         .then((res) => {
@@ -82,7 +82,7 @@ class CharityModal extends Component {
   saveCharities () {
     console.log('this is getting sent to the database', this.state.updatedCharities);
     this.setState( {charities: this.state.updatedCharities})
-    axios.post('http://localhost:8080/api/user/charities/update', {
+    axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/charities/update', {
       email: this.state.userEmail,
       charities: this.state.updatedCharities
     })

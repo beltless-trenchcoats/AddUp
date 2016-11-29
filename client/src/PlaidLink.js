@@ -18,7 +18,7 @@ class PlaidLinkComponent extends Component {
       public_token: token
     });
 
-    axios.post('http://localhost:8080/api/plaid/authenticate',
+    axios.post('https://beltless-trenchcoats.herokuapp.com/api/plaid/authenticate',
       {'account_id': this.state.plaidData.account_id,
         'public_token': this.state.public_token,
         'institution_name': this.state.plaidData.institution.name

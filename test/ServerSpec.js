@@ -18,7 +18,7 @@ describe('Server routes', function() {
       });
 
       it('should send response with user data for a user who exists in the db', function(done) {
-        axios.post('http://localhost:8080/api/session/login',
+        axios.post('https://beltless-trenchcoats.herokuapp.com/api/session/login',
         {
           email: 'test@test.com',
           password: 'test'
@@ -32,7 +32,7 @@ describe('Server routes', function() {
       });
 
       it('should not send response for user that does not exist in the db', function(done) {
-        axios.post('http://localhost:8080/api/session/login',
+        axios.post('https://beltless-trenchcoats.herokuapp.com/api/session/login',
         {
           email: 'invalid@gmail.com',
           password: 'test'
@@ -58,7 +58,7 @@ describe('Server routes', function() {
       });
 
       it('should log in a user upon successful sign up', function(done) {
-        axios.post('http://localhost:8080/api/session/signup',
+        axios.post('https://beltless-trenchcoats.herokuapp.com/api/session/signup',
         {
           email: 'notarealemail@test.com',
           password: 'test',

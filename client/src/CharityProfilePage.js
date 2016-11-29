@@ -25,7 +25,7 @@ class CharityProfilePage extends Component {
   }
 
   componentWillMount () {
-    axios.post('http://localhost:8080/api/charity', {
+    axios.post('https://beltless-trenchcoats.herokuapp.com/api/charity', {
       charityId: this.state.charityId,
       type: this.props.params.type
     })
@@ -48,7 +48,7 @@ class CharityProfilePage extends Component {
     })
     .then(() => {
       if (this.state.charity.id_owner) {
-        axios.post('http://localhost:8080/api/user/info', {
+        axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/info', {
           idOrEmail: (this.state.charity.id_owner).toString()
         })
         .then((res) => {

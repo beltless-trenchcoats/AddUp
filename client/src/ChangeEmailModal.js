@@ -58,7 +58,7 @@ class ChangeEmailModal extends Component {
     if(this.state.newEmail1 === this.state.newEmail2) {
       this.setState({ newEmailMatch: true });
       this.closeEmail();
-      axios.post('http://localhost:8080/api/user/update', {
+      axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/update', {
         email: this.props.session.email,
         newEmail: this.state.newEmail1,
       })

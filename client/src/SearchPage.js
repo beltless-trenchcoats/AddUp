@@ -118,11 +118,11 @@ class SearchPage extends Component {
         }, function() {
           this.state.searchResults.map((charity, i) => {
             <CharitySearchResult key={i} info={charity} />
-          }))
-        }
-      }
+          })
+        })
+      })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
       })
     }
   }

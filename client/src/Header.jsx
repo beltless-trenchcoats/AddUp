@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import cookie from 'react-cookie';
 import axios from 'axios';
 import { Button, Modal, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import { Link, browserHistory } from 'react-router';
@@ -24,13 +25,13 @@ class Header extends Component {
       showLoginModal: false,
       showSignupModal: false,
       showLogoutModal: false,
-      loggedIn: false,
+      loggedIn: !!(cookie.load('email')),
       validationError: false,
-      email: '',
+      email: cookie.load('email') || '',
       password1: '',
       password2: '',
-      firstname: '',
-      lastname: '',
+      firstname: cookie.load('firstname') || '',
+      lastname: cookie.load('lastname') || '',
       invalidPassword: false
     }
     this.closeLogin = this.closeLogin.bind(this)
@@ -49,21 +50,6 @@ class Header extends Component {
     this.onEmailChange = this.onEmailChange.bind(this)
     this.onFirstnameChange = this.onFirstnameChange.bind(this)
     this.onLastnameChange = this.onLastnameChange.bind(this)
-  }
-
-  componentWillMount() {
-    axios.get(server + '/api/session')
-    .then((res) => {
-      this.setState({
-        email: res.data.email || '',
-        firstname: res.data.firstName || '',
-        lastname: res.data.lastName || '',
-        loggedIn: (res.data.email) || false
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
   }
 
   closeLogin() {
@@ -144,6 +130,9 @@ class Header extends Component {
           lastname: res.data.last_name,
           loggedIn: true
         });
+        cookie.save('email', res.data.email, { path: '/' });
+        cookie.save('firstname', res.data.first_name, { path: '/' });
+        cookie.save('lastname', res.data.last_name, { path: '/' });
         this.closeLogin();
         browserHistory.push('/user');
       } else {
@@ -168,6 +157,12 @@ class Header extends Component {
         firstname: '',
         lastname: ''
       });
+      cookie.remove('email', { path: '/' });
+      cookie.remove('firstname', { path: '/' });
+      cookie.remove('lastname', { path: '/' });
+
+      /** Clear all cookies starting with 'session' (to get all cookies, omit regex argument) */
+      Object.keys(cookie.select(/^session.*/i)).forEach(name => cookie.remove(name, { path: '/' }));
       this.closeLogout();
     })
     .catch((err) => {

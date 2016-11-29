@@ -1,0 +1,763 @@
+/* Style Variables */
+$homepage-blue: #5687AD;
+$blue: #5B7091;
+$profile-blue: #337AB7;
+$step-blue: #A6C0D3;
+$dark-blue: #001328;
+$dark-grey: #333;
+$med-grey: #d5d5d5;
+$light-grey: #F2F0EF;
+$charity-grey: #f7f7f7;
+$error-red: #B53D47;
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  font-weight: 300;
+}
+
+h1 {
+  padding: 10px 20px;
+  font-size: 45px;
+  margin-top: 30px;
+  font-weight: 300;
+}
+
+button, .btn {
+  font-weight: 200;
+}
+
+label, .label {
+  font-weight: 400;
+}
+
+.App::after {
+  content: '';
+  background: url("../public/road.jpg");
+  background-size: cover;
+  opacity: 0.8;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.App {
+  text-align: center;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: $dark-grey;
+  height: 100vh;
+  padding:20px;
+}
+
+
+/*************** HEADER AND MODALS ***************/
+
+.App-logo {
+  position: relative;
+  height: 145%;
+  top: -15%;
+  float: left;
+}
+
+.App-header {
+  z-index: 1000;
+  width: 100%;
+  padding: 0 20px;
+  background: linear-gradient(90deg, #F3F6F6 10%, #E6EDEC, white 70%);
+  height: 55px;
+  color: white;
+  position: absolute;
+}
+
+.userButtons {
+  float: right;
+  height: 55px;
+}
+
+.userIcon {
+  margin: -5px 5px 0 5px;
+}
+
+.headerButton {
+  border: none;
+  margin-left: 10px;
+  color: $homepage-blue;
+  background-color: rgba(255, 255, 255, 0);
+  height: 100%;
+  font-size: 18px;
+}
+
+.headerButton:hover {
+  color: black;
+}
+
+.headerButton:focus {
+  outline: none;
+}
+
+.loginoutButton {
+  color: black;
+}
+
+.userProfileLink {
+  display: inline-block;
+  font-weight: 200;
+  position: relative;
+  top: 2%;
+  color: $blue;
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.userProfileLink:hover {
+  color: $dark-grey;
+}
+
+.modalButton {
+  margin: 0 5px;
+}
+
+/*************** HOMEPAGE BODY ***************/
+
+.description {
+  height: 400px;
+}
+
+.infoSections {
+  font-size: 16px;
+  letter-spacing: 0.3px;
+  margin-top: 50px;
+}
+
+.jumbotron {
+  top: 19%;
+  background: white;
+  opacity: 0.9;
+  word-wrap: break-word;
+  width: 48%;
+  padding: 5px;
+  font-size: 12px;
+  position: absolute;
+  margin-left: 50px;
+}
+
+.findButton {
+  font-size: 18px;
+  letter-spacing: 0.7px;
+  background: $homepage-blue;
+  color: white;
+  border: none;
+  margin: 5px;
+}
+
+.panel {
+  border: none;
+  border-radius: 0px;
+  margin: 0 10px;
+}
+
+.panel-heading {
+  background-color: $homepage-blue !important;
+  border: none;
+  font-size: 18px;
+  border-radius: 0;
+}
+
+.graph {
+  height: 800px;
+}
+
+.chartLabel {
+  text-align: center;
+}
+
+/*************** USER PROFILE PAGE ***************/
+
+.shadowbox {
+  border-radius: 4px;
+  box-shadow: 10px 10px 8px -10px rgba(0,0,0,0.4);
+  background-color: white;
+}
+
+.error {
+  color: $error-red;
+  margin-bottom: 10px;
+}
+
+.row {
+  padding: 20px 10px 30px 10px;
+}
+
+/*************** User Profile Box ***************/
+
+.profilePage {
+  top: 55px;
+  position: relative;
+
+  .lessPadding {
+    padding-bottom: 10px;
+  }
+
+  .userProfile {
+    height: 280px;
+    padding: 5px 20px 0px 10px;
+    margin-top: 15px;
+    background-color: $light-grey !important;
+
+    .welcome {
+      font-size: 45px;
+      margin-bottom: 30px;
+      padding-top: 30px;
+      padding-left: 100px;
+    }
+
+    .loginButton {
+      margin-right: 160px;
+    }
+
+    .profileField {
+      width: 90%;
+      height: 40px;
+      padding-left: 100px;
+      position: relative;
+
+      div {
+        display: inline-block;
+      }
+
+      .label {
+        width: 170px;
+        text-align: left;
+        float: left;
+        color: $profile-blue;
+        letter-spacing: 0.5px;
+      }
+
+      span {
+        font-size: 20px;
+        color: $dark-grey;
+      }
+
+      .changeButton {
+        position: absolute;
+        right: 0;
+        bottom: 7px;
+      }
+    }
+  }
+
+  .profilePhoto {
+    margin: 20px;
+    text-align: center;
+
+    label {
+      font-size: 16px;
+    }
+
+    .profilePhotoImage {
+      background: $med-grey;
+      border-radius: 50%;
+      height: 160px;
+      width: 160px;
+      overflow: hidden;
+      margin: 25px 0 15px 17%;
+    }
+
+    .image {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      color: white;
+    }
+
+    input[type=file] {
+      margin-left: 15%;
+    }
+  }
+}
+
+
+/*************** Step Box ***************/
+
+.step {
+  font-size: 24px;
+}
+
+.stepBox {
+  width: 320px;
+  height: 210px;
+  text-align: center;
+  background-color: $step-blue;
+  color: $dark-blue;
+  font-size: 36px;
+  padding: 20px 30px 30px 30px;
+
+  .linked {
+    color: $light-grey;
+    float: right;
+    font-size: 26px;
+    line-height: 20px;
+  }
+
+  .incomplete {
+    border: 2px solid $error-red;
+  }
+
+  .stepText {
+    clear: both;
+  }
+
+  .account {
+    font-size: 22px;
+  }
+  
+  div button {
+    margin-top: 15px;
+    height: 50px;
+    width: 150px;
+
+    span {
+      font-size: 22px;
+    }
+  }
+
+  .limit {
+    font-size: 20px;
+
+    #limitInput {
+      display: inline;
+      margin-right: 5px;
+      width: 150px;
+      font-size: 18px;
+    }
+
+    .invalidLimit {
+      border: 2px solid $error-red;
+    }
+  }
+
+  .scrollButton {
+    background-color: rgba(255,255, 255, 0);
+    border: none;
+    width: 100px;
+  }
+
+  .scrollButton:focus {
+    outline: none;
+  }
+}
+
+/*************** User Charities Banners ***************/
+
+.charitiesBanner {
+  width: 100%;
+  padding: 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: $light-grey;
+  font-size: 40px;
+
+  .startButton {
+    margin-top: 20px;
+    max-width: 200px;
+    font-size: 25px;
+  }
+}
+
+/*************** User Charities ***************/
+
+.userCharitiesContainer {
+  position: relative;
+
+  .searchButton {
+    position: absolute;
+    top: 0px;
+    right: 180px;
+    font-size: 25px;
+  }
+
+  .editButton {
+    position: absolute;
+    top: 0px;
+    right: 100px;
+    font-size: 25px;
+  }
+
+  h1{
+    font-size: 48px;
+    text-align: center;
+  }
+
+  .userCharities {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+
+    a:hover {
+      text-decoration: none;
+
+      .charityInfo{
+        background-color: #eee;
+      }
+    }
+
+    .userCharity {
+      width: 480px;
+      margin: 20px 30px;
+      
+      .percentInfo {
+        display: inline-block;
+        width: 30%;
+        font-size: 40px;
+        text-align: center;
+        vertical-align: top;
+        color: $profile-blue;
+      }
+
+      .charityInfo {
+        width: 70%;
+        min-height: 100px;
+        display: inline-block;
+        position: relative;
+        padding-bottom: 50px;
+        background-color: $charity-grey;
+
+        div {
+          margin: 0 20px;
+        }
+
+        .title {
+          margin-top: 10px;
+          font-size: 24px;
+          color: $dark-grey;
+
+          a {
+            color: $dark-grey;
+          }
+        }
+
+        .goalReached {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          font-size: 16px;
+          color: green;
+        }
+
+        .amount, .since {
+          position: absolute;
+          bottom: 10px;
+        }
+
+        .amount {
+          font-size: 32px;
+          color: #ff7f50;
+        }
+
+        .since {
+          right: 20px;
+          font-size: 20px;
+          font-style: italic;
+          color: #aaa;
+        }
+      }
+    }
+
+    .dim {
+      opacity: 0.5;
+    }
+  }
+  
+}
+
+/*************** User Custom Causes ***************/
+
+.customCauses {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  a:hover {
+    text-decoration: none;
+  }
+
+  .customCause {
+    width: 80%;
+    margin: 10px;
+    background-color: $charity-grey;
+    padding: 20px;
+
+    .title {
+      font-size: 32px;
+      color: $dark-grey;
+    }
+
+    .contributors {
+      font-size: 20px;
+      padding: 10px 0 0 30px;
+      float: left;
+    }
+
+    .amount{
+      font-size: 24px;
+      padding: 10px 0 0 30px;
+      float: right;
+    }
+
+    .percentage {
+      font-size: 36px;
+      float: right;
+      margin-left: 15px;
+    }
+  }
+}
+
+/*************** User Transactions ***************/
+
+.userTransactionsContainer {
+  background-color: #eee;
+  padding: 40px;
+  margin-top: 40px;
+
+  h1 {
+    margin-top: 10px;
+  }
+
+  .transactionHistory {
+    width: 100%;
+    margin-top: 20px;
+  }
+}
+
+/*************** USER PUBLIC PROFILE PAGE ***************/
+
+.publicProfile {
+  top: 55px;
+  position: relative;
+
+  .userCharitiesContainer h1 {
+    width: 100%;
+    text-align: center;
+    margin-top: 0;
+  }
+
+  .charityInfo {
+    
+  }
+}
+
+/*************** SEARCH PAGE ***************/
+.searchPage {
+  top: 55px;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  position: relative;
+  color: black;
+  background-color: #eee;
+
+  .dropdownCat {
+    height: auto;
+    width: auto;
+  }
+
+  .noResults {
+    margin: 30px auto;
+    text-align: center;
+    color: black;
+  }
+
+  .charityCard {
+    width: 80%;
+    margin: 10px auto;
+
+    .panel-title {
+      color: white;
+    }
+
+    .panel-title:hover {
+      color: black;
+    }
+  }
+
+  .pagination {
+    position: relative;
+    left: 26%;
+  }
+}
+
+/*************** CHARITY PROFILE PAGE ***************/
+
+.charityProfilePage {
+  top: 55px;
+  position: relative;
+  padding: 15px;
+
+  .backButton {
+    border: none;
+    border-bottom: thin dotted $med-grey;
+    background: white;
+    font-size: 16px;
+    color: $profile-blue;
+  }
+
+  .backButton:hover {
+    color: $dark-grey;
+  }
+
+  .backButton:focus {
+    outline: none;
+  }
+
+  .addCharity, .removeCharity {
+    float: right;
+    background-color: $profile-blue;
+    margin: 20px 20px 0 0;
+  }
+
+  .addressHeader {
+    font-weight: 400;
+  }
+
+  .address {
+    font-size: 0.8em;
+    font-style: italic;
+    color: grey;
+  }
+
+  .corpInfo {
+    font-size: 0.8em;
+    font-style: italic;
+    color: grey;
+  }
+
+  .percentageError {
+    color: $error-red;
+    font-size: 0.8em;
+    font-style: italic;
+    text-align: center;
+  }
+}
+
+
+/*************** About Us Page ***************/
+
+.aboutUsSection {
+  background: url('../public/sky_resized-min.png');
+  background-size: cover;
+  height: 100vh;
+  text-align: center;
+  padding-top: 200px;
+
+  .about {
+    width: 65vw;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 40px 50px;
+    text-align: center;
+    font-size: 22px;
+    line-height: 32px;
+
+    .aboutButton {
+      margin-top: 20px;
+      border: none;
+      background-color: rgba(243, 246, 246, 0.9);
+      color: $dark-grey;
+      padding: 5px 15px;
+    }
+  }
+}
+
+/*************** Contact Us Page ***************/
+
+.contactUsSection {
+  background: url('../public/ocean.jpg');
+  background-size: cover;
+  height: 100vh;
+  text-align: center;
+  padding-top: 200px;
+
+  .contact {
+    width: 50vw;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 40px 50px;
+    text-align: center;
+    font-size: 22px;
+    line-height: 32px;
+  }
+}
+
+/*************** Charts ***************/
+
+.recharts-wrapper {
+  position: relative;
+  left: 19%;
+  margin-top: 35px;
+}
+
+.pieChart {
+  position: relative;
+  left: 40%;
+}
+
+
+/************ Icons **************/
+
+.creditCardHand {
+  position: absolute;
+  left: 15%;
+  height: 17%;
+}
+
+.heartHandShake {
+  position: absolute;
+  height: 12%;
+  left: 45.5%;
+}
+
+.coinStack {
+  position: absolute;
+  height: 15%;
+  left: 70%;
+}
+
+
+/************* Contributions **********/
+.impactSection {
+  position: relative;
+  top: 18%;
+  font-weight: 300;
+  font-size: 16px;
+  letter-spacing: 0.3px;
+}
+
+.charityName {
+  color: red;
+  font-weight: bold;
+}
+
+.contributionTitle {
+  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.impactColumn {
+    margin-bottom: 5%;
+}
+
+.impactPanel {
+  box-shadow: 10px 10px 5px #888888;
+}
+
+

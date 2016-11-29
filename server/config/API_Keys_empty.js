@@ -1,3 +1,4 @@
+//Copy this file, rename to API_Keys.js, and fill in with appropriate keys
 module.exports = {
   orgHunter: 'FILL_ME_IN',
   gmaps: 'FILL_ME_IN',

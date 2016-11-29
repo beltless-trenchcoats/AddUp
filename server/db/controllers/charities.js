@@ -19,7 +19,7 @@ exports.createCharity = Promise.promisify(function(values, callback) {
     } else {
       if (results.rowCount > 0) {
         console.log('charity already in database: ' + values.name);
-        callback(null, results.rows);
+        callback(null, results.rows[0]);
       } else {
         console.log('INSERT INTO charities(name, category, ein, donation_url, city, state, zip, balance_owed, total_donated, mission_statement, \
             id_owner, dollar_goal, type, private, photo, paypalemail) \

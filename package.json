@@ -1,12 +1,13 @@
 {
-  "name": "server",
+  "name": "AddUp",
   "version": "1.0.0",
-  "description": "",
+  "description": "Thesis project by beltless-trenchcoats",
   "main": "index.js",
   "scripts": {
+    "start": "node server/index.js",
     "test": "mocha test"
   },
-  "author": "",
+  "author": "Charlotte Willens, Karina Kinaman, Miles Smith, Tim Garibaldi",
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "2.x",

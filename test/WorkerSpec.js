@@ -79,24 +79,8 @@ describe('Worker functions', function() {
 
   describe('rounding up transactions', function() {
     it('should return rounded-up amount for an amount > 0.50', function(done) {
-      expect(worker.roundUpTransaction(users[0], transactions[0])).to.equal(0.51);
+      expect(worker.roundUpTransaction(transactions[0])).to.equal(0.51);
       done();
-    });
-
-    it('should only return an amount up to their monthly limit', function(done) {
-      expect(worker.roundUpTransaction(users[0], transactions[1])).to.equal(users[0].monthly_limit - users[0].monthly_total);
-      done();
-    });
-
-    it('should return 0 if they are already over their monthly limit', function(done) {
-      expect(worker.roundUpTransaction(users[1], transactions[0])).to.equal(0);
-      done();
-    });
-
-    it('should update a users pending balance if their aggregate balance is still < 0.50', function(done) {
-      expect(worker.roundUpTransaction(users[0], transactions[2])).to.equal(0);
-      //giving time for the inner database call to go through 
-      setTimeout(() => done(), 100);
     });
   });
 
@@ -115,20 +99,34 @@ describe('Worker functions', function() {
         }
         Users.createUser('test@test.com', 'test', 'Test', 'Test')
         .then(() => {
-          Users.updateUser('test@test.com', {plaid_access_token: 'test_wells', stripe_bank_account_token: 'btok_9YDoZt3NHiIjun'}, () => {});
-          Charities.createCharity({name: 'Green Peace', category: 'A', ein: 'gsot23235', donation_url: 'www.eggs.com', city: 'San Francisco',
-            state: 'CA', zip: '94114', mission_statement: 'To eat every egg in the fridge'})
-            .then(() =>{
-              Charities.createCharity({name: 'Sea Shepherd Conservation Society', category: 'A', ein: 'gsot23235', donation_url: 'www.eggs.com', city: 'San Francisco',
-                state: 'CA', zip: '94114', mission_statement: 'To eat every egg in the fridge'})
-              .then(() => {
-                dbHelper.getIDs('', 'Green Peace', function(idObj1) {
-                  dbHelper.getIDs('', 'Sea Shepherd Conservation Society', function(idObj2) {
-                    console.log('CHARITY IDS ARE', idObj1, idObj2);
-                    UsersCharities.insert('test@test.com', idObj1.id_charities, .7, (r) => {console.log(r);});
-                    UsersCharities.insert('test@test.com', idObj2.id_charities, .3, (r) => {console.log(r);});
-                  });
-                });
+          Users.updateUser('test@test.com', {plaid_access_token: 'test_wells'}, () => {});
+          Charities.createCharity(
+          {
+            name: 'Green Peace', 
+            category: 'A', 
+            ein: '123', 
+            donation_url: 'www.eggs.com', 
+            city: 'San Francisco',
+            state: 'CA', 
+            zip: '94114', 
+            mission_statement: 'To eat every egg in the fridge'
+          })
+            .then(charity1 => {
+              Charities.createCharity(
+              {
+                name: 'Sea Shepherd Conservation Society', 
+                category: 'A', 
+                ein: '456', 
+                donation_url: 'www.eggs.com', 
+                city: 'San Francisco',
+                state: 'CA', 
+                zip: '94114', 
+                mission_statement: 'To eat every egg in the fridge'
+              })
+              .then(charity2 => {
+                console.log('CHARITY IDS ARE', charity1.id, charity2.id);
+                UsersCharities.insert('test@test.com', charity1.id, .7, (r) => {console.log(r);});
+                UsersCharities.insert('test@test.com', charity2.id, .3, (r) => {console.log(r);});
               });
             })
             .catch(err => {

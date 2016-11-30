@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PlaidLink from 'react-plaid-link';
 import axios from 'axios';
 import server from '../../server/config/config';
+import helpers from '../helpers';
 
 class PlaidLinkComponent extends Component {
   constructor(props, context) {
@@ -19,12 +20,17 @@ class PlaidLinkComponent extends Component {
       public_token: token
     });
 
+    var cookies = helpers.parseCookie(document.cookie);
+    console.log('email', cookies.email);
+
     axios.post(server + '/api/plaid/authenticate',
       {'account_id': this.state.plaidData.account_id,
         'public_token': this.state.public_token,
-        'institution_name': this.state.plaidData.institution.name
+        'institution_name': this.state.plaidData.institution.name,
+        'email': cookies.email
       })
     .then((resp) => {
+      console.log('this worked', resp.data);
       this.props.successFunc(this.state.plaidData.institution.name, resp.data);
     });
   }

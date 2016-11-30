@@ -62,7 +62,7 @@ class Header extends Component {
     });
     console.log('all cookies', cookies); // => ""
   }
-  
+
   closeLogin() {
     this.setState({ showLoginModal: false, validationError: false });
   }
@@ -164,8 +164,8 @@ class Header extends Component {
   }
 
   logoutUser () {
-    axios.get(server + '/api/session/logout')
-    .then((res) => {
+    // axios.get(server + '/api/session/logout')
+    // .then((res) => {
       this.setState({
         loggedIn: false,
         email: '',
@@ -179,10 +179,10 @@ class Header extends Component {
       document.cookie = 'lastname=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
 
       this.closeLogout();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    // })
+    // .catch((err) => {
+    //   console.log(err);
+    // });
   }
 
   onPassword1Change (e) {

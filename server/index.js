@@ -40,6 +40,9 @@ app.use('/', express.static(__dirname + '/../client/build'));
 app.get('/charity/*', function(req, res) {
     res.sendFile(path.join(__dirname + '/../client/build/index.html'));
 });
+app.get('/custom/*', function(req, res) {
+    res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+});
 app.get('/search*', function(req, res) {
     res.sendFile(path.join(__dirname + '/../client/build/index.html'));
 });

@@ -5,6 +5,7 @@ import { Col, Row, Grid, Table, Button, FormControl } from 'react-bootstrap';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell } from 'recharts';
 import axios from 'axios';
 import $ from "jquery";
+import fileDownload from 'react-file-download';
 
 import Header from './Header';
 import Transaction from './Transaction';
@@ -50,6 +51,7 @@ class UserProfile extends Component {
     }
     this.setCustomCauses = this.setCustomCauses.bind(this);
     this.setSession = this.setSession.bind(this);
+    this.downloadTransactions = this.downloadTransactions.bind(this);
   }
 
   componentWillMount() {
@@ -73,7 +75,6 @@ class UserProfile extends Component {
         'idOrEmail': email
         })
         .then(res => {
-          console.log('userInfo', res.data)
           this.setState({
             userInfo: res.data,
             bankInfo: {
@@ -310,6 +311,13 @@ class UserProfile extends Component {
     this.setState({ userSession: session});
   }
 
+  downloadTransactions () {
+    let transactionTableData = [['Date, Amount, Recipient Charity']+'\n']
+    this.state.transactions.forEach((transaction) => transactionTableData.push([new Date(transaction.date_time).toLocaleDateString(), transaction.amount, transaction.name]+'\n'))
+    console.log('transactionTable', JSON.parse(JSON.stringify(transactionTableData)))
+    fileDownload(JSON.parse(JSON.stringify(transactionTableData)), 'AddUp-Transaction-History.csv')
+  }
+
   render() {
     return (
       <Header>
@@ -477,7 +485,7 @@ class UserProfile extends Component {
               <Col className="userTransactionsContainer">
                 <h1>Your Donation History</h1>
                 <div className="transactionHistory">
-                  <Table responsive striped hover>
+                  <Table responsive striped hover id="transactionTable">
                     <thead>
                       <tr>
                         <th>Date</th>
@@ -487,13 +495,16 @@ class UserProfile extends Component {
                     </thead>
 
                     <tbody>
-                      {this.state.transactions.map ((transaction, i) =>
-                        <Transaction key={i} transaction={transaction} />
+                      {this.state.transactions.map ((transaction, i) => (
+                          // transactionTableData.push([transaction.date_time, transaction.amount, transaction.name]),
+                          <Transaction key={i} transaction={transaction} /> 
+                        )
                       )}
                     </tbody>
                   </Table>
                 </div>
               </Col>
+              <button onClick={this.downloadTransactions}>Download Transaction History</button>
             </Row>
           </Grid>
           : null

@@ -5,10 +5,10 @@ import { Col, Row, Grid, Table, Button, FormControl } from 'react-bootstrap';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell } from 'recharts';
 import axios from 'axios';
 import $ from "jquery";
-import cookie from 'react-cookie';
 import fileDownload from 'react-file-download';
 
 import server from '../../server/config/config';
+import helpers from '../helpers';
 
 import Header from './Header';
 import Transaction from './Transaction';
@@ -58,26 +58,18 @@ class UserProfile extends Component {
   }
 
   componentWillMount() {
-    // if (this.props.location.query.code) {
-    //   axios.post(server + '/oauth/callback', {
-    //     code: this.props.location.query.code
-    //   })
-    //   .then(res => {
-    //     console.log('stripe info', res.data);
-    //   });
-    // }
+
+    var cookies = helpers.parseCookie(document.cookie);
     var cookieSession = {
-      email: cookie.load('email'),
-      firstName: cookie.load('firstname'),
-      lastName: cookie.load('lastname')
+      email: cookies.email || '',
+      firstName: cookies.firstname || '',
+      lastName: cookies.lastname || ''
     };
-    // axios.get('http://localhost:8080/api/session')
-    // .then(res => {
     this.setState({
       userSession: cookieSession
     });
 
-    var email = cookie.load('email');
+    var email = cookies.email;
 
     axios.post(server + '/api/user/info', {
       'idOrEmail': email
@@ -91,31 +83,31 @@ class UserProfile extends Component {
             bank_digits: res.data.bank_digits
           },
           monthlyLimit: res.data.monthly_limit || '--'
+        });
+        if (this.state.monthlyLimit && this.state.monthlyLimit !== '--') {
+          this.setState({monthlyLimitSet: true});
+          $('#step2').removeClass('incomplete');
+        } else {
+          $('#step2').addClass('incomplete');
+        }
+        if (this.state.bankInfo.bank_name) {
+          this.setState({hasLinkAccount: true});
+          $('#step1').removeClass('incomplete');
+        } else{
+          $('#step1').addClass('incomplete');
+        }
+        var userSession = this.state.userSession;
+        userSession.id = res.data.id;
+        this.setState({userSession: userSession});
+        axios.post(server + '/api/charities/search', {
+          'id_owner': res.data.id,
+          'type': 'Custom Cause'
+          })
+          .then(response => {
+            if (response.data) {
+              this.setState({customCauses: response.data});
+            }
           });
-          if (this.state.monthlyLimit && this.state.monthlyLimit !== '--') {
-            this.setState({monthlyLimitSet: true});
-            $('#step2').removeClass('incomplete');
-          } else {
-            $('#step2').addClass('incomplete');
-          }
-          if (this.state.bankInfo.bank_name) {
-            this.setState({hasLinkAccount: true});
-            $('#step1').removeClass('incomplete');
-          } else{
-            $('#step1').addClass('incomplete');
-          }
-          var userSession = this.state.userSession;
-          userSession.id = res.data.id;
-          this.setState({userSession: userSession});
-          axios.post(server + '/api/charities/search', {
-            'id_owner': res.data.id,
-            'type': 'Custom Cause'
-            })
-            .then(response => {
-              if (response.data) {
-                this.setState({customCauses: response.data});
-              }
-            });
         });
 
       axios.post(server + '/api/user/transactions', {

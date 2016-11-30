@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import cookie from 'react-cookie';
 import axios from 'axios';
 import { Button, Modal, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import { Link, browserHistory } from 'react-router';
@@ -8,6 +7,7 @@ import server from '../../server/config/config';
 
 import logo from '../assets/images/addUpLogoUpdated.png';
 import FaUser from 'react-icons/lib/fa/user';
+import helpers from '../helpers';
 
 const FieldGroup = ({ id, label, ...props }) => {
   return (
@@ -25,13 +25,13 @@ class Header extends Component {
       showLoginModal: false,
       showSignupModal: false,
       showLogoutModal: false,
-      loggedIn: !!(cookie.load('email')),
+      loggedIn: false,
       validationError: false,
-      email: cookie.load('email') || '',
+      email: '',
       password1: '',
       password2: '',
-      firstname: cookie.load('firstname') || '',
-      lastname: cookie.load('lastname') || '',
+      firstname: '',
+      lastname: '',
       invalidPassword: false
     }
     this.closeLogin = this.closeLogin.bind(this)
@@ -52,6 +52,17 @@ class Header extends Component {
     this.onLastnameChange = this.onLastnameChange.bind(this)
   }
 
+  componentWillMount() {
+    var cookies = helpers.parseCookie(document.cookie);
+    this.setState({
+      email: cookies.email || '',
+      firstname: cookies.firstname || '',
+      lastname: cookies.lastname || '',
+      loggedIn: !!(cookies.email)
+    });
+    console.log('all cookies', cookies); // => ""
+  }
+  
   closeLogin() {
     this.setState({ showLoginModal: false, validationError: false });
   }
@@ -92,6 +103,9 @@ class Header extends Component {
       })
       .then((res) => {
         if (res.data) {
+          document.cookie = "email=" + res.data.email;
+          document.cookie = "firstname=" + res.data.first_name;
+          document.cookie = "lastname=" + res.data.last_name;
           this.setState({
             loggedIn: true
           });
@@ -130,9 +144,12 @@ class Header extends Component {
           lastname: res.data.last_name,
           loggedIn: true
         });
-        cookie.save('email', res.data.email, { path: '/' });
-        cookie.save('firstname', res.data.first_name, { path: '/' });
-        cookie.save('lastname', res.data.last_name, { path: '/' });
+        document.cookie = "email=" + res.data.email;
+        document.cookie = "firstname=" + res.data.first_name;
+        document.cookie = "lastname=" + res.data.last_name;
+        // cookie.save('email', res.data.email, { path: '/', maxAge: 60 * 60 * 24 * 365 * 10, secure: true });
+        // cookie.save('firstname', res.data.first_name, { path: '/', maxAge: 60 * 60 * 24 * 365 * 10, secure: true });
+        // cookie.save('lastname', res.data.last_name, { path: '/', maxAge: 60 * 60 * 24 * 365 * 10, secure: true });
         this.closeLogin();
         browserHistory.push('/user');
       } else {
@@ -157,12 +174,10 @@ class Header extends Component {
         firstname: '',
         lastname: ''
       });
-      cookie.remove('email', { path: '/' });
-      cookie.remove('firstname', { path: '/' });
-      cookie.remove('lastname', { path: '/' });
+      document.cookie = 'email=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      document.cookie = 'firstname=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      document.cookie = 'lastname=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
 
-      /** Clear all cookies starting with 'session' (to get all cookies, omit regex argument) */
-      Object.keys(cookie.select(/^session.*/i)).forEach(name => cookie.remove(name, { path: '/' }));
       this.closeLogout();
     })
     .catch((err) => {

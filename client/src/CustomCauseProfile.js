@@ -4,6 +4,7 @@ import { Col, Row, Grid, Table } from 'react-bootstrap';
 import server from '../../server/config/config';
 
 import axios from 'axios';
+import helpers from '../helpers';
 
 import Header from './Header';
 import Donation from './Donation';
@@ -22,12 +23,14 @@ class CustomCauseProfilePage extends Component {
   }
 
   componentWillMount () {
-    console.log('THIS IS THE CURRENT URL', this.props.location.pathname);
-    axios.get(server + '/api/session')
-    .then(res => {
-      this.setState({
-        userSession: res.data
-      });
+    var cookies = helpers.parseCookie(document.cookie);
+    var cookieSession = {
+      email: cookies.email || '',
+      firstName: cookies.firstname || '',
+      lastName: cookies.lastname || ''
+    };
+    this.setState({
+      userSession: cookieSession
     });
     this.getCharityInfo();
 

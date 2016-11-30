@@ -3,6 +3,7 @@ import { Button, Modal, Table } from 'react-bootstrap';
 import axios from 'axios';
 import $ from 'jquery';
 import _ from 'lodash';
+import helpers from '../helpers';
 
 import server from '../../server/config/config';
 
@@ -17,6 +18,7 @@ class CharityModal extends Component {
       userEmail: '',
       donationTotal: 0
     }
+
     this.updateCharities = this.updateCharities.bind(this)
     this.saveCharities = this.saveCharities.bind(this)
     this.updateTotal = this.updateTotal.bind(this)
@@ -24,46 +26,39 @@ class CharityModal extends Component {
   }
 
   componentDidMount () {
-    axios.get(server + '/api/session')
-      .then((res) => {
-        this.setState({ userEmail: res.data.email || '' });
-        axios.post(server + '/api/user/charities/info', {
-          email: this.state.userEmail
-        })
-        .then((res) => {
-          var usersCharities = res.data;
-          console.log('current charities', usersCharities);
-          // If there is a current charity (if not, on user profile page)
-          if (Object.keys(this.props.currentCharity).length) {
-            this.props.currentCharity.percentage = 0;
-            if (!usersCharities) {
-              usersCharities = [this.props.currentCharity];
-            } else {
-              //if current charity is not already linked to user, add it to their charities
-              if (this.props.currentCharity.type === 'custom') {
-                if ((usersCharities.filter(charity => charity.id === this.props.currentCharity.id)).length === 0) {
-                  usersCharities.push(this.props.currentCharity);
-                }
-              } else {
-                if ((usersCharities.filter((charity) => charity.ein === this.props.currentCharity.ein)).length === 0) {
-                  usersCharities.push(this.props.currentCharity);
-                }
-              }
-            }
+    var cookies = helpers.parseCookie(document.cookie);
+    this.setState({
+      userEmail: cookies.email || '',
+    });
+    axios.post(server + '/api/user/charities/info', {
+      email: cookies.email
+    })
+    .then((res) => {
+      var usersCharities = res.data;
+      console.log('current charities', usersCharities);
+      // If there is a current charity (if not, on user profile page)
+      if (Object.keys(this.props.currentCharity).length) {
+        this.props.currentCharity.percentage = 0;
+        if (!usersCharities) {
+          usersCharities = [this.props.currentCharity];
+        } else {
+          //test if current charity is already linked to user
+          if (this.props.currentCharity.type === 'custom') {
+            (((usersCharities.filter((charity) => charity.id === this.props.currentCharity.id)).length > 0) ? null : usersCharities.push(this.props.currentCharity));
+          } else {
+            (((usersCharities.filter((charity) => charity.ein === this.props.currentCharity.ein)).length > 0) ? null : usersCharities.push(this.props.currentCharity));
           }
-          
-          this.setState({
-            updatedCharities: usersCharities,
-            charities: usersCharities
-          });
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-      })
-      .catch((err) => {
-        console.log(err);
+        }
+      }
+      
+      this.setState({
+        updatedCharities: usersCharities,
+        charities: usersCharities
       });
+    })
+    .catch((err) => {
+      console.log(err)
+    });
   }
 
   updateTotal (percentage) {

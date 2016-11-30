@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { Row, Button, Jumbotron, Col, Panel } from 'react-bootstrap';
 import axios from 'axios';
 import { XAxis, YAxis, LineChart, Line, CartesianGrid } from 'recharts';
+import helpers from '../helpers';
 
 import server from '../../server/config/config';
 
@@ -15,7 +16,6 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      userSession: {},
       data: [],
       totalDonated: 0,
       charityPieChartData: []
@@ -23,17 +23,6 @@ class App extends Component {
   }
 
   componentWillMount() {
-    axios.get(server + '/api/session')
-    .then((res) => {
-      console.log('userSession', res.data);
-      this.setState({
-        userSession: res.data
-      })
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-
     axios.get(server + '/api/transactions/all')
     .then((res) => {
       var transactions = res.data;
@@ -57,9 +46,6 @@ class App extends Component {
         return (aNum - bNum);
       });
       this.setState({data: data});
-      // this.setState({
-      //   userSession: res.data
-      // })
     })
     .catch((err) => {
       console.log(err);

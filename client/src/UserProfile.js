@@ -93,7 +93,7 @@ class UserProfile extends Component {
         if (this.state.bankInfo.bank_name) {
           this.setState({hasLinkAccount: true});
           $('#step1').removeClass('incomplete');
-        } else{
+        } else {
           $('#step1').addClass('incomplete');
         }
         var userSession = this.state.userSession;
@@ -171,18 +171,8 @@ class UserProfile extends Component {
             November['Donated'] = Math.floor(November['Donated'] * 100) / 100;
             December['Donated'] = Math.floor(December['Donated'] * 100) / 100;
 
-            months.push(January);
-            months.push(February);
-            months.push(March);
-            months.push(April);
-            months.push(May);
-            months.push(June);
-            months.push(July);
-            months.push(August);
-            months.push(September);
-            months.push(October);
-            months.push(November);
-            months.push(December);
+            months.push(January, February, March, April, May, June, July, August,
+            September, October, November, December);
           }
           console.log('months ', months);
           for(var j = 0; j < months.length; j++) {

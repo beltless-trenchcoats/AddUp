@@ -303,10 +303,6 @@ label, .label {
     line-height: 20px;
   }
 
-  .incomplete {
-    border: 2px solid $error-red;
-  }
-
   .stepText {
     clear: both;
   }
@@ -349,6 +345,10 @@ label, .label {
   .scrollButton:focus {
     outline: none;
   }
+}
+
+.incomplete {
+  border: 2px solid $error-red;
 }
 
 /*************** User Charities Banners ***************/

@@ -314,7 +314,7 @@ label, .label {
   .account {
     font-size: 22px;
   }
-  
+
   div button {
     margin-top: 15px;
     height: 50px;
@@ -413,7 +413,7 @@ label, .label {
     .userCharity {
       width: 480px;
       margin: 20px 30px;
-      
+
       .percentInfo {
         display: inline-block;
         width: 30%;
@@ -476,7 +476,7 @@ label, .label {
       opacity: 0.5;
     }
   }
-  
+
 }
 
 /*************** User Custom Causes ***************/
@@ -551,7 +551,7 @@ label, .label {
   }
 
   .charityInfo {
-    
+
   }
 }
 
@@ -710,6 +710,11 @@ label, .label {
   left: 40%;
 }
 
+.donationGraph {
+  position: relative;
+  left: -4%;
+}
+
 
 /************ Icons **************/
 
@@ -759,5 +764,3 @@ label, .label {
 .impactPanel {
   box-shadow: 10px 10px 5px #888888;
 }
-
-

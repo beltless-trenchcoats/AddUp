@@ -42,7 +42,7 @@ app.use(parser.json(), function(req, res, next) {
 
 app.use(session({secret: 'test'}));
 
-app.use(express.static(__dirname + '/../client/build/static/index.html'));
+app.use(express.static(__dirname + '/../client/build/index.html'));
 
 //accurate interval timer +- 1ms
 function interval(duration, fn){

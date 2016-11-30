@@ -4,8 +4,10 @@
   "description": "Thesis project by beltless-trenchcoats",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "npm run server",
+    "start-dev": "concurrently \"npm run server-dev\" \"npm run client\"",
     "server": "NODE_ENV=production node server/index.js",
+    "server-dev": "NODE_ENV=dev node server/index.js",
     "client": "cd client && npm start",
     "test": "mocha test"
   },
@@ -17,7 +19,6 @@
     "bcrypt": "^0.8.7",
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
-    "concurrently": "^3.1.0",
     "dns": "^0.2.2",
     "ejs": "2.x",
     "express": "^4.14.0",

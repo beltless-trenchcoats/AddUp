@@ -3,7 +3,6 @@ import { Link } from 'react-router';
 import { Row, Button, Jumbotron, Col, Panel } from 'react-bootstrap';
 import axios from 'axios';
 import { XAxis, YAxis, LineChart, Line, CartesianGrid } from 'recharts';
-import helpers from '../helpers';
 
 import server from '../../server/config/config';
 
@@ -38,7 +37,9 @@ class App extends Component {
       this.setState({totalDonated: totalDonated});
       var data = [];
       for (var key in daysData) {
-        data.push({name: key, 'Amount Donated': daysData[key]});
+        if(key) {
+          data.push({name: key, 'Amount Donated': daysData[key]});
+        }
       }
       data.sort(function(a,b) {
         var bNum = Number(''+b.name.split('/')[1] + b.name.split('/')[0]);
@@ -102,9 +103,9 @@ class App extends Component {
             </LineChart>
             </Row>
             <h3 className="contributionTitle">How Your Contributions Help</h3>
-            <img className="creditCardHand" src={require('../assets/images/creditCardHand.png')} />
-            <img className="heartHandShake" src={require('../assets/images/Heart-hand-shake.png')} />
-            <img className="coinStack" src={require('../assets/images/coinsStacking.png')} />
+            <img className="creditCardHand" role="presentation" src={require('../assets/images/creditCardHand.png')} />
+            <img className="heartHandShake" role="presentation" src={require('../assets/images/Heart-hand-shake.png')} />
+            <img className="coinStack" role="presentation" src={require('../assets/images/coinsStacking.png')} />
 
             <div className="impactSection">
 

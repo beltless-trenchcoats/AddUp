@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "NODE_ENV=production node server/index.js",
+    "server": "NODE_ENV=dev node server/index.js",
     "client": "cd client && npm start",
     "test": "mocha test"
   },

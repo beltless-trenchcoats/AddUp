@@ -131,7 +131,6 @@ app.post('/api/plaid/authenticate', function(req, res) {
   var bank_name = req.body.institution_name;
   var email = req.body.email;
   var bank_digits = '';
-  console.log('reqbody', req.body);
 
   // Exchange a public_token for a Plaid access_token to get users past transactions
   plaidClient.exchangeToken(public_token, account_id, function(err, exchangeTokenRes) {
@@ -144,7 +143,6 @@ app.post('/api/plaid/authenticate', function(req, res) {
         access_token: access_token
       })
       .then(resp => {
-        console.log('line 147 is running');
         var accounts = resp.data.accounts;
         var transactions = resp.data.transactions;
         //Get user's last four digits of bank account number
@@ -164,7 +162,6 @@ app.post('/api/plaid/authenticate', function(req, res) {
           }
           index++;
         }
-        console.log('email is for update user', email, 'account id', account_id, 'access_token', access_token, 'public_token',public_token,'bank_name', bank_name, 'bank_digits', bank_digits);
         Users.updateUser(email, {
           plaid_account_id: account_id,
           plaid_access_token: access_token,
@@ -174,7 +171,6 @@ app.post('/api/plaid/authenticate', function(req, res) {
         },
           function(result) {
             //Send back the bank digits to PlaidLink.js to display on the UserProfile page
-            console.log('result of update user', result);
             res.status(201).send(bank_digits);
           })
       })

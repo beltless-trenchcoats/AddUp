@@ -64,12 +64,17 @@ exports.updateFields = function(updateFields, table, filterFields, callback) {
 }
 
 exports.getUserID = function(email, callback) {
+  console.log('the evil email', email);
   // if (email) {
   exports.getFields(['id'], 'users', {email: email}, function(err, result) {
     if (err) {
       callback(err);
     } else {
-      var id_users = result[0].id;
+      if (result[0]) {
+        var id_users = result[0].id;
+      } else {
+        id_users = '';
+      }
       callback(id_users);
     }   
   });

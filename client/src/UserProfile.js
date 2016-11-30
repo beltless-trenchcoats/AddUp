@@ -7,6 +7,8 @@ import axios from 'axios';
 import $ from "jquery";
 import fileDownload from 'react-file-download';
 
+import server from '../../server/config/config';
+
 import Header from './Header';
 import Transaction from './Transaction';
 import CharityModal from './CharityModal';
@@ -56,14 +58,14 @@ class UserProfile extends Component {
 
   componentWillMount() {
     // if (this.props.location.query.code) {
-    //   axios.post('https://beltless-trenchcoats.herokuapp.com/oauth/callback', {
+    //   axios.post(server + '/oauth/callback', {
     //     code: this.props.location.query.code
     //   })
     //   .then(res => {
     //     console.log('stripe info', res.data);
     //   });
     // }
-    axios.get('https://beltless-trenchcoats.herokuapp.com/api/session')
+    axios.get(server + '/api/session')
     .then(res => {
       this.setState({
         userSession: res.data
@@ -71,7 +73,7 @@ class UserProfile extends Component {
 
       var email = this.state.userSession.email;
 
-      axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/info', {
+      axios.post(server + '/api/user/info', {
         'idOrEmail': email
         })
         .then(res => {
@@ -98,7 +100,7 @@ class UserProfile extends Component {
           var userSession = this.state.userSession;
           userSession.id = res.data.id;
           this.setState({userSession: userSession});
-          axios.post('https://beltless-trenchcoats.herokuapp.com/api/charities/search', {
+          axios.post(server + '/api/charities/search', {
             'id_owner': res.data.id,
             'type': 'Custom Cause'
             })
@@ -109,7 +111,7 @@ class UserProfile extends Component {
             });
         });
 
-      axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/transactions', {
+      axios.post(server + '/api/user/transactions', {
           'email': email
         })
         .then(res => {
@@ -188,7 +190,7 @@ class UserProfile extends Component {
           }
         });
 
-      axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/charities/info', {
+      axios.post(server + '/api/user/charities/info', {
         'email': email
         })
         .then(res => {
@@ -262,7 +264,7 @@ class UserProfile extends Component {
     e.preventDefault();
     if (this.state.newMonthlyLimit > 0) {
       $('#limitInput').removeClass('invalidLimit');
-      axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/update', {
+      axios.post(server + '/api/user/update', {
         email: this.state.userSession.email,
         limit: this.state.newMonthlyLimit
       }).then(() => {

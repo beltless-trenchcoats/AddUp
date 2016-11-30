@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PlaidLink from 'react-plaid-link';
 import axios from 'axios';
+import server from '../../server/config/config';
 
 class PlaidLinkComponent extends Component {
   constructor(props, context) {
@@ -18,7 +19,7 @@ class PlaidLinkComponent extends Component {
       public_token: token
     });
 
-    axios.post('https://beltless-trenchcoats.herokuapp.com/api/plaid/authenticate',
+    axios.post(server + '/api/plaid/authenticate',
       {'account_id': this.state.plaidData.account_id,
         'public_token': this.state.public_token,
         'institution_name': this.state.plaidData.institution.name

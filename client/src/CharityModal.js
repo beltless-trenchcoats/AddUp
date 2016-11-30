@@ -4,6 +4,8 @@ import axios from 'axios';
 import $ from 'jquery';
 import _ from 'lodash';
 
+import server from '../../server/config/config';
+
 import CharityModalEntry from './CharityModalEntry';
 
 class CharityModal extends Component {
@@ -22,10 +24,10 @@ class CharityModal extends Component {
   }
 
   componentDidMount () {
-    axios.get('https://beltless-trenchcoats.herokuapp.com/api/session')
+    axios.get(server + '/api/session')
       .then((res) => {
         this.setState({ userEmail: res.data.email || '' });
-        axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/charities/info', {
+        axios.post(server + '/api/user/charities/info', {
           email: this.state.userEmail
         })
         .then((res) => {
@@ -37,11 +39,15 @@ class CharityModal extends Component {
             if (!usersCharities) {
               usersCharities = [this.props.currentCharity];
             } else {
-              //test if current charity is already linked to user
+              //if current charity is not already linked to user, add it to their charities
               if (this.props.currentCharity.type === 'custom') {
-                (((usersCharities.filter((charity) => charity.id === this.props.currentCharity.id)).length > 0) ? null : usersCharities.push(this.props.currentCharity));
+                if ((usersCharities.filter(charity => charity.id === this.props.currentCharity.id)).length === 0) {
+                  usersCharities.push(this.props.currentCharity);
+                }
               } else {
-                (((usersCharities.filter((charity) => charity.ein === this.props.currentCharity.ein)).length > 0) ? null : usersCharities.push(this.props.currentCharity));
+                if ((usersCharities.filter((charity) => charity.ein === this.props.currentCharity.ein)).length === 0) {
+                  usersCharities.push(this.props.currentCharity);
+                }
               }
             }
           }
@@ -82,7 +88,7 @@ class CharityModal extends Component {
   saveCharities () {
     console.log('this is getting sent to the database', this.state.updatedCharities);
     this.setState( {charities: this.state.updatedCharities})
-    axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/charities/update', {
+    axios.post(server + '/api/user/charities/update', {
       email: this.state.userEmail,
       charities: this.state.updatedCharities
     })

@@ -4,7 +4,9 @@ import { Row, Button, Jumbotron, Col, Panel } from 'react-bootstrap';
 import axios from 'axios';
 import { XAxis, YAxis, LineChart, Line, CartesianGrid } from 'recharts';
 
-import './App.css';
+import server from '../../server/config/config';
+
+import './App.scss';
 
 import Header from './Header';
 
@@ -21,7 +23,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    axios.get('https://beltless-trenchcoats.herokuapp.com/api/session')
+    axios.get(server + '/api/session')
     .then((res) => {
       console.log('userSession', res.data);
       this.setState({
@@ -32,10 +34,10 @@ class App extends Component {
       console.log(err);
     });
 
-    axios.get('https://beltless-trenchcoats.herokuapp.com/api/transactions/all')
+    axios.get(server + '/api/transactions/all')
     .then((res) => {
       var transactions = res.data;
-      var daysData = [];
+      var daysData = {};
       var totalDonated = 0;
       transactions.forEach(function(elt) {
         var day = new Date(elt.date_time);

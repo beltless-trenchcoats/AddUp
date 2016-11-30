@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import FaUser from 'react-icons/lib/fa/user';
 
+import server from '../../server/config/config';
+
 import axios from 'axios';
 
 const FieldGroup = ({ id, label, ...props }) => {
@@ -31,7 +33,7 @@ class PhotoUploader extends Component {
     file == null ? alert('No file selected.') : this.getSignedRequest(file);
   }
   getSignedRequest(file){
-    axios.get(`https://beltless-trenchcoats.herokuapp.com/sign-s3?file-name=${file.name}&file-type=${file.type}`) //&userId=${this.props.user.id}`)
+    axios.get(server + `/sign-s3?file-name=${file.name}&file-type=${file.type}`) //&userId=${this.props.user.id}`)
     .then((res) => {
       this.uploadFile(file, res.data.signedRequest, res.data.url);
     })
@@ -49,7 +51,7 @@ class PhotoUploader extends Component {
     axios.put(signedRequest, file, options)
     .then((res) => {
       this.setState({ userPhoto: url})
-      axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/update', {
+      axios.post(server + '/api/user/update', {
         email: this.props.user.email,
         photoUrl: url
       })

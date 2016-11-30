@@ -7,11 +7,9 @@ var plaid = require('plaid');
 
 var server = require('./config/config');
 
-//load environment variables from .env file for dev mode
-if (process.env.NODE_ENV !== 'production') {
-  var env = require('node-env-file');
-  env(__dirname + '/config/.env');
-}
+//comment these in for dev mode
+// var env = require('node-env-file');
+// env(__dirname + '/config/.env');
 
 // Note: This should be the testing key unless we actually want to charge real money!
 var test_key = 'sk_test_eKJNtjs3Il6V1QZvyKs1dS6y';

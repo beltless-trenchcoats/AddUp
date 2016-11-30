@@ -750,3 +750,19 @@ a:hover .charityInfo{
   height: 15%;
   left: 70%;
 }
+
+.impactSection {
+  position: relative;
+  top: 18%;
+}
+
+.charityName {
+  color: red;
+  font-weight: bold;
+}
+
+.contributionTitle {
+  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+}

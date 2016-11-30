@@ -312,8 +312,8 @@ class UserProfile extends Component {
   }
 
   downloadTransactions () {
-    let transactionTableData = [['Date, Amount, Recipient Charity']+'\n']
-    this.state.transactions.forEach((transaction) => transactionTableData.push([new Date(transaction.date_time).toLocaleDateString(), transaction.amount, transaction.name]+'\n'))
+    let transactionTableData = [['Date', 'Amount', 'Recipient Charity']]
+    this.state.transactions.forEach((transaction) => transactionTableData.push('\n'+[new Date(transaction.date_time).toLocaleDateString(), transaction.amount, transaction.name]))
     console.log('transactionTable', JSON.parse(JSON.stringify(transactionTableData)))
     fileDownload(JSON.parse(JSON.stringify(transactionTableData)), 'AddUp-Transaction-History.csv')
   }

@@ -33,13 +33,13 @@ function isAuth (nextState, replace) {
 ReactDOM.render (
 	<Router history={browserHistory}>
 		<Route path="/" component={App}/>
-	    <Route path="/user" component={UserProfile} onEnter={isAuth} />
-	    <Route path="/profile/:id" component={PublicProfile} />
-	   	<Route path="/search" component={SearchPage} />
-			<Route path="/about" component={About} />
-			<Route path="/contact" component={Contact} />
-	   	<Route path="/:type/:id" component={CharityProfilePage} />
-      <Route path="/myCause/edit/:id" component={CustomCauseProfilePage} onEnter={isAuth} />
+    <Route path="/user" component={UserProfile} onEnter={isAuth} />
+    <Route path="/profile/:id" component={PublicProfile} />
+   	<Route path="/search" component={SearchPage} />
+		<Route path="/about" component={About} />
+		<Route path="/contact" component={Contact} />
+   	<Route path="/:type/:id" component={CharityProfilePage} />
+    <Route path="/myCause/edit/:id" component={CustomCauseProfilePage} onEnter={isAuth} />
 	</Router>,
   document.getElementById('root')
 );

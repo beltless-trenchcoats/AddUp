@@ -284,7 +284,9 @@ class SearchPage extends Component {
                  clickCallback={this.pageSelect.bind(this)}
                  containerClassName={"pagination"}
                  subContainerClassName={"pages pagination"}
-                 activeClassName={"active"} />
+                 activeClassName={"active"}
+                 initialSelected={((Number(document.location.hash.split('=')[document.location.hash.split('=').length-1]) + 20) / 20)-1} 
+                 />
               : null
             }
           </div>

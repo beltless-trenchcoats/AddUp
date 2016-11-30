@@ -158,7 +158,6 @@ class Header extends Component {
   logoutUser () {
     axios.get('https://beltless-trenchcoats.herokuapp.com/api/session/logout')
     .then((res) => {
-      console.log(res);
       this.setState({
         loggedIn: false,
         email: '',
@@ -175,9 +174,7 @@ class Header extends Component {
   }
 
   onPassword1Change (e) {
-    console.log('everythings changing', e.target.value);
     var invalidPassword = !this.validatePassword(e.target.value);
-    console.log('invalid password', invalidPassword);
     this.setState({password1: e.target.value, invalidPassword: invalidPassword});
   }
 

@@ -1,15 +1,24 @@
 import React from 'react';
 import expect from 'expect';
-import { shallow, mount, render } from 'enzyme';
-import CharityModal from '../CharityModal';
+import shallow from 'enzyme';
+import CharityModal from './CharityModal';
+import CharityModalEntry from './CharityModalEntry';
 
-const wrapper = shallow(<CharityModal />);
 
-describe('<CharityModal />', () => {
+const props = {
+  charities: {
+    charity1: '',
+    charity2: ''
+  }
+}
+
+const wrapper = shallow(<CharityModal {...props}/>);
+
+describe('CharityModal', () => {
 
   it('should render components', () => {
 
-    expect(wrapper.find(CharityModalEntry)).to.have.length(???????????????);
+    expect(wrapper.length).toEqual(2);
   });
 
   // it('should render an `.icon-star`', () => {

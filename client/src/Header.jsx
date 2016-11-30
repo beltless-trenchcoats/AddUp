@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Button, Modal, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import { Link, browserHistory } from 'react-router';
 
+import server from '../../server/config/config';
+
 import logo from '../assets/images/addUpLogoUpdated.png';
 import FaUser from 'react-icons/lib/fa/user';
 
@@ -50,7 +52,7 @@ class Header extends Component {
   }
 
   componentWillMount() {
-    axios.get('https://beltless-trenchcoats.herokuapp.com/api/session')
+    axios.get(server + '/api/session')
     .then((res) => {
       this.setState({
         email: res.data.email || '',
@@ -96,7 +98,7 @@ class Header extends Component {
     if (!this.validatePassword(this.state.password1)) {
       this.setState({invalidPassword: true});
     } else if(this.state.password1 === this.state.password2) {
-      axios.post('https://beltless-trenchcoats.herokuapp.com/api/session/signup', {
+      axios.post(server + '/api/session/signup', {
         email: this.state.email,
         password: this.state.password1,
         firstname: this.state.firstname,
@@ -130,7 +132,7 @@ class Header extends Component {
 
   loginUser (e) {
     e.preventDefault();
-    axios.post('https://beltless-trenchcoats.herokuapp.com/api/session/login', {
+    axios.post(server + '/api/session/login', {
       email: this.state.email,
       password: this.state.password1
     })
@@ -156,7 +158,7 @@ class Header extends Component {
   }
 
   logoutUser () {
-    axios.get('https://beltless-trenchcoats.herokuapp.com/api/session/logout')
+    axios.get(server + '/api/session/logout')
     .then((res) => {
       this.setState({
         loggedIn: false,

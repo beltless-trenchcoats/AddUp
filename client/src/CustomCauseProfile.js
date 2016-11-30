@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Col, Row, Grid, Table } from 'react-bootstrap';
 
+import server from '../../server/config/config';
+
 import axios from 'axios';
 
 import Header from './Header';
@@ -21,7 +23,7 @@ class CustomCauseProfilePage extends Component {
 
   componentWillMount () {
     console.log('THIS IS THE CURRENT URL', this.props.location.pathname);
-    axios.get('https://beltless-trenchcoats.herokuapp.com/api/session')
+    axios.get(server + '/api/session')
     .then(res => {
       this.setState({
         userSession: res.data
@@ -29,7 +31,7 @@ class CustomCauseProfilePage extends Component {
     });
     this.getCharityInfo();
 
-    axios.post('https://beltless-trenchcoats.herokuapp.com/api/customCause/transactions', {
+    axios.post(server + '/api/customCause/transactions', {
       charityID: this.state.charityId
     })
     .then((res) => {
@@ -45,7 +47,7 @@ class CustomCauseProfilePage extends Component {
   }
 
   getCharityInfo () {
-    axios.post('https://beltless-trenchcoats.herokuapp.com/charityInfo', {
+    axios.post(server + '/charityInfo', {
       charityId: this.state.charityId,
       type: 'custom'
     })

@@ -5,6 +5,8 @@ import axios from 'axios';
 import $ from "jquery";
 import { browserHistory } from 'react-router';
 
+import server from '../../server/config/config';
+
 import Header from './Header';
 import CharitySearchResult from './CharitySearchResult';
 
@@ -46,13 +48,6 @@ class SearchPage extends Component {
     var obj = {};
     obj[key] = val;
     this.setState(obj);
-  }
-
-
-  onSearchInput (type, e) {
-    var stateChange = {};
-    stateChange[type] = e.target.value;
-    this.setState(stateChange);
   }
 
   handleSelect (evt,evtKey) {
@@ -110,15 +105,15 @@ class SearchPage extends Component {
         this.setStateWithObj(keyVal[0], keyVal[1]);
       });
 
-      axios.post('https://beltless-trenchcoats.herokuapp.com/api/charities/search', searchTerms)
+      axios.post(server + '/api/charities/search', searchTerms)
       .then((res) => {
         this.setState({
           searchResults: res.data,
           isLoading: false
         }, function() {
-          this.state.searchResults.map((charity, i) => {
+          this.state.searchResults.map((charity, i) => 
             <CharitySearchResult key={i} info={charity} />
-          })
+          )
         })
       })
       .catch((err) => {
@@ -129,9 +124,7 @@ class SearchPage extends Component {
   //this function is called by ReactPaginate component
   pageSelect = (data) => {
     //previous start is what rows to request from the api
-    var previousStart = parseInt(this.state.start);
-    //array of previous results
-    let previousResults = this.state.lastPageContents;
+    var previousStart = parseInt(this.state.start, 10);
     //activePage is the current selected page
     let activePage = data.selected;
     //lastActivePage is the last page the user selected

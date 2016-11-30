@@ -19,6 +19,12 @@ var aws = require('aws-sdk');
 var S3_BUCKET = process.env.S3_BUCKET || 'addupp-profile-photos';
 var paypalHelpers = require('./paypalHelpers');
 
+var server = require('./config/config');
+
+//load environment variables from .env file
+var env = require('node-env-file');
+env(__dirname + '/config/.env');
+
 var app = express();
 var port = process.env.PORT || 8080;
 
@@ -35,6 +41,8 @@ app.use(parser.json(), function(req, res, next) {
 });
 
 app.use(session({secret: 'test'}));
+
+app.use(express.static(__dirname + '/../client/build'));
 
 //accurate interval timer +- 1ms
 function interval(duration, fn){
@@ -121,7 +129,7 @@ app.post('/api/plaid/authenticate', function(req, res) {
     } else {
       var access_token = exchangeTokenRes.access_token;
 
-      axios.post('https://beltless-trenchcoats.herokuapp.com/api/plaid/transactions', {
+      axios.post(server + '/api/plaid/transactions', {
         access_token: access_token
       })
       .then(resp => {
@@ -182,7 +190,7 @@ app.post('/api/session/signup', function(req, res) {
   Users.createUser(email, password, firstName, lastName)
     .then(function(success) {
       if (success) {
-        axios.post('https://beltless-trenchcoats.herokuapp.com/api/session/login', {
+        axios.post(server + '/api/session/login', {
           email: email,
           password: password
         })
@@ -221,14 +229,12 @@ app.post('/api/session/login', function(req, res) {
             req.session.email = email;
             req.session.firstName = data[0].first_name;
             req.session.lastName = data[0].last_name;
-            console.log('JUST SET THE SESSION', req.session);
             userSession = {
               email: email,
               firstName: data[0].first_name,
               lastName: data[0].last_name
             };
           // });
-          console.log('JUST AFTER SETTING THE SESSION', req.session);
           //send response to client with first_name, last_name, and email
           res.send({"first_name": data[0].first_name, "last_name": data[0].last_name,
           "email": data[0].email, currentUser: currentUser});
@@ -243,7 +249,6 @@ app.post('/api/session/login', function(req, res) {
 
 app.get('/api/session', function(req, res) {
   // req.session.reload(function(err) {
-    console.log('THIS IS THE SESSION', req.session);
     res.send(JSON.stringify(userSession));
   //   // session updated
   // })

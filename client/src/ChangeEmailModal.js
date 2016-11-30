@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Modal, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
+import server from '../../server/config/config';
+
 import axios from 'axios';
 
 const FieldGroup = ({ id, label, ...props }) => {
@@ -58,7 +60,7 @@ class ChangeEmailModal extends Component {
     if(this.state.newEmail1 === this.state.newEmail2) {
       this.setState({ newEmailMatch: true });
       this.closeEmail();
-      axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/update', {
+      axios.post(server + '/api/user/update', {
         email: this.props.session.email,
         newEmail: this.state.newEmail1,
       })

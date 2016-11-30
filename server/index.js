@@ -20,6 +20,7 @@ var S3_BUCKET = process.env.S3_BUCKET || 'addupp-profile-photos';
 var paypalHelpers = require('./paypalHelpers');
 
 var server = require('./config/config');
+var path = require('path');
 
 //COMMENT THESE IN FOR DEV MODE
 // var env = require('node-env-file');
@@ -42,7 +43,23 @@ app.use(parser.json(), function(req, res, next) {
 
 app.use(session({secret: 'test'}));
 
-app.use(express.static(__dirname + '/../client/build/index.html'));
+app.get('/charity/*', function(req, res) {
+    res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+});
+app.get('/search*', function(req, res) {
+    res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+});
+app.get('/user', function(req, res) {
+    res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+});
+app.get('/about', function(req, res) {
+    res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+});
+app.get('/contact', function(req, res) {
+    res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+});
+
+app.use('/', express.static(__dirname + '/../client/build'));
 
 //accurate interval timer +- 1ms
 function interval(duration, fn){

@@ -171,7 +171,6 @@ class Header extends Component {
     document.cookie = 'email=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     document.cookie = 'firstname=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     document.cookie = 'lastname=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-
     this.closeLogout();
   }
 

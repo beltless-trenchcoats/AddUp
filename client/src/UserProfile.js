@@ -17,6 +17,9 @@ import PhotoUploader from './PhotoUploader';
 import CustomCauseModal from './CustomCauseModal';
 import ChangeEmailModal from './ChangeEmailModal';
 import ChangePasswordModal from './ChangePasswordModal';
+import CustomCauseBanner from './CustomCauseBanner';
+import UserCharityCard from './UserCharityCard';
+import RemoveAccountModal from './RemoveAccountModal';
 
 let transactionChartData = [];
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FEB4D5','#FBFF28'];
@@ -51,10 +54,20 @@ class UserProfile extends Component {
       charities: [],
       customCauses: [],
       showEditCharitiesModal: false,
+      showRemoveAccountModal: false
     }
     this.setCustomCauses = this.setCustomCauses.bind(this);
     this.setSession = this.setSession.bind(this);
+    this.displayLinkAccount = this.displayLinkAccount.bind(this);
+    this.newLimit = this.newLimit.bind(this);
+    this.setMonthlyLimit = this.setMontlyLimit.bind(this);
+    this.scrollDown = this.scrollDown.bind(this);
+    this.closeEditCharitiesModal = this.closeEditCharitiesModal.bind(this);
+    this.updateCharities = this.updateCharities.bind(this);
+    this.openEditCharitiesModal = this.openEditCharitiesModal.bind(this)
     this.downloadTransactions = this.downloadTransactions.bind(this);
+    this.openRemoveAccountModal = this.openRemoveAccountModal.bind(this);
+    this.closeRemoveAccountModal = this.closeRemoveAccountModal.bind(this);
   }
 
   componentWillMount() {
@@ -268,24 +281,20 @@ class UserProfile extends Component {
     }
   }
 
-  convertToReadableDate(date_time) {
-    var date = new Date(date_time);
-    if (date.getFullYear() < 2015) { //if the user hasn't donated yet, it returns default date from 1960s (don't want to display)
-      return 'No Donations On File';
-    }
-    var options = {
-      month: "short",
-      year: "numeric",
-      day: "numeric"
-    };
-    return 'since ' + date.toLocaleDateString("en-us", options)
-  }
-
   openEditCharitiesModal() {
     this.setState({ showEditCharitiesModal: true });
   }
   closeEditCharitiesModal() {
     this.setState({ showEditCharitiesModal: false });
+  }
+
+  openRemoveAccountModal () {
+    console.log('OPEN!')
+    this.setState({showRemoveAccountModal: true});
+  }
+
+  closeRemoveAccountModal () {
+    this.setState({showRemoveAccountModal: false});
   }
 
   scrollDown() {
@@ -348,15 +357,17 @@ class UserProfile extends Component {
                       <form id="some-id"></form>
                       <text className='profileHeader'> </text>
                       <div className='linkText'>Link a bank account</div>
-                      <PlaidLinkComponent successFunc={this.displayLinkAccount.bind(this)}/>
+                      <PlaidLinkComponent successFunc={this.displayLinkAccount}/>
                     </div>
                   :
                     <div id='step1' className="stepBox shadowbox">
                       <div className='linked'>&#10004;</div>
                       <div className='stepText'>{this.state.bankInfo.bank_name}</div>
                       <text className='account'>Account ending in: {this.state.bankInfo.bank_digits}</text>
+                      <Button onClick={this.openRemoveAccountModal}>Remove Account</Button>
                     </div>
                 }
+                
                 </Col>
                 <Col md={4} xs={4}>
                   <div className='step'>Step 2</div>
@@ -365,9 +376,9 @@ class UserProfile extends Component {
                       this.state.monthlyLimitSet ? <div className='linked'>&#10004;</div> : null
                     }
                     <div className='stepText'>Set A Monthly Limit</div>
-                    <text className='limit'>$ <FormControl id='limitInput' placeholder='e.g. 50' onChange={this.newLimit.bind(this)}></FormControl></text>
-                    <Button onClick={this.setMontlyLimit.bind(this)}>Save</Button>
-                  </div>
+                    <text className='limit'>$ <FormControl id='limitInput' placeholder='e.g. 50' onChange={this.newLimit}></FormControl></text>
+                    <Button onClick={this.setMontlyLimit}>Save</Button>
+                  </div>  
                 </Col>
                 <Col md={4} xs={4}>
                   <div className='step'>Step 3</div>
@@ -376,7 +387,7 @@ class UserProfile extends Component {
                       this.state.charitiesSelected ? <div className='linked'>&#10004;</div> : null
                     }
                     <div className='stepText'>Select Your Charities</div>
-                    <button onClick={this.scrollDown.bind(this)} className='scrollButton stepText'>&#9662;</button>
+                    <button onClick={this.scrollDown} className='scrollButton stepText'>&#9662;</button>
                   </div>
                 </Col>
               </div>
@@ -388,7 +399,7 @@ class UserProfile extends Component {
                 this.state.charities.length ?
               <div className="userCharitiesContainer">
                 <Button className='searchButton' href="/search" >Add</Button>
-                <Button className='editButton' onClick={this.openEditCharitiesModal.bind(this)} >Edit</Button>
+                <Button className='editButton' onClick={this.openEditCharitiesModal} >Edit</Button>
                 <h1>Your Donation Breakdown</h1>
                 <PieChart width={500} height={350} onMouseEnter={this.onPieEnter} className="pieChart">
                   <Pie
@@ -406,23 +417,7 @@ class UserProfile extends Component {
                 <div className='userCharities'>
                 {
                   this.state.charities.sort((a, b) => b.percentage - a.percentage).map(charity =>
-                    <a href={'/' + charity.type + '/' + (charity.ein || charity.id)}>
-                      <div className='userCharity'>
-                        <div className='percentInfo'>
-                          {charity.percentage*100} %
-                        </div>
-                        <div className='charityInfo'>
-                          <div className='title'>{charity.name}</div>
-                          {
-                            (charity.goal_reached === '1') ?
-                            <div className='goalReached'>&#10004; Goal Reached</div>
-                            : null
-                          }
-                          <div className='amount'>${charity.user_donation_total}</div>
-                          <div className='since'>{this.convertToReadableDate(charity.initial_date)}</div>
-                        </div>
-                      </div>
-                    </a>
+                    <UserCharityCard charity={charity} />
                     )
                 }
                 </div>
@@ -452,14 +447,7 @@ class UserProfile extends Component {
                 <div className='customCauses'>
                 {
                   this.state.customCauses.map(cause =>
-                      <div className='customCause'>
-                        <div className='title'>
-                          <a href={'/myCause/edit/' + cause.id} className='title'>{cause.charityName}</a>
-                        </div>
-                        <div className='contributors'>Number of Contributors:</div>
-                        <div className='percentage'>{Math.floor((cause.total_donated/cause.dollar_goal)*100)}%</div>
-                        <div className='amount'>$ {cause.total_donated} / {cause.dollar_goal}</div>
-                      </div>
+                    <CustomCauseBanner cause={cause} />
                     )
                 }
                 </div>
@@ -486,7 +474,6 @@ class UserProfile extends Component {
 
                     <tbody>
                       {this.state.transactions.map ((transaction, i) => (
-                          // transactionTableData.push([transaction.date_time, transaction.amount, transaction.name]),
                           <Transaction key={i} transaction={transaction} />
                         )
                       )}
@@ -503,10 +490,17 @@ class UserProfile extends Component {
 
         <CharityModal
           show={this.state.showEditCharitiesModal}
-          onHide={this.closeEditCharitiesModal.bind(this)}
+          onHide={this.closeEditCharitiesModal}
           currentCharity={{}}
-          updateProfile={this.updateCharities.bind(this)}
+          updateProfile={this.updateCharities}
         />
+
+        <RemoveAccountModal 
+          show={this.state.showRemoveAccountModal}
+          onHide={this.closeRemoveAccountModal}
+          currentUser={this.state.userInfo}
+        />
+
 
         <div className="donationGraph">
           <AreaChart width={1000} height={400} data={transactionChartData} syncId="anyId"

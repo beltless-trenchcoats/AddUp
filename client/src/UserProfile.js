@@ -174,7 +174,6 @@ class UserProfile extends Component {
             months.push(January, February, March, April, May, June, July, August,
             September, October, November, December);
           }
-          console.log('months ', months);
           for(var j = 0; j < months.length; j++) {
             transactionChartData.push({ 'Date': months[j].date, 'Donated': months[j].Donated })
           }

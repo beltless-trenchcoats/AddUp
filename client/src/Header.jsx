@@ -60,7 +60,6 @@ class Header extends Component {
       lastname: cookies.lastname || '',
       loggedIn: !!(cookies.email)
     });
-    console.log('all cookies', cookies); // => ""
   }
 
   closeLogin() {
@@ -147,9 +146,6 @@ class Header extends Component {
         document.cookie = "email=" + res.data.email;
         document.cookie = "firstname=" + res.data.first_name;
         document.cookie = "lastname=" + res.data.last_name;
-        // cookie.save('email', res.data.email, { path: '/', maxAge: 60 * 60 * 24 * 365 * 10, secure: true });
-        // cookie.save('firstname', res.data.first_name, { path: '/', maxAge: 60 * 60 * 24 * 365 * 10, secure: true });
-        // cookie.save('lastname', res.data.last_name, { path: '/', maxAge: 60 * 60 * 24 * 365 * 10, secure: true });
         this.closeLogin();
         browserHistory.push('/user');
       } else {
@@ -164,25 +160,19 @@ class Header extends Component {
   }
 
   logoutUser () {
-    // axios.get(server + '/api/session/logout')
-    // .then((res) => {
-      this.setState({
-        loggedIn: false,
-        email: '',
-        password1: '',
-        password2: '',
-        firstname: '',
-        lastname: ''
-      });
-      document.cookie = 'email=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-      document.cookie = 'firstname=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-      document.cookie = 'lastname=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    this.setState({
+      loggedIn: false,
+      email: '',
+      password1: '',
+      password2: '',
+      firstname: '',
+      lastname: ''
+    });
+    document.cookie = 'email=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    document.cookie = 'firstname=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    document.cookie = 'lastname=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
 
-      this.closeLogout();
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    // });
+    this.closeLogout();
   }
 
   onPassword1Change (e) {

@@ -7,7 +7,7 @@ var plaid = require('plaid');
 
 var server = require('./config/config');
 
-//comment these in for dev mode
+//COMMENT THESE IN FOR DEV MODE
 // var env = require('node-env-file');
 // env(__dirname + '/config/.env');
 

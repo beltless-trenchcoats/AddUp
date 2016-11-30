@@ -41,7 +41,6 @@ class PhotoUploader extends Component {
     })
   }
   uploadFile(file, signedRequest, url) {
-    console.log('UPLOADFILE', file, signedRequest, url)
     var options = {
       headers: {
         'Content-Type': file.type
@@ -64,7 +63,6 @@ class PhotoUploader extends Component {
   }
 
   render() {
-    console.log('PHOTOURL', this.state.userPhoto, this.props.userPhoto)
     return (
      <div className="profilePhoto">
         <div className="profilePhotoImage">

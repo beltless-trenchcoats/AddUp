@@ -105,7 +105,7 @@ class App extends Component {
             <img className="creditCardHand" src={require('../assets/images/creditCardHand.png')} />
             <img className="heartHandShake" src={require('../assets/images/Heart-hand-shake.png')} />
             <img className="coinStack" src={require('../assets/images/coinsStacking.png')} />
-            
+
             <div className="impactSection">
 
               <Col xs={6} md={4} className="impactColumn">

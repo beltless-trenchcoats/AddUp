@@ -19,6 +19,7 @@ var client_id = process.env.PLAID_CLIENT_ID;
 var secret = process.env.PLAID_SECRET;
 
 var plaidClient = new plaid.Client(client_id, secret, plaid.environments.tartan);
+// var plaidClient = new plaid.Client(client_id, secret, plaid.environments.production);
 
 // This function will be called whenever we want to check if a user has made new transactions
 var processDailyTransactions = function() {

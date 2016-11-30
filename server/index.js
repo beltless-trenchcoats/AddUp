@@ -35,6 +35,8 @@ app.use(parser.json(), function(req, res, next) {
   next();
 });
 
+app.use('/', express.static(__dirname + '/../client/build'));
+
 app.get('/charity/*', function(req, res) {
     res.sendFile(path.join(__dirname + '/../client/build/index.html'));
 });
@@ -51,7 +53,6 @@ app.get('/contact', function(req, res) {
     res.sendFile(path.join(__dirname + '/../client/build/index.html'));
 });
 
-app.use('/', express.static(__dirname + '/../client/build'));
 
 //accurate interval timer +- 1ms
 function interval(duration, fn){
@@ -122,6 +123,7 @@ setInterval(weeklyCausePayout, 604800000);
 var client_id = process.env.PLAID_CLIENT_ID;
 var secret = process.env.PLAID_SECRET;
 var plaidClient = new plaid.Client(client_id, secret, plaid.environments.tartan);
+// var plaidClient = new plaid.Client(client_id, secret, plaid.environments.production);
 
 //send a POST to Plaid's API to authenticate your user's credentials on
 //user bank linking
@@ -182,6 +184,7 @@ app.post('/api/plaid/authenticate', function(req, res) {
 //sends POST to Plaid and returns transaction data
 app.post('/api/plaid/transactions', function(req, res) {
   axios.post('https://tartan.plaid.com/connect/get', {
+  // axios.post('https://api.plaid.com/connect/get', {
     'client_id': '58224c96a753b9766d52bbd1',
     'secret': '04137ebffb7d68729f7182dd0a9e71',
     'access_token': req.body.access_token

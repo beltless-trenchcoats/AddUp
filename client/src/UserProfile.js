@@ -184,6 +184,7 @@ class UserProfile extends Component {
             months.push(November);
             months.push(December);
           }
+          console.log('months ', months);
           for(var j = 0; j < months.length; j++) {
             transactionChartData.push({ 'Date': months[j].date, 'Donated': months[j].Donated })
           }
@@ -498,7 +499,7 @@ class UserProfile extends Component {
                     <tbody>
                       {this.state.transactions.map ((transaction, i) => (
                           // transactionTableData.push([transaction.date_time, transaction.amount, transaction.name]),
-                          <Transaction key={i} transaction={transaction} /> 
+                          <Transaction key={i} transaction={transaction} />
                         )
                       )}
                     </tbody>
@@ -520,7 +521,7 @@ class UserProfile extends Component {
         />
 
         <div className="donationGraph">
-          <AreaChart width={900} height={400} data={transactionChartData} syncId="anyId"
+          <AreaChart width={1000} height={400} data={transactionChartData} syncId="anyId"
                 margin={{top: 10, right: 30, left: 0, bottom: 0}}>
             <XAxis dataKey="Date"/>
             <YAxis/>

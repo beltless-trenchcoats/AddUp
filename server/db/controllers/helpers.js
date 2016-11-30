@@ -64,7 +64,6 @@ exports.updateFields = function(updateFields, table, filterFields, callback) {
 }
 
 exports.getUserID = function(email, callback) {
-  console.log('the evil email', email);
   // if (email) {
   exports.getFields(['id'], 'users', {email: email}, function(err, result) {
     if (err) {

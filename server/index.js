@@ -21,9 +21,11 @@ var paypalHelpers = require('./paypalHelpers');
 
 var server = require('./config/config');
 
-//load environment variables from .env file
-var env = require('node-env-file');
-env(__dirname + '/config/.env');
+//load environment variables from .env file for dev mode
+if (process.env.NODE_ENV !== 'production') {
+  var env = require('node-env-file');
+  env(__dirname + '/config/.env');
+}
 
 var app = express();
 var port = process.env.PORT || 8080;

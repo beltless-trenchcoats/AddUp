@@ -101,7 +101,7 @@ class CharityProfilePage extends Component {
                 this.state.selected ?
                   <Button onClick={this.openModal} className="removeCharity" bsStyle="primary">Remove from My Charities</Button>
                 : <Button onClick={this.openModal} className="addCharity" bsStyle="primary">Add to My Charities</Button>}
-              <h2 className="charityName">{this.state.charity.name}</h2>
+              <h2>{this.state.charity.name}</h2>
               {this.state.charity.id_owner ? <h5 className="charityAuthor">Created by: {<a href={"/profile/" + this.state.charityAuthor.id}> {this.state.authorName}</a>}</h5> : null }
               <div className="charityType">{this.state.charity.nteeType}</div>
               <div className="charityType">{this.state.charity.category}</div>

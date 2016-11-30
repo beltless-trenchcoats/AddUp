@@ -99,7 +99,7 @@ var weeklyCausePayout = function() {
           //set balance owed back to 0
           Charities.updateCharity(entry.id, {balance_owed: 0}, function(response) {
             // console.log(response);
-          }); 
+          });
         }
       });
       if (paypalInput.length > 0) {
@@ -215,6 +215,14 @@ app.post('/api/session/signup', function(req, res) {
       }
     });
 });
+
+app.delete('/api/plaid/delete', function(res, req) {
+  axios.delete('https://tartan.plaid.com/connect', {
+    client_id: '',
+    secret: '',
+    access_token: ''
+  })
+})
 
 //login users
 app.post('/api/session/login', function(req, res) {
@@ -492,7 +500,7 @@ app.post('/charityInfo', function (req, res) {
           }
         });
       }
-    });   
+    });
   } else {
     if (req.body.charityId) { var filterFields = {id: req.body.charityId}; }
     else { var filterFields = null; }

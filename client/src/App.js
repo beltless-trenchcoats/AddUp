@@ -113,10 +113,31 @@ class App extends Component {
               <Line type="monotone" dataKey="Amount Donated" stroke="#8884d8" />
             </LineChart>
             </Row>
+            <h3 className="contributionTitle">How Your Contributions Help</h3>
             <img className="creditCardHand" src={require('../assets/images/creditCardHand.png')} />
             <img className="heartHandShake" src={require('../assets/images/Heart-hand-shake.png')} />
             <img className="coinStack" src={require('../assets/images/coinsStacking.png')} />
+            <div className="impactSection">
 
+              <Col xs={6} md={4} className="impactColumn">
+                <Panel header="Every Month Your Change Can" bsStyle="primary">
+                  <p>You can protect 12 people from Malaria for three to four years, on average by giving to the <span className="charityName">Against Malaria Foundation</span>.</p>
+                </Panel>
+              </Col>
+
+              <Col xs={6} md={4} className="impactColumn">
+                <Panel header="Every 6 Months Your Change Can" bsStyle="primary">
+                  <p>You can provide safe water to 142 community members for one year with <span className="charityName">Evidence Action</span>.</p>
+                </Panel>
+              </Col>
+
+              <Col xs={6} md={4} className="impactColumn">
+                <Panel header="Every Year Your Change Can" bsStyle="primary">
+                  <p>Provide school meal programs to 5 children for one year with <span className="charityName">Oxfam</span>.</p>
+                </Panel>
+              </Col>
+
+            </div>
         </div>
       </Header>
     );

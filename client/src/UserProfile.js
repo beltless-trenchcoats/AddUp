@@ -357,7 +357,7 @@ class UserProfile extends Component {
                 {
                   !this.state.hasLinkAccount ?
                     <div id='step1' className='stepBox shadowbox'>
-                      <form id="some-id" method="POST" action="/api/plaid/authenticate"></form>
+                      <form id="some-id"></form>
                       <text className='profileHeader'> </text>
                       <div className='linkText'>Link a bank account</div>
                       <PlaidLinkComponent successFunc={this.displayLinkAccount.bind(this)}/>

@@ -1,7 +1,6 @@
 var express = require('express');
 var parser = require('body-parser');
 var request = require('request');
-var session = require('express-session');
 
 var axios = require('axios');
 var bcrypt = require('bcrypt');
@@ -29,19 +28,12 @@ var path = require('path');
 var app = express();
 var port = process.env.PORT || 8080;
 
-var currentUser = undefined;
-var userSession = {};
-
-
-
 app.use(parser.json(), function(req, res, next) {
   //allow cross origin requests from client, and Plaid API
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-
-app.use(session({secret: 'test'}));
 
 app.get('/charity/*', function(req, res) {
     res.sendFile(path.join(__dirname + '/../client/build/index.html'));
@@ -137,6 +129,7 @@ app.post('/api/plaid/authenticate', function(req, res) {
   var public_token = req.body.public_token;
   var account_id = req.body.account_id;
   var bank_name = req.body.institution_name;
+  var email = req.body.email;
   var bank_digits = '';
 
   // Exchange a public_token for a Plaid access_token to get users past transactions
@@ -169,7 +162,7 @@ app.post('/api/plaid/authenticate', function(req, res) {
           }
           index++;
         }
-        Users.updateUser(userSession.email, {
+        Users.updateUser(email, {
           plaid_account_id: account_id,
           plaid_access_token: access_token,
           plaid_public_token: public_token,
@@ -230,51 +223,21 @@ app.post('/api/session/login', function(req, res) {
   Users.loginUser(email, password, function(response) {
     //if response is true continue with login
     if(response) {
-      //update currentUser
-      bcrypt.hash(email, 10, function(error, hash) {
-        currentUser = hash;
-      });
-      // req.session.email = req.body.email;
       //gets user info to send back to client for dynamic loading such as "Hello, X!"
       Users.getUserFields(email, function(err, data) {
         if(err) {
           //if error send error to client
           res.send('Error in User Login');
         } else {
-          // req.session.regenerate(function(err) {
-            // will have a new session here
-            req.session.email = email;
-            req.session.firstName = data[0].first_name;
-            req.session.lastName = data[0].last_name;
-            userSession = {
-              email: email,
-              firstName: data[0].first_name,
-              lastName: data[0].last_name
-            };
-          // });
           //send response to client with first_name, last_name, and email
           res.send({"first_name": data[0].first_name, "last_name": data[0].last_name,
-          "email": data[0].email, currentUser: currentUser});
+          "email": data[0].email});
         }
       })
     } else { // No user exists
       res.send();
     }
   })
-});
-
-//replace session email and currentUser with undefined
-app.get('/api/session/logout', function(req, res) {
-  currentUser = undefined;
-  userSession = {};
-  req.session.destroy(function(err) {
-    // cannot access session here
-    if (err) {
-      console.log(err);
-    }
-    res.send('success');
-  });
-  //call the function that destroys the user's token
 });
 
 //Sample request body (body can take category, searchTerm, category, city, state, zipCode)

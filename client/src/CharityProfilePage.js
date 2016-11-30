@@ -5,6 +5,8 @@ import axios from 'axios';
 import _ from 'lodash';
 import { browserHistory } from 'react-router';
 
+import server from '../../server/config/config';
+
 import Header from './Header';
 import CharityModal from './CharityModal';
 
@@ -25,7 +27,7 @@ class CharityProfilePage extends Component {
   }
 
   componentWillMount () {
-    axios.post('https://beltless-trenchcoats.herokuapp.com/api/charity', {
+    axios.post(server + '/api/charity', {
       charityId: this.state.charityId,
       type: this.props.params.type
     })
@@ -48,7 +50,7 @@ class CharityProfilePage extends Component {
     })
     .then(() => {
       if (this.state.charity.id_owner) {
-        axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/info', {
+        axios.post(server + '/api/user/info', {
           idOrEmail: (this.state.charity.id_owner).toString()
         })
         .then((res) => {

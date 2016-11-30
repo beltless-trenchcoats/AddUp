@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Button, Modal, Checkbox, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import axios from 'axios';
 
+import server from '../../server/config/config';
+
 import categoryHelper from '../../server/helpers';
 
 const FieldGroup = ({ id, label, ...props }) => {
@@ -57,9 +59,9 @@ class AddCauseModal extends Component {
     if (this.props.purpose === 'add') {
       fields.id_owner = Number(this.props.session.id);
       fields.dollar_goal = Number(fields.dollar_goal);
-      axios.post('https://beltless-trenchcoats.herokuapp.com/api/customCause/add', fields)
+      axios.post(server + '/api/customCause/add', fields)
         .then(res => {
-          axios.post('https://beltless-trenchcoats.herokuapp.com/api/charities/search', {
+          axios.post(server + '/api/charities/search', {
             'id_owner': fields.id_owner,
             'type': 'Custom Cause'
             })
@@ -70,9 +72,9 @@ class AddCauseModal extends Component {
     } else {
       var charityID = this.props.charity.id;
       if (fields.dollar_goal) { fields.dollar_goal = Number(fields.dollar_goal); }
-      axios.post('https://beltless-trenchcoats.herokuapp.com/api/charity/update', {charityID: charityID, updateFields: fields})
+      axios.post(server + '/api/charity/update', {charityID: charityID, updateFields: fields})
         .then(res => {
-          axios.post('https://beltless-trenchcoats.herokuapp.com/api/customCause/search', {
+          axios.post(server + '/api/customCause/search', {
             'id': charityID
             })
             .then(response => {

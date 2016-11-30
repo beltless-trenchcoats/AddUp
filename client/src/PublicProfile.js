@@ -3,6 +3,8 @@ import { Col, Row } from 'react-bootstrap';
 import axios from 'axios';
 import FaUser from 'react-icons/lib/fa/user';
 
+import server from '../../server/config/config';
+
 import Header from './Header';
 
 class PublicProfile extends Component {
@@ -17,7 +19,7 @@ class PublicProfile extends Component {
   }
 
   componentWillMount () {
-    axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/info', {
+    axios.post(server + '/api/user/info', {
       idOrEmail: this.props.params.id
     })
     .then((res) => {
@@ -26,7 +28,7 @@ class PublicProfile extends Component {
         lastInitial: res.data.last_name.charAt(0)
       }, () => {
         // console.log('profileinfo', this.state.profileInfo)
-        axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/charities/info', {
+        axios.post(server + '/api/user/charities/info', {
           email: this.state.profileInfo.email
         })
         .then((res) => {
@@ -34,7 +36,7 @@ class PublicProfile extends Component {
             charities: res.data
           })
           // console.log('CHAIRITIES INFO', res.data)
-          axios.post('https://beltless-trenchcoats.herokuapp.com/api/charities/search', {
+          axios.post(server + '/api/charities/search', {
             'id_owner': this.props.params.id,
             'type': 'Custom Cause'
             })

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Modal, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
+import server from '../../server/config/config';
+
 import axios from 'axios';
 
 
@@ -52,7 +54,7 @@ class ChangePasswordModal extends Component {
     if(this.state.newPassword1 === this.state.newPassword2) {
       this.setState({ newPasswordMatch: true});
       this.closePassword();
-      axios.post('https://beltless-trenchcoats.herokuapp.com/api/user/update', {
+      axios.post(server + '/api/user/update', {
         email: this.props.session.email,
         newPassword: this.state.newPassword1
       })

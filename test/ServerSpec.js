@@ -1,6 +1,8 @@
 var expect = require('chai').expect;
 var axios = require('axios');
 
+var server = require('../server/config/config');
+
 var Users = require('../server/db/controllers/users');
 var db = require('../server/db/config/db');
 
@@ -18,7 +20,7 @@ describe('Server routes', function() {
       });
 
       it('should send response with user data for a user who exists in the db', function(done) {
-        axios.post('https://beltless-trenchcoats.herokuapp.com/api/session/login',
+        axios.post(server + '/api/session/login',
         {
           email: 'test@test.com',
           password: 'test'
@@ -32,7 +34,7 @@ describe('Server routes', function() {
       });
 
       it('should not send response for user that does not exist in the db', function(done) {
-        axios.post('https://beltless-trenchcoats.herokuapp.com/api/session/login',
+        axios.post(server + '/api/session/login',
         {
           email: 'invalid@gmail.com',
           password: 'test'
@@ -58,7 +60,7 @@ describe('Server routes', function() {
       });
 
       it('should log in a user upon successful sign up', function(done) {
-        axios.post('https://beltless-trenchcoats.herokuapp.com/api/session/signup',
+        axios.post(server + '/api/session/signup',
         {
           email: 'notarealemail@test.com',
           password: 'test',

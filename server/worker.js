@@ -5,6 +5,11 @@ var Charities = require('./db/controllers/charities');
 var axios = require('axios');
 var plaid = require('plaid');
 
+var server = require('./config/config');
+
+var env = require('node-env-file');
+env(__dirname + '/config/.env');
+
 // Note: This should be the testing key unless we actually want to charge real money!
 var test_key = 'sk_test_eKJNtjs3Il6V1QZvyKs1dS6y';
 var stripe = require('stripe')(test_key);
@@ -20,7 +25,7 @@ var processDailyTransactions = function() {
     users.forEach(user => {
       //If the user has linked a bank account through plaid
       if (user.plaid_access_token && user.plaid_public_token) { 
-        axios.post('https://beltless-trenchcoats.herokuapp.com/api/plaid/transactions', {
+        axios.post(server + '/api/plaid/transactions', {
             'access_token': user.plaid_access_token
           })
           .then(resp => {

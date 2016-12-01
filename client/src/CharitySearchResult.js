@@ -22,7 +22,7 @@ class CharitySearchResult extends Component {
   render() {
     return (
      <div>
-      <Panel className='charityCard' header={<a href={'/' + this.state.type + '/' + this.state.charityId}>{this.props.info.charityName}</a>} bsStyle='info'>
+      <Panel className='charityCard' header={<Link to={{pathname: '/' + this.state.type + '/' + this.state.charityId, state: { searched: true }}}>{this.props.info.charityName}</Link>} bsStyle='info'>
         <p className='category'>{this.props.info.category}</p>
         <p className='missionStatement'><span className='missionStatementTitle'>Mission Statement: </span>{this.props.info.missionStatement}</p>
         <p className='location'>{this.props.info.city}, {this.props.info.state}</p>

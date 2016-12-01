@@ -53,7 +53,6 @@ label, .label {
   padding:20px;
 }
 
-
 /*************** HEADER AND MODALS ***************/
 
 .App-logo {
@@ -194,7 +193,7 @@ label, .label {
 
 /*************** User Profile Box ***************/
 
-.profilePage {
+.profilePage, .publicProfile {
   top: 55px;
   position: relative;
 
@@ -740,6 +739,7 @@ label, .label {
 /************* Contributions **********/
 .impactSection {
   position: relative;
+  text-align: center;
   top: 18%;
   font-weight: 300;
   font-size: 16px;
@@ -762,5 +762,5 @@ label, .label {
 }
 
 .impactPanel {
-  box-shadow: 10px 10px 5px #888888;
+  box-shadow: 10px 10px 8px -10px rgba(0,0,0,0.4);
 }

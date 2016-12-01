@@ -5,6 +5,8 @@ import axios from 'axios';
 import $ from "jquery";
 import { browserHistory } from 'react-router';
 
+import server from '../../server/config/config';
+
 import Header from './Header';
 import CharitySearchResult from './CharitySearchResult';
 
@@ -110,7 +112,7 @@ class SearchPage extends Component {
         this.setStateWithObj(keyVal[0], keyVal[1]);
       });
 
-      axios.post('https://beltless-trenchcoats.herokuapp.com/api/charities/search', searchTerms)
+      axios.post(server + '/api/charities/search', searchTerms)
       .then((res) => {
         this.setState({
           searchResults: res.data,

@@ -22,8 +22,8 @@ var server = require('./config/config');
 var path = require('path');
 
 //COMMENT THESE IN FOR DEV MODE
-var env = require('node-env-file');
-env(__dirname + '/config/.env');
+// var env = require('node-env-file');
+// env(__dirname + '/config/.env');
 
 var app = express();
 var port = process.env.PORT || 8080;

@@ -69,6 +69,7 @@ class UserProfile extends Component {
     this.openRemoveAccountModal = this.openRemoveAccountModal.bind(this);
     this.closeRemoveAccountModal = this.closeRemoveAccountModal.bind(this);
     this.deleteAccount = this.deleteAccount.bind(this);
+    this.fixPlaidButtonStyling = this.fixPlaidButtonStyling.bind(this);
   }
 
   componentWillMount() {
@@ -214,10 +215,6 @@ class UserProfile extends Component {
   }
 
   componentDidMount() {
-    //Style pre-styled Plaid Link Button
-    $('.stepBox div button span').html('Add Account');
-    $('.stepBox div button').addClass('btn');
-    $('.stepBox div button').addClass('btn-default');
 
     if (!this.state.hasLinkAccount) {
       $('#step1').addClass('incomplete');
@@ -335,6 +332,13 @@ class UserProfile extends Component {
     fileDownload(JSON.parse(JSON.stringify(transactionTableData)), 'AddUp-Transaction-History.csv')
   }
 
+  fixPlaidButtonStyling() {
+    //Style pre-styled Plaid Link Button
+    $('.stepBox div button span').html('Add Account');
+    $('.stepBox div button').addClass('btn');
+    $('.stepBox div button').addClass('btn-default');
+  }
+
   render() {
     return (
       <Header>
@@ -375,14 +379,14 @@ class UserProfile extends Component {
                       <form id="some-id"></form>
                       <text className='profileHeader'> </text>
                       <div className='linkText'>Link a bank account</div>
-                      <PlaidLinkComponent successFunc={this.displayLinkAccount}/>
+                      <PlaidLinkComponent fixStylingFunc={this.fixPlaidButtonStyling} successFunc={this.displayLinkAccount}/>
                     </div>
                   :
                     <div id='step1' className="stepBox shadowbox">
                       <div className='linked'>&#10004;</div>
                       <div className='stepText'>{this.state.bankInfo.bank_name}</div>
                       <text className='account'>Account ending in: {this.state.bankInfo.bank_digits}</text>
-                      <Button onClick={this.openRemoveAccountModal}>Remove Account</Button>
+                      <Button className='removeBankButton' onClick={this.openRemoveAccountModal}>Remove Account</Button>
                     </div>
                 }
                 

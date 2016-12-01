@@ -111,19 +111,19 @@ class App extends Component {
 
               <Col xs={6} md={4} className="impactColumn">
                 <Panel header="Every Month Your Change Can" bsStyle="primary" className="impactPanel">
-                  <p>Protect 12 people from Malaria for three to four years, by giving to the <span className="charityName">Against Malaria Foundation</span>.</p>
+                  <p>Protect 12 people from Malaria for three to four years, by giving to the <span className="emphasis">Against Malaria Foundation</span>.</p>
                 </Panel>
               </Col>
 
               <Col xs={6} md={4} className="impactColumn">
                 <Panel header="Every 6 Months Your Change Can" bsStyle="primary" className="impactPanel">
-                  <p>Provide safe water to 142 community members for one year with <span className="charityName">Evidence Action</span>.</p>
+                  <p>Provide safe water to 142 community members for one year with <span className="emphasis">Evidence Action</span>.</p>
                 </Panel>
               </Col>
 
               <Col xs={6} md={4} className="impactColumn">
                 <Panel header="Every Year Your Change Can" bsStyle="primary" className="impactPanel">
-                  <p>Provide school meal programs to 5 children for one year with <span className="charityName">Oxfam</span>.</p>
+                  <p>Provide school meal programs to 5 children for one year with <span className="emphasis">Oxfam</span>.</p>
                 </Panel>
               </Col>
 

@@ -623,13 +623,38 @@ label, .label {
     margin: 20px 20px 0 0;
   }
 
-  .addressHeader {
+  .charityName {
+    font-size: 38px;
+    font-weight: 400;
+    margin: 10px 0;
+  }
+
+  .charityAuthor, .category {
+    font-size: 20px;
+  }
+
+  .mission {
+    margin: 20px 0;
+    font-style: italic;
+    font-size: 20px;
+  }
+
+  .donationsToDate {
+    font-size: 24px;
     font-weight: 400;
   }
 
+  .map {
+    margin-bottom: 20px;
+  }
+
+  .addressName {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+
   .address {
-    font-size: 0.8em;
-    font-style: italic;
+    font-size: 15px;
     color: grey;
   }
 
@@ -746,7 +771,7 @@ label, .label {
   letter-spacing: 0.3px;
 }
 
-.charityName {
+.emphasis {
   color: red;
   font-weight: bold;
 }

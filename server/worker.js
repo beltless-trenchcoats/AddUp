@@ -26,7 +26,7 @@ var processDailyTransactions = function() {
   Users.getUserFields('', function(err, users) {
     users.forEach(user => {
       //If the user has linked a bank account through plaid
-      if (user.plaid_access_token && user.plaid_public_token) { 
+      if (user.plaid_access_token && user.plaid_public_token) {
         axios.post(server + '/api/plaid/transactions', {
             'access_token': user.plaid_access_token
           })
@@ -83,7 +83,7 @@ var processDailyTransactions = function() {
 var findRecentTransactions = function(user, transactions) {
   //filter transactions for correct account and whether they are already an even dollar amount and positive
   var usersTransactions = transactions.filter(function(transaction) {
-    return (transaction._account === user.plaid_account_id && 
+    return (transaction._account === user.plaid_account_id &&
             transaction.amount % 1 !== 0 &&
             transaction.amount > 0);
   });

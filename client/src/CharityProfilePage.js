@@ -115,93 +115,101 @@ class CharityProfilePage extends Component {
         :
       <Header>
         <div className="charityProfilePage">
-          <button className='backButton' onClick={browserHistory.goBack}>&#x2190; Back To Search Results</button>
+          {
+            history.state ? <button className='backButton' onClick={browserHistory.goBack}>&#x2190; Back To Search Results</button>
+              : null
+          }
+          
           <Grid>
-            <Row>
+            <Row className='charityInfo lessPadding'>
+              <Col md={3} mdPush={9}>
               {
                 this.state.selected ?
                   <Button onClick={this.openModal} className="removeCharity" bsStyle="primary">Remove from My Charities</Button>
-                : <Button onClick={this.openModal} className="addCharity" bsStyle="primary">Add to My Charities</Button>}
-              <h2>{this.state.charity.name}</h2>
-              {this.state.charity.id_owner ? <h5 className="charityAuthor">Created by: {<a href={"/profile/" + this.state.charityAuthor.id}> {this.state.authorName}</a>}</h5> : null }
-              <div className="charityType">{this.state.charity.nteeType}</div>
-              <div className="charityType">{this.state.charity.category}</div>
-              {
-                this.state.charity.mission_statement ?
-                  <div className="charityType">{this.state.charity.mission_statement}</div>
-                : null
+                : <Button onClick={this.openModal} className="addCharity" bsStyle="primary">Add to My Charities</Button>
               }
-              <div className="charityActivities">
-                {
-                  this.state.charity.activity1 ? this.state.charity.activity1 : null
-                }
-                {
-                  this.state.charity.activity2 ?  ', ' + this.state.charity.activity2 : null
-                }
-                { this.state.charity.activity3 ? ',' + this.state.charity.activity3 : null }
-              </div>
+              </Col>
+              <Col md={9} mdPull={3}>
+              <div className='charityName'>{this.state.charity.name}</div>
+              {
+                this.state.charity.id_owner ? <div className="charityAuthor">Created by: {<a href={"/profile/" + this.state.charityAuthor.id}> {this.state.authorName}</a>}</div> 
+                : null 
+              }
+
+              <div className="category">{this.state.charity.nteeType}</div>
               {
                 this.state.charity.url ?
                   <div className="charityType">{this.state.charity.url}</div>
                 : null
               }
+
+              {
+                this.state.charity.mission_statement ?
+                  <div className="mission">{this.state.charity.mission_statement}</div>
+                : <div className="mission"></div>
+              }
               {
                 this.props.params.type==='custom' ?
-                  <h3> {
+                  <div className='percentFunded'> {
                     this.state.charity.total_donated * 100 / this.state.charity.dollar_goal ?
                       Math.floor(this.state.charity.total_donated * 100 / this.state.charity.dollar_goal)
-                      : 0}% Funded!</h3>
+                      : 0}% Funded!</div>
                 : null
               }
-              <h3> Total AddUp+ Donations to Date: ${this.state.charity.total_donated}</h3>
+              <div className='donationsToDate'>AddUp+ Donations to Date: ${this.state.charity.total_donated}</div>
               {
                 this.props.params.type==='custom' ?
-                  <h3> Fundraising Goal: ${this.state.charity.dollar_goal}</h3>
+                  <div className='goal'> Fundraising Goal: ${this.state.charity.dollar_goal}</div>
                 : null
-              }
-              
+              } 
+              </Col>
             </Row>
 
             <Row>
-                {<Col md={6} mdPush={6} className="charityClassification">
-                  {this.props.params.type!=='custom' ? <h4>Foundation Classification Info</h4> : null }
-                  <div className="corpInfo">{this.state.charity.organization}, {this.state.charity.classification}</div>
-                  {
-                    this.props.params.type!=='custom' ?
-                      <div className="corpInfo">Section {this.state.charity.subsection} {this.state.charity.deductibility}</div>
-                      : null
-                  }
-                  {
-                    this.props.params.type!=='custom' ?
-                      <div className="corpInfo">Reported Revenue: ${this.state.charity.totrevenue}</div> : null
-                  }
-                  <div className="corpInfo">{this.state.charity.foundation}</div>
-                  <div className="corpInfo">{this.state.charity.affiliation}</div>
-                </Col>}
+              <Col md={6} mdPush={6} className="charityClassification">
+                {
+                  this.props.params.type!=='custom' ? 
+                    <div className='charityClassification'>Foundation Classification Info</div> 
+                  : null 
+                }
+                <div className="corpInfo">{this.state.charity.organization}, {this.state.charity.classification}</div>
+                {
+                  this.props.params.type!=='custom' ?
+                    <div className="corpInfo">Section {this.state.charity.subsection} {this.state.charity.deductibility}</div>
+                    : null
+                }
+                {
+                  this.props.params.type!=='custom' ?
+                    <div className="corpInfo">Reported Revenue: ${this.state.charity.totrevenue}</div> : null
+                }
+                <div className="corpInfo">{this.state.charity.foundation}</div>
+                <div className="corpInfo">{this.state.charity.affiliation}</div>
+              </Col>
 
               <Col md={6} mdPull={6} className="charityLocation">
-                <h4>Location and Contact</h4>
-                <div className="addressHeader">Address:</div>
-                <div className="address">{this.state.charity.name}</div>
+                <div className="map">
+                  {
+                    this.props.params.type==='custom' ? null : 
+                    <Gmaps
+                      width={'300px'}
+                      height={'300px'}
+                      lat={this.state.charity.latitude}
+                      lng={this.state.charity.longitude}
+                      zoom={12}
+                      params={{v: '3.exp', key: process.env.GMAPS_KEY}}
+                      onMapCreated={this.onMapCreated}>
+                      <Marker
+                        lat={this.state.charity.latitude}
+                        lng={this.state.charity.longitude}
+                        draggable={true}
+                        onDragEnd={this.onDragEnd} />
+                    </Gmaps>
+                  }
+                </div>
+                <div className="addressName">{this.state.charity.name}</div>
                 <div className="address">{this.state.charity.street}</div>
                 <div className="address">{this.state.charity.city}, {this.state.charity.state} {this.state.charity.zipCode}</div>
                 <div className="address">{this.state.charity.country}</div>
-                <div className="map">
-                  {this.props.params.type==='custom' || !(this.state.gmapsKey) ? null : <Gmaps
-                    width={'300px'}
-                    height={'300px'}
-                    lat={this.state.charity.latitude}
-                    lng={this.state.charity.longitude}
-                    zoom={12}
-                    params={{v: '3.exp', key: this.state.gmapsKey}}
-                    onMapCreated={this.onMapCreated}>
-                    <Marker
-                      lat={this.state.charity.latitude}
-                      lng={this.state.charity.longitude}
-                      draggable={true}
-                      onDragEnd={this.onDragEnd} />
-                  </Gmaps>}
-                </div>
               </Col>
             </Row>
           </Grid>

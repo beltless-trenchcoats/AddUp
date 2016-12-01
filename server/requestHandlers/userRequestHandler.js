@@ -1,4 +1,3 @@
-
 var Users = require('../db/controllers/users');
 var Transactions = require('../db/controllers/transactions');
 var UserCharities = require('../db/controllers/usersCharities');
@@ -6,6 +5,10 @@ var Charities = require('../db/controllers/charities');
 
 var aws = require('aws-sdk');
 var S3_BUCKET = process.env.S3_BUCKET || 'addupp-profile-photos';
+
+//COMMENT THESE IN FOR DEV MODE
+// var env = require('node-env-file');
+// env(__dirname + '/../config/.env');
 
 exports.updateUserCharities = function(req, res) {
   var userEmail = req.body.email;

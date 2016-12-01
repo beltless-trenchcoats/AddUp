@@ -43,7 +43,7 @@ bower install
 ```
 
 
-![start-dev-mode]('http://www.giphy.com/gifs/l0MYH23IxKSnX2GcM')
+![start-dev-mode](https://gfycat.com/ScarceCreepyHarvestmen)
 ### Roadmap
 
 View the project roadmap [here](LINK_TO_PROJECT_ISSUES)

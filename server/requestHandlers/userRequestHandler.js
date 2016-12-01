@@ -1,17 +1,16 @@
-
-var Users = require('./db/controllers/users');
-var Transactions = require('./db/controllers/transactions');
-var UserCharities = require('./db/controllers/usersCharities');
-var Charities = require('./db/controllers/charities');
+var Users = require('../db/controllers/users');
+var Transactions = require('../db/controllers/transactions');
+var UserCharities = require('../db/controllers/usersCharities');
+var Charities = require('../db/controllers/charities');
 
 var aws = require('aws-sdk');
 var S3_BUCKET = process.env.S3_BUCKET || 'addupp-profile-photos';
 
 //COMMENT THESE IN FOR DEV MODE
 // var env = require('node-env-file');
-// env(__dirname + '/config/.env');
+// env(__dirname + '/../config/.env');
 
-updateUserCharities = function(req, res) {
+exports.updateUserCharities = function(req, res) {
   var userEmail = req.body.email;
   var promises = [];
   req.body.charities.forEach(function (charity) {
@@ -53,7 +52,7 @@ updateUserCharities = function(req, res) {
   Promise.all(promises).then(() => res.sendStatus(200));
 }
 
-getUserInfo = function(req, res) {
+exports.getUserInfo = function(req, res) {
   Users.getUserFields(req.body.idOrEmail, function(err, data) {
     if (err) {
       res.send(err);
@@ -63,7 +62,7 @@ getUserInfo = function(req, res) {
   });
 }
 
-getUserTransactions = function(req, res) {
+exports.getUserTransactions = function(req, res) {
   if (req.body.email) {
     Transactions.getTransactions(req.body.email, function(err, data) {
       if (err) {
@@ -77,7 +76,7 @@ getUserTransactions = function(req, res) {
   }
 }
 
-getUserCharityDonations = function(req, res) {
+exports.getUserCharityDonations = function(req, res) {
   UserCharities.getUsersCharityDonationsInfo(req.body.email, function(err, data) {
     if (err) {
       res.send(err);
@@ -87,7 +86,7 @@ getUserCharityDonations = function(req, res) {
   })
 }
 
-updateUserInfo = function(req, res) {
+exports.updateUserInfo = function(req, res) {
   var email = req.body.email;
   var newEmail = req.body.newEmail;
   var newPassword = req.body.newPassword;
@@ -112,7 +111,7 @@ updateUserInfo = function(req, res) {
   }
 }
 
-getS3Url = (req, res) => {
+exports.getS3Url = (req, res) => {
   var s3 = new aws.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY});
@@ -139,3 +138,4 @@ getS3Url = (req, res) => {
     res.end();
   });
 };
+

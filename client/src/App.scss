@@ -311,13 +311,20 @@ label, .label {
   }
 
   div button {
-    margin-top: 15px;
+    text-align: center;
+    margin-top: 10px;
     height: 50px;
-    width: 150px;
+    width: 175px;
 
     span {
       font-size: 22px;
     }
+  }
+
+  .removeBankButton {
+    font-size: 16px;
+    height: 40px;
+    width: 150px;
   }
 
   .limit {
@@ -676,12 +683,12 @@ label, .label {
     color: grey;
   }
 
-  .percentageError {
-    color: $error-red;
-    font-size: 0.8em;
-    font-style: italic;
-    text-align: center;
-  }
+}
+.percentageError {
+  color: $error-red;
+  font-size: 14px;
+  font-style: italic;
+  text-align: center;
 }
 
 

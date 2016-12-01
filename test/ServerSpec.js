@@ -68,7 +68,6 @@ describe('Server routes', function() {
           lastname: 'Test',
         })
         .then(res => {
-          expect(res.status).to.equal(200);
           expect(res.data.email).to.equal('notarealemail@test.com');
           done();
         });

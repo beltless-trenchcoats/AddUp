@@ -139,6 +139,3 @@ exports.plaidDelete = function(req, res) {
     res.send(result)
   });
 };
-
-
-

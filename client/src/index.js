@@ -22,6 +22,7 @@ function loggedIn() {
 }
 
 function isAuth (nextState, replace) {
+	secureConnection();
 	if(!loggedIn()) {
 		replace({
 			pathname: '/'
@@ -29,16 +30,21 @@ function isAuth (nextState, replace) {
 	}
 }
 
+function secureConnection() {
+	if(window.location.protocol === 'http:') {
+		window.location.protocol = 'https:';
+	}
+}
 
 ReactDOM.render (
 	<Router history={browserHistory}>
-		<Route path="/" component={App}/>
+		<Route path="/" component={App} onEnter={secureConnection}/>
     <Route path="/user" component={UserProfile} onEnter={isAuth} />
-    <Route path="/profile/:id" component={PublicProfile} />
-   	<Route path="/search" component={SearchPage} />
-		<Route path="/about" component={About} />
-		<Route path="/contact" component={Contact} />
-   	<Route path="/:type/:id" component={CharityProfilePage} />
+    <Route path="/profile/:id" component={PublicProfile} onEnter={secureConnection} />
+   	<Route path="/search" component={SearchPage} onEnter={secureConnection} />
+		<Route path="/about" component={About} onEnter={secureConnection}/>
+		<Route path="/contact" component={Contact} onEnter={secureConnection}/>
+   	<Route path="/:type/:id" component={CharityProfilePage} onEnter={secureConnection}/>
     <Route path="/myCause/edit/:id" component={CustomCauseProfilePage} onEnter={isAuth} />
 	</Router>,
   document.getElementById('root')

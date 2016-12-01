@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Panel, Button } from 'react-bootstrap'
+import { Panel, Button } from 'react-bootstrap';
+import { Link } from 'react-router';
 
 class CharitySearchResult extends Component {
   constructor(props) {
@@ -27,7 +28,7 @@ class CharitySearchResult extends Component {
         <p className="missionStatement"><span className="missionStatementTitle">Mission Statement: </span>{this.props.info.missionStatement}</p>
         <p className="location">{this.props.info.city}, {this.props.info.state}</p>
         <p className="website">{this.props.info.website}</p>
-        <a href={"/" + this.state.type + '/' + this.state.charityId}><Button bsStyle="primary">Learn More and Donate</Button></a>
+        <Link to={{pathname: "/" + this.state.type + '/' + this.state.charityId, state:{searched: true}}}><Button bsStyle="primary">Learn More and Donate</Button></Link>
       </Panel>
      </div>
     );

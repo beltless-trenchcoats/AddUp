@@ -115,7 +115,11 @@ class CharityProfilePage extends Component {
         :
       <Header>
         <div className="charityProfilePage">
-          <button className='backButton' onClick={browserHistory.goBack}>&#x2190; Back To Search Results</button>
+          {
+            history.state ? <button className='backButton' onClick={browserHistory.goBack}>&#x2190; Back To Search Results</button>
+              : null
+          }
+          
           <Grid>
             <Row className='charityInfo lessPadding'>
               <Col md={3} mdPush={9}>
@@ -131,12 +135,14 @@ class CharityProfilePage extends Component {
                 this.state.charity.id_owner ? <div className="charityAuthor">Created by: {<a href={"/profile/" + this.state.charityAuthor.id}> {this.state.authorName}</a>}</div> 
                 : null 
               }
+
               <div className="category">{this.state.charity.nteeType}</div>
               {
                 this.state.charity.url ?
                   <div className="charityType">{this.state.charity.url}</div>
                 : null
               }
+
               {
                 this.state.charity.mission_statement ?
                   <div className="mission">{this.state.charity.mission_statement}</div>

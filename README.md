@@ -1,5 +1,5 @@
-# Project Name
-AddUp++
+# AddUp++
+
 > Pithy project description
 
 ## Team

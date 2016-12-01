@@ -43,7 +43,7 @@ bower install
 ```
 
 
-![start-dev-mode](https://giant.gfycat.com/MilkyOnlyAyeaye.webm)
+![startDevMode](https://giant.gfycat.com/MilkyOnlyAyeaye.webm)
 ### Roadmap
 
 View the project roadmap [here](LINK_TO_PROJECT_ISSUES)

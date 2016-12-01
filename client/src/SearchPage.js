@@ -24,9 +24,9 @@ class SearchPage extends Component {
       categoryName: '',
       type: 'Charity',
       searchResults: [],
-      activePage: 1,
-      lastPage: 1,
-      firstPageChange: false
+      lastPage: (Number(document.location.hash.split('=')[document.location.hash.split('=').length-1])) / 20,
+      firstLoad: (((Number(document.location.hash.split('=')[document.location.hash.split('=').length-1])) / 20) > 0),
+      initialPage: (Number(document.location.hash.split('=')[document.location.hash.split('=').length-1])) / 20
     }
     this.getResults = this.getResults.bind(this);
     this.onSearchInput = this.onSearchInput.bind(this);
@@ -76,7 +76,7 @@ class SearchPage extends Component {
   }
 
   navigateBySearchTerms() {
-    var options = ['searchTerm', 'city', 'state', 'zipCode', 'category', 'start'];
+    var options = ['searchTerm', 'city', 'state', 'zipCode', 'category', 'type', 'start'];
     var queryStr = '';
     for (var i = 0; i < options.length; i++) {
       if (this.state[options[i]] !== '') {
@@ -121,6 +121,7 @@ class SearchPage extends Component {
           this.state.searchResults.map((charity, i) => {
             <CharitySearchResult key={i} info={charity} />
           })
+          this.setState({initialPage:(Number(document.location.hash.split('=')[document.location.hash.split('=').length-1])) / 20});
         })
       })
       .catch((err) => {
@@ -130,71 +131,21 @@ class SearchPage extends Component {
   }
   //this function is called by ReactPaginate component
   pageSelect = (data) => {
-    //previous start is what rows to request from the api
-    var previousStart = parseInt(this.state.start);
-    //array of previous results
-    let previousResults = this.state.lastPageContents;
-    //activePage is the current selected page
-    let activePage = data.selected;
-    //lastActivePage is the last page the user selected
-    let lastActivePage = this.state.lastPage;
-    //these two are set for future use in if statements
-    let pageDifference = undefined;
-    let resultDifference = 0;
-    //on first select if statement will be called, it moves activePage up but leaves
-    //lastPage at 1 still
-    if(activePage - lastActivePage === 0 && this.state.firstPageChange === false) {
-      //sets activePage state up 1 and firstPageChange state to false
-      this.setState({activePage: activePage += 1, start: previousStart += 20, firstPageChange: true},
-        function() {
-          //gets results from API
-          this.navigateBySearchTerms();
-        })
-    //gets called when the user increments up in numbers like 1 -> 2
-    } else if(activePage >= lastActivePage && this.state.firstPageChange === false) {
-      pageDifference = activePage - lastActivePage;
-      this.setState({activePage: activePage += pageDifference, start: previousStart += (activePage - lastActivePage) * 20,
-      firstPageChange: true},
+    if (!this.state.firstLoad) {
+      var pageDifference = (data.selected - this.state.lastPage);
+      var resultDifference = pageDifference * 20;
+      console.log('data selected', data.selected, 'last page', this.state.lastPage, 'result diff', resultDifference, 'start', parseInt(this.state.start) );
+      this.setState({start: parseInt(this.state.start) + resultDifference, lastPage: this.state.lastPage + pageDifference},
         function() {
           this.navigateBySearchTerms();
-        });
-    } else if(activePage > lastActivePage) {
-      //pageDifference is if the user skips from 1 -> 9 so we can Calculate where to
-      //start the API call
-      pageDifference = activePage - lastActivePage;
-      //resultDifference uses pageDifference and multiplies it by 20
-      resultDifference = (pageDifference * 20);
-      if(pageDifference >= 2) {
-        this.setState({activePage: activePage += pageDifference, start: previousStart += resultDifference - 20,
-          lastPage: lastActivePage += pageDifference},
-          function() {
-            this.navigateBySearchTerms();
-          });
-      } else {
-        this.setState({activePage: activePage += pageDifference, start: previousStart += resultDifference,
-          lastPage: lastActivePage += pageDifference},
-          function() {
-            this.navigateBySearchTerms();
-          });
-      }
-    //this route is for when users go down 1 by 1, eventually lastActivePage and activePage will be =
-    } else if(activePage === lastActivePage) {
-      this.setState({activePage: activePage -= 1, start: previousStart -= 20},
-        function() {
-          this.navigateBySearchTerms();
-        });
-    //else if the user is making steps down 5 -> 4, etc...
+        }
+      );
     } else {
-      //same concept as stepping up but in reverse order
-      pageDifference = lastActivePage - activePage;
-      resultDifference = pageDifference * 20;
-      this.setState({activePage: activePage -= pageDifference, start: previousStart -= resultDifference,
-         lastPage: lastActivePage -= pageDifference},
-      function() {
-        this.navigateBySearchTerms();
-      });
+      this.setState({firstLoad: false});
     }
-}
+  }
+
+
 
   render() {
     return (
@@ -290,7 +241,7 @@ class SearchPage extends Component {
                  containerClassName={"pagination"}
                  subContainerClassName={"pages pagination"}
                  activeClassName={"active"}
-                 initialSelected={((Number(document.location.hash.split('=')[document.location.hash.split('=').length-1]) + 20) / 20)-1} 
+                 initialSelected={this.state.initialPage}
                  />
               : null
             }

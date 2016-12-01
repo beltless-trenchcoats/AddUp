@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 
-import server from '../../server/config/config';
-import axios from 'axios';
-
 class RemoveAccountModal extends Component {
   constructor(props) {
     super(props);

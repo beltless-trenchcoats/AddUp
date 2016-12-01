@@ -1,6 +1,6 @@
-# Project Name
+# AddUp++
 
-> Pithy project description
+> Pithy project description goes here
 
 ## Team
 

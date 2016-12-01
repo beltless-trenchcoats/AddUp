@@ -5,8 +5,8 @@ var bcrypt = require('bcrypt');
 var server = require('../config/config');
 
 //COMMENT THESE IN FOR DEV MODE
-// var env = require('node-env-file');
-// env(__dirname + '/../config/.env');
+var env = require('node-env-file');
+env(__dirname + '/../config/.env');
 
 var plaid = require('plaid');
 //get Plaid transactions for signed up user

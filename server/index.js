@@ -77,7 +77,7 @@ app.get('/sign-s3', userHandler.getS3Url);
 app.post('/api/charity',charityHandler.getCharityInfo);
 app.post('/api/charity/savedInfo', charityHandler.getCharityInfoFromDB);
 app.post('/api/charities/search', charityHandler.charitySearch);
-
+app.get('/api/gmaps', charityHandler.gmaps);
 
 //===================CUSTOM CAUSES=====================
 app.post('/api/customCause/add', charityHandler.addCustomCause);

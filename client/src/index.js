@@ -30,8 +30,8 @@ function isAuth (nextState, replace) {
 	}
 }
 
-//COMMENT OUT FOR DEVELOPMENT
 function secureConnection() {
+//COMMENT OUT FOR DEVELOPMENT
 	if(window.location.protocol === 'http:') {
 		window.location.protocol = 'https:';
 	}

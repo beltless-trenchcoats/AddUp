@@ -140,7 +140,7 @@ class CharityProfilePage extends Component {
               {
                 this.state.charity.mission_statement ?
                   <div className="mission">{this.state.charity.mission_statement}</div>
-                : null
+                : <div className="mission"></div>
               }
               {
                 this.props.params.type==='custom' ?

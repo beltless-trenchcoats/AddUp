@@ -40,6 +40,6 @@ class RemoveAccountModal extends Component {
     </div>
     );
   }
-};
+}
 
 export default RemoveAccountModal;

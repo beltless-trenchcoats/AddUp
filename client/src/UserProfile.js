@@ -4,7 +4,7 @@ import PlaidLinkComponent from './PlaidLink';
 import { Col, Row, Grid, Table, Button, FormControl } from 'react-bootstrap';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell } from 'recharts';
 import axios from 'axios';
-import $ from "jquery";
+import $ from 'jquery';
 import fileDownload from 'react-file-download';
 
 import server from '../../server/config/config';
@@ -22,16 +22,16 @@ import UserCharityCard from './UserCharityCard';
 import RemoveAccountModal from './RemoveAccountModal';
 
 let transactionChartData = [];
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FEB4D5','#FBFF28'];
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FEB4D5', '#FBFF28'];
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
- 	const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x  = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy  + radius * Math.sin(-midAngle * RADIAN);
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
   return (
-    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} 	dominantBaseline="central">
-    	{`${(percent * 100).toFixed(0)}%`}
+    <text x={x} y={y} fill='white' textAnchor={x > cx ? 'start' : 'end'} 	dominantBaseline="central">
+      {`${(percent * 100).toFixed(0)}%`}
     </text>
   );
 };
@@ -40,7 +40,8 @@ let charityPieChartData = [];
 
 class UserProfile extends Component {
   constructor(props) {
-    super(props)
+    super(props);
+
     this.state = {
       transactions: [],
       userSession: {},
@@ -54,7 +55,8 @@ class UserProfile extends Component {
       charities: [],
       customCauses: [],
       showEditCharitiesModal: false
-    }
+    };
+
     this.setCustomCauses = this.setCustomCauses.bind(this);
     this.setSession = this.setSession.bind(this);
     this.displayLinkAccount = this.displayLinkAccount.bind(this);
@@ -62,7 +64,7 @@ class UserProfile extends Component {
     this.setMonthlyLimit = this.setMonthlyLimit.bind(this);
     this.scrollDown = this.scrollDown.bind(this);
     this.updateCharities = this.updateCharities.bind(this);
-    this.openEditCharitiesModal = this.openEditCharitiesModal.bind(this)
+    this.openEditCharitiesModal = this.openEditCharitiesModal.bind(this);
     this.closeEditCharitiesModal = this.closeEditCharitiesModal.bind(this);
     this.downloadTransactions = this.downloadTransactions.bind(this);
     this.deleteAccount = this.deleteAccount.bind(this);
@@ -85,129 +87,129 @@ class UserProfile extends Component {
 
     axios.post(server + '/api/user/info', {
       'idOrEmail': email
-      })
-      .then(res => {
-        console.log('userInfo', res.data)
-        this.setState({
-          userInfo: res.data,
-          bankInfo: {
-            bank_name: res.data.bank_name,
-            bank_digits: res.data.bank_digits
-          },
-          monthlyLimit: res.data.monthly_limit || '--'
-        });
-        if (this.state.monthlyLimit && this.state.monthlyLimit !== '--') {
-          this.setState({monthlyLimitSet: true});
-          $('#step2').removeClass('incomplete');
-        } else {
-          $('#step2').addClass('incomplete');
-        }
-        if (this.state.bankInfo.bank_name) {
-          this.setState({hasLinkAccount: true});
-          $('#step1').removeClass('incomplete');
-        } else {
-          $('#step1').addClass('incomplete');
-        }
-        var userSession = this.state.userSession;
-        userSession.id = res.data.id;
-        this.setState({userSession: userSession});
-        axios.post(server + '/api/charities/search', {
-          'id_owner': res.data.id,
-          'type': 'Custom Cause'
-          })
-          .then(response => {
-            if (response.data) {
-              this.setState({customCauses: response.data});
-            }
-          });
-        });
-
-      axios.post(server + '/api/user/transactions', {
-          'email': email
-        })
-        .then(res => {
-          this.setState({transactions: res.data});
-            var months = [];
-            var January = {'date': 'January', 'Donated': 0 };
-            var February = {'date': 'February', 'Donated': 0 };
-            var March = {'date': 'March', 'Donated': 0 };
-            var April = {'date': 'April', 'Donated': 0 };
-            var May = {'date': 'May', 'Donated': 0 };
-            var June = {'date': 'June', 'Donated': 0 };
-            var July = {'date': 'July', 'Donated': 0 };
-            var August = {'date': 'August', 'Donated': 0 };
-            var September = {'date': 'September', 'Donated': 0 };
-            var October = {'date': 'October', 'Donated': 0 };
-            var November = {'date': 'November', 'Donated': 0 };
-            var December = {'date': 'December', 'Donated': 0 };
-          for(var i = 0; i < 1; i++) {
-            res.data.map( (transaction) => {
-              var newDate = transaction.date_time.split('T');
-              var newMonth = newDate[0].split('-');
-              if(newMonth[1] === '01') {
-                January['Donated'] += transaction.amount;
-              } else if(newMonth[1] === '02') {
-                February['Donated'] += transaction.amount;
-              } else if(newMonth[1] === '02') {
-                March['Donated'] += transaction.amount;
-              } else if(newMonth[1] === '04') {
-                April['Donated'] += transaction.amount;
-              } else if(newMonth[1] === '05') {
-                May['Donated'] += transaction.amount;
-              } else if(newMonth[1] === '06') {
-                June['Donated'] += transaction.amount;
-              } else if(newMonth[1] === '07') {
-                July['Donated'] += transaction.amount;
-              } else if(newMonth[1] === '08') {
-                August['Donated'] += transaction.amount;
-              } else if(newMonth[1] === '09') {
-                September['Donated'] += transaction.amount;
-              } else if(newMonth[1] === '10') {
-                October['Donated'] += transaction.amount;
-              } else if(newMonth[1] === '11') {
-                November['Donated'] += transaction.amount;
-              } else {
-                December['Donated'] += transaction.amount;
-              }
-            })
-            January['Donated'] = Math.floor(January['Donated'] * 100) / 100;
-            February['Donated'] = Math.floor(February['Donated'] * 100) / 100;
-            March['Donated'] = Math.floor(March['Donated'] * 100) / 100;
-            April['Donated'] = Math.floor(April['Donated'] * 100) / 100;
-            May['Donated'] = Math.floor(May['Donated'] * 100) / 100;
-            June['Donated'] = Math.floor(June['Donated'] * 100) / 100;
-            July['Donated'] = Math.floor(July['Donated'] * 100) / 100;
-            August['Donated'] = Math.floor(August['Donated'] * 100) / 100;
-            September['Donated'] = Math.floor(September['Donated'] * 100) / 100;
-            October['Donated'] = Math.floor(October['Donated'] * 100) / 100;
-            November['Donated'] = Math.floor(November['Donated'] * 100) / 100;
-            December['Donated'] = Math.floor(December['Donated'] * 100) / 100;
-
-            months.push(January, February, March, April, May, June, July, August,
-            September, October, November, December);
-          }
-          for(var j = 0; j < months.length; j++) {
-            transactionChartData.push({ 'Date': months[j].date, 'Donated': months[j].Donated })
-          }
-        });
-
-      axios.post(server + '/api/user/charities/info', {
-      'email': email
-      })
-      .then(res => {
-        this.setState({charities: res.data});
-        if (this.state.charities.length) {
-          this.setState({charitiesSelected: true});
-          $('#step3').removeClass('incomplete');
-        } else {
-          $('#step3').addClass('incomplete');
-        }
-        res.data.map( (charity) => {
-          if(charity.percentage > 0) {
-            charityPieChartData.push({'name': charity.name, 'value': charity.percentage})
-          }
-        })
+    })
+    .then(res => {
+      console.log('userInfo', res.data);
+      this.setState({
+        userInfo: res.data,
+        bankInfo: {
+          bank_name: res.data.bank_name,
+          bank_digits: res.data.bank_digits
+        },
+        monthlyLimit: res.data.monthly_limit || '--'
       });
+      if (this.state.monthlyLimit && this.state.monthlyLimit !== '--') {
+        this.setState({monthlyLimitSet: true});
+        $('#step2').removeClass('incomplete');
+      } else {
+        $('#step2').addClass('incomplete');
+      }
+      if (this.state.bankInfo.bank_name) {
+        this.setState({hasLinkAccount: true});
+        $('#step1').removeClass('incomplete');
+      } else {
+        $('#step1').addClass('incomplete');
+      }
+      var userSession = this.state.userSession;
+      userSession.id = res.data.id;
+      this.setState({userSession: userSession});
+      axios.post(server + '/api/charities/search', {
+        'id_owner': res.data.id,
+        'type': 'Custom Cause'
+      })
+      .then(response => {
+        if (response.data) {
+          this.setState({customCauses: response.data});
+        }
+      });
+    });
+
+    axios.post(server + '/api/user/transactions', {
+      'email': email
+    })
+    .then(res => {
+      this.setState({transactions: res.data});
+      var months = [];
+      var January = {'date': 'January', 'Donated': 0 };
+      var February = {'date': 'February', 'Donated': 0 };
+      var March = {'date': 'March', 'Donated': 0 };
+      var April = {'date': 'April', 'Donated': 0 };
+      var May = {'date': 'May', 'Donated': 0 };
+      var June = {'date': 'June', 'Donated': 0 };
+      var July = {'date': 'July', 'Donated': 0 };
+      var August = {'date': 'August', 'Donated': 0 };
+      var September = {'date': 'September', 'Donated': 0 };
+      var October = {'date': 'October', 'Donated': 0 };
+      var November = {'date': 'November', 'Donated': 0 };
+      var December = {'date': 'December', 'Donated': 0 };
+      for (var i = 0; i < 1; i++) {
+        res.data.forEach( transaction => {
+          var newDate = transaction.date_time.split('T');
+          var newMonth = newDate[0].split('-');
+          if (newMonth[1] === '01') {
+            January['Donated'] += transaction.amount;
+          } else if (newMonth[1] === '02') {
+            February['Donated'] += transaction.amount;
+          } else if (newMonth[1] === '02') {
+            March['Donated'] += transaction.amount;
+          } else if (newMonth[1] === '04') {
+            April['Donated'] += transaction.amount;
+          } else if (newMonth[1] === '05') {
+            May['Donated'] += transaction.amount;
+          } else if (newMonth[1] === '06') {
+            June['Donated'] += transaction.amount;
+          } else if (newMonth[1] === '07') {
+            July['Donated'] += transaction.amount;
+          } else if (newMonth[1] === '08') {
+            August['Donated'] += transaction.amount;
+          } else if (newMonth[1] === '09') {
+            September['Donated'] += transaction.amount;
+          } else if (newMonth[1] === '10') {
+            October['Donated'] += transaction.amount;
+          } else if (newMonth[1] === '11') {
+            November['Donated'] += transaction.amount;
+          } else {
+            December['Donated'] += transaction.amount;
+          }
+        });
+        January['Donated'] = Math.floor(January['Donated'] * 100) / 100;
+        February['Donated'] = Math.floor(February['Donated'] * 100) / 100;
+        March['Donated'] = Math.floor(March['Donated'] * 100) / 100;
+        April['Donated'] = Math.floor(April['Donated'] * 100) / 100;
+        May['Donated'] = Math.floor(May['Donated'] * 100) / 100;
+        June['Donated'] = Math.floor(June['Donated'] * 100) / 100;
+        July['Donated'] = Math.floor(July['Donated'] * 100) / 100;
+        August['Donated'] = Math.floor(August['Donated'] * 100) / 100;
+        September['Donated'] = Math.floor(September['Donated'] * 100) / 100;
+        October['Donated'] = Math.floor(October['Donated'] * 100) / 100;
+        November['Donated'] = Math.floor(November['Donated'] * 100) / 100;
+        December['Donated'] = Math.floor(December['Donated'] * 100) / 100;
+
+        months.push(January, February, March, April, May, June, July, August,
+        September, October, November, December);
+      }
+      for (var j = 0; j < months.length; j++) {
+        transactionChartData.push({ 'Date': months[j].date, 'Donated': months[j].Donated });
+      }
+    });
+
+    axios.post(server + '/api/user/charities/info', {
+      'email': email
+    })
+    .then(res => {
+      this.setState({charities: res.data});
+      if (this.state.charities.length) {
+        this.setState({charitiesSelected: true});
+        $('#step3').removeClass('incomplete');
+      } else {
+        $('#step3').addClass('incomplete');
+      }
+      res.data.forEach( charity => {
+        if (charity.percentage > 0) {
+          charityPieChartData.push({'name': charity.name, 'value': charity.percentage});
+        }
+      });
+    });
     // })
   }
 
@@ -296,13 +298,13 @@ class UserProfile extends Component {
     })
     .catch((err)=> {
       console.log(err);
-    })
+    });
   }
 
   scrollDown() {
     $('html,body').animate({
-        scrollTop: $('#charities').offset().top
-      }, 'slow');
+      scrollTop: $('#charities').offset().top
+    }, 'slow');
   }
 
   setCustomCauses(causes) {
@@ -314,9 +316,9 @@ class UserProfile extends Component {
   }
 
   downloadTransactions () {
-    let transactionTableData = [['Date', 'Amount', 'Recipient Charity']]
-    this.state.transactions.forEach((transaction) => transactionTableData.push('\n'+[new Date(transaction.date_time).toLocaleDateString(), transaction.amount, transaction.name]))
-    fileDownload(JSON.parse(JSON.stringify(transactionTableData)), 'AddUp-Transaction-History.csv')
+    let transactionTableData = [['Date', 'Amount', 'Recipient Charity']];
+    this.state.transactions.forEach(transaction => transactionTableData.push('\n' + [new Date(transaction.date_time).toLocaleDateString(), transaction.amount, transaction.name]));
+    fileDownload(JSON.parse(JSON.stringify(transactionTableData)), 'AddUp-Transaction-History.csv');
   }
 
   fixPlaidButtonStyling() {

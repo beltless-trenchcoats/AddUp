@@ -17,12 +17,12 @@ class CharityModal extends Component {
       updatedCharities: [],
       userEmail: '',
       donationTotal: 0
-    }
+    };
 
-    this.updateCharities = this.updateCharities.bind(this)
-    this.saveCharities = this.saveCharities.bind(this)
-    this.updateTotal = this.updateTotal.bind(this)
-    this.close = this.close.bind(this)
+    this.updateCharities = this.updateCharities.bind(this);
+    this.saveCharities = this.saveCharities.bind(this);
+    this.updateTotal = this.updateTotal.bind(this);
+    this.close = this.close.bind(this);
   }
 
   componentDidMount () {
@@ -57,23 +57,23 @@ class CharityModal extends Component {
       });
     })
     .catch((err) => {
-      console.log(err)
+      console.log(err);
     });
   }
 
   updateTotal (percentage) {
     var newTotal = (this.state.donationTotal += percentage);
     newTotal = Math.round(newTotal * 100) / 100;
-    this.setState( { donationTotal:  newTotal} )
+    this.setState( { donationTotal: newTotal} );
   }
 
   close() {
     this.props.onHide();
-    this.setState({ donationTotal: 0 })
+    this.setState({ donationTotal: 0 });
   }
 
   updateCharities (index, charityId, remove, percentage) {
-    let updates = $.extend(true, [], this.state.updatedCharities)
+    let updates = $.extend(true, [], this.state.updatedCharities);
     updates[index].remove = remove;
     updates[index].id = charityId;
     updates[index].percentage = percentage;
@@ -82,7 +82,7 @@ class CharityModal extends Component {
 
   saveCharities () {
     console.log('this is getting sent to the database', this.state.updatedCharities);
-    this.setState( {charities: this.state.updatedCharities})
+    this.setState( {charities: this.state.updatedCharities});
     axios.post(server + '/api/user/charities/update', {
       email: this.state.userEmail,
       charities: this.state.updatedCharities
@@ -93,8 +93,8 @@ class CharityModal extends Component {
       }
     })
     .catch((err) => {
-      console.log(err)
-    })
+      console.log(err);
+    });
     this.close();
   }
 
@@ -138,7 +138,7 @@ class CharityModal extends Component {
       </Modal>
     );
   }
-};
+}
 
 
 export default CharityModal;

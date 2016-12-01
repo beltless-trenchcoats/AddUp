@@ -23,9 +23,10 @@ class CharityProfilePage extends Component {
       selected: false, //TODO: Add flag to change button depending on if charity is already selected
       invalidCharity: false,
       gmapsKey: ''
-    }
-    this.openModal = this.openModal.bind(this)
-    this.closeModal = this.closeModal.bind(this)
+    };
+
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentWillMount () {
@@ -70,19 +71,19 @@ class CharityProfilePage extends Component {
         })
         .then((res) => {
           let first = res.data.first_name;
-          let lastInitial = res.data.last_name[0]
+          let lastInitial = res.data.last_name[0];
           this.setState({
             charityAuthor: res.data,
             authorName: first + ' ' + lastInitial + '.'
-          })
+          });
         })
         .catch((err) => {
-          console.log(err)
-        })
+          console.log(err);
+        });
       }
     })
     .catch((err) => {
-      console.log(err)
+      console.log(err);
     });
 
   }
@@ -132,11 +133,11 @@ class CharityProfilePage extends Component {
               <Col md={9} mdPull={3}>
               <div className='charityName'>{this.state.charity.name}</div>
               {
-                this.state.charity.id_owner ? <div className="charityAuthor">Created by: {<a href={"/profile/" + this.state.charityAuthor.id}> {this.state.authorName}</a>}</div> 
+                this.state.charity.id_owner ? <div className="charityAuthor">Created by: {<a href={'/profile/' + this.state.charityAuthor.id}> {this.state.authorName}</a>}</div> 
                 : null 
               }
               {
-                this.state.charity.nteeType !== 'Not Provided' ? <div className="category">{this.state.charity.nteeType}</div> : null
+                this.state.charity.nteeType !== 'Not Provided' ? <div className='category'>{this.state.charity.nteeType}</div> : null
               }
               {
                 this.state.charity.url ?
@@ -150,7 +151,7 @@ class CharityProfilePage extends Component {
                 : <div className="mission"></div>
               }
               {
-                this.props.params.type==='custom' ?
+                this.props.params.type === 'custom' ?
                   <div className='percentFunded'> {
                     this.state.charity.total_donated * 100 / this.state.charity.dollar_goal ?
                       Math.floor(this.state.charity.total_donated * 100 / this.state.charity.dollar_goal)
@@ -159,7 +160,7 @@ class CharityProfilePage extends Component {
               }
               <div className='donationsToDate'>AddUp+ Donations to Date: ${this.state.charity.total_donated}</div>
               {
-                this.props.params.type==='custom' ?
+                this.props.params.type === 'custom' ?
                   <div className='goal'> Fundraising Goal: ${this.state.charity.dollar_goal}</div>
                 : null
               } 
@@ -169,18 +170,18 @@ class CharityProfilePage extends Component {
             <Row>
               <Col md={6} mdPush={6} className="charityClassification">
                 {
-                  this.props.params.type!=='custom' ? 
+                  this.props.params.type !== 'custom' ? 
                     <div className='charityClassification'>Foundation Classification Info</div> 
                   : null 
                 }
                 <div className="corpInfo">{this.state.charity.organization}, {this.state.charity.classification}</div>
                 {
-                  this.props.params.type!=='custom' ?
+                  this.props.params.type !== 'custom' ?
                     <div className="corpInfo">Section {this.state.charity.subsection} {this.state.charity.deductibility}</div>
                     : null
                 }
                 {
-                  this.props.params.type!=='custom' ?
+                  this.props.params.type !== 'custom' ?
                     <div className="corpInfo">Reported Revenue: ${this.state.charity.totrevenue}</div> : null
                 }
                 <div className="corpInfo">{this.state.charity.foundation}</div>
@@ -190,7 +191,7 @@ class CharityProfilePage extends Component {
               <Col md={6} mdPull={6} className="charityLocation">
                 <div className="map">
                   {
-                    this.props.params.type==='custom' || !(this.state.gmapsKey) ? null : 
+                    this.props.params.type === 'custom' || !(this.state.gmapsKey) ? null : 
                     <Gmaps
                       width={'300px'}
                       height={'300px'}

@@ -15,7 +15,7 @@ class PublicProfile extends Component {
       charities: {},
       lastInitial: '',
       customCauses: []
-    }
+    };
   }
 
   componentWillMount () {
@@ -34,12 +34,11 @@ class PublicProfile extends Component {
         .then((res) => {
           this.setState({
             charities: res.data
-          })
-          // console.log('CHAIRITIES INFO', res.data)
+          });
           axios.post(server + '/api/charities/search', {
             'id_owner': this.props.params.id,
             'type': 'Custom Cause'
-            })
+          })
             .then(response => {
               if (response.data) {
                 this.setState({customCauses: response.data}, ()=> console.log('CUSTOM CAUSES', this.state.customCauses));
@@ -47,13 +46,13 @@ class PublicProfile extends Component {
             });
         })  
         .catch((err) => {
-          console.log(err)
-        })
-      })
+          console.log(err);
+        });
+      });
     })
     .catch((err) => {
-      console.log(err)
-    })
+      console.log(err);
+    });
   }
 
   render () {
@@ -113,7 +112,7 @@ class PublicProfile extends Component {
                       <a href={'/myCause/edit/' + cause.id} className='title'>{cause.charityName}</a>
                     </div>
                     <div className='contributors'>Number of Contributors:</div>
-                    <div className='percentage'>{Math.floor((cause.total_donated/cause.dollar_goal)*100)}%</div>
+                    <div className='percentage'>{Math.floor((cause.total_donated / cause.dollar_goal) * 100)}%</div>
                     <div className='amount'>$ {cause.total_donated} / {cause.dollar_goal}</div>
                   </div>
                 )
@@ -125,7 +124,7 @@ class PublicProfile extends Component {
         </Row>
         </div>
       </Header>
-    )
+    );
   }
 }
 

@@ -12,7 +12,7 @@ const FieldGroup = ({ id, label, ...props }) => {
       <FormControl {...props} />
     </FormGroup>
   );
-}
+};
 
 class ChangeEmailModal extends Component {
   constructor(props) {
@@ -57,7 +57,7 @@ class ChangeEmailModal extends Component {
 
   checkEmail(e) {
     e.preventDefault();
-    if(this.state.newEmail1 === this.state.newEmail2) {
+    if (this.state.newEmail1 === this.state.newEmail2) {
       this.setState({ newEmailMatch: true });
       this.closeEmail();
       axios.post(server + '/api/user/update', {
@@ -69,7 +69,7 @@ class ChangeEmailModal extends Component {
       })
       .catch(function(err) {
         console.log('error in checkEmail POST ', err);
-      })
+      });
     } else {
       this.setState({ newEmailMatch: false });
     }

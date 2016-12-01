@@ -21,28 +21,28 @@ describe('Server routes', function() {
 
       it('should send response with user data for a user who exists in the db', function(done) {
         axios.post(server + '/api/session/login',
-        {
-          email: 'test@test.com',
-          password: 'test'
-        })
-        .then(res => {
-          expect(res.data.first_name).to.equal('Test');
-          expect(res.data.last_name).to.equal('Test');
-          expect(res.data.email).to.equal('test@test.com');
-          done();
-        });
+          {
+            email: 'test@test.com',
+            password: 'test'
+          })
+          .then(res => {
+            expect(res.data.first_name).to.equal('Test');
+            expect(res.data.last_name).to.equal('Test');
+            expect(res.data.email).to.equal('test@test.com');
+            done();
+          });
       });
 
       it('should not send response for user that does not exist in the db', function(done) {
         axios.post(server + '/api/session/login',
-        {
-          email: 'invalid@gmail.com',
-          password: 'test'
-        })
-        .then(res => {
-          expect(res.body).to.be.undefined;
-          done();
-        });
+          {
+            email: 'invalid@gmail.com',
+            password: 'test'
+          })
+          .then(res => {
+            expect(res.body).to.be.undefined;
+            done();
+          });
       });
 
       //TODO: Update this when we implement real sessions
@@ -61,16 +61,16 @@ describe('Server routes', function() {
 
       it('should log in a user upon successful sign up', function(done) {
         axios.post(server + '/api/session/signup',
-        {
-          email: 'notarealemail@test.com',
-          password: 'test',
-          firstname: 'Test',
-          lastname: 'Test',
-        })
-        .then(res => {
-          expect(res.data.email).to.equal('notarealemail@test.com');
-          done();
-        });
+          {
+            email: 'notarealemail@test.com',
+            password: 'test',
+            firstname: 'Test',
+            lastname: 'Test',
+          })
+          .then(res => {
+            expect(res.data.email).to.equal('notarealemail@test.com');
+            done();
+          });
       });
 
       it('should add a user to the database upon successful sign up', function(done) {
@@ -130,8 +130,8 @@ describe('Server routes', function() {
 
       it('should return transaction information for a given user', function(done) {
         done();
-      })
-    })
+      });
+    });
 
   });
 

@@ -10,8 +10,9 @@ class PlaidLinkComponent extends Component {
     this.state = {
       plaidData: {},
       public_token: ''
-    }
-    this.handleOnSuccess = this.handleOnSuccess.bind(this)
+    };
+
+    this.handleOnSuccess = this.handleOnSuccess.bind(this);
   }
 
   handleOnSuccess(token, metadata) {

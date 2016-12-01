@@ -13,7 +13,7 @@ const FieldGroup = ({ id, label, ...props }) => {
       <FormControl {...props} />
     </FormGroup>
   );
-}
+};
 
 class ChangePasswordModal extends Component {
   constructor(props) {
@@ -51,7 +51,7 @@ class ChangePasswordModal extends Component {
 
   checkPassword (e) {
     e.preventDefault();
-    if(this.state.newPassword1 === this.state.newPassword2) {
+    if (this.state.newPassword1 === this.state.newPassword2) {
       this.setState({ newPasswordMatch: true});
       this.closePassword();
       axios.post(server + '/api/user/update', {
@@ -63,7 +63,7 @@ class ChangePasswordModal extends Component {
       })
       .catch(function(err) {
         console.log('error in checkPassword POST ', err);
-      })
+      });
     } else {
       this.setState({ newPasswordMatch: false });
     }

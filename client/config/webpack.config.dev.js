@@ -81,6 +81,10 @@ module.exports = {
       'react-native': 'react-native-web'
     }
   },
+
+  eslint: {
+    configFile: '../.eslintrc.js'
+  },
   
   module: {
     // First, run the linter.

@@ -117,15 +117,15 @@ class CharityProfilePage extends Component {
         <div className="charityProfilePage">
           <button className='backButton' onClick={browserHistory.goBack}>&#x2190; Back To Search Results</button>
           <Grid>
-            <Row className='lessPadding'>
-              <Col md={4} mdPush={8}>
+            <Row className='charityInfo lessPadding'>
+              <Col md={3} mdPush={9}>
               {
                 this.state.selected ?
                   <Button onClick={this.openModal} className="removeCharity" bsStyle="primary">Remove from My Charities</Button>
                 : <Button onClick={this.openModal} className="addCharity" bsStyle="primary">Add to My Charities</Button>
               }
               </Col>
-              <Col md={8} mdPull={4}>
+              <Col md={9} mdPull={3}>
               <div className='charityName'>{this.state.charity.name}</div>
               {
                 this.state.charity.id_owner ? <div className="charityAuthor">Created by: {<a href={"/profile/" + this.state.charityAuthor.id}> {this.state.authorName}</a>}</div> 
@@ -133,13 +133,13 @@ class CharityProfilePage extends Component {
               }
               <div className="category">{this.state.charity.nteeType}</div>
               {
-                this.state.charity.mission_statement ?
-                  <div className="mission">{this.state.charity.mission_statement}</div>
+                this.state.charity.url ?
+                  <div className="charityType">{this.state.charity.url}</div>
                 : null
               }
               {
-                this.state.charity.url ?
-                  <div className="charityType">{this.state.charity.url}</div>
+                this.state.charity.mission_statement ?
+                  <div className="mission">{this.state.charity.mission_statement}</div>
                 : null
               }
               {

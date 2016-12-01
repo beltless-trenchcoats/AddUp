@@ -223,12 +223,14 @@ app.post('/api/session/signup', function(req, res) {
 });
 
 app.delete('/api/plaid/delete', function(res, req) {
-  axios.delete('https://tartan.plaid.com/connect', {
-    client_id: '',
-    secret: '',
-    access_token: ''
-  })
-})
+  Users.updateFields(req.body.email, {plaid_public_token: null}, function(resp, err) {
+    if(err) {
+      res.send('error deleting', err);
+    } else {
+      res.sendStatus(201);
+    }
+  });
+});
 
 //login users
 app.post('/api/session/login', function(req, res) {

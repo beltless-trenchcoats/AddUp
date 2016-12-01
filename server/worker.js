@@ -8,8 +8,8 @@ var plaid = require('plaid');
 var server = require('./config/config');
 
 //COMMENT THESE IN FOR DEV MODE
-var env = require('node-env-file');
-env(__dirname + '/config/.env');
+// var env = require('node-env-file');
+// env(__dirname + '/config/.env');
 
 // Note: This should be the testing key unless we actually want to charge real money!
 var test_key = 'sk_test_eKJNtjs3Il6V1QZvyKs1dS6y';

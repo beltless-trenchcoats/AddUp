@@ -43,7 +43,7 @@ bower install
 ```
 
 
-![start-dev-mode](https://gfycat.com/ScarceCreepyHarvestmen)
+![start-dev-mode](https://gfycat.com/MilkyOnlyAyeaye)
 ### Roadmap
 
 View the project roadmap [here](LINK_TO_PROJECT_ISSUES)

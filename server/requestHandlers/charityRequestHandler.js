@@ -4,6 +4,10 @@ var Transactions = require('../db/controllers/transactions');
 var Charities = require('../db/controllers/charities');
 var helper = require('../helpers');
 
+//COMMENT THESE IN FOR DEV MODE
+var env = require('node-env-file');
+env(__dirname + '/../config/.env');
+
 //Sample request body (body can take category, searchTerm, category, city, state, zipCode)
 // {
 //   "category": "A",
@@ -202,4 +206,8 @@ exports.updateCustomCause = function(req, res) {
     res.send(result);
   });
 };
+
+exports.gmaps = function(req, res) {
+  res.send(process.env.GMAPS_KEY);
+}
 

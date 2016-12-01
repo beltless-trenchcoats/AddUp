@@ -7,8 +7,8 @@ var aws = require('aws-sdk');
 var S3_BUCKET = process.env.S3_BUCKET || 'addupp-profile-photos';
 
 //COMMENT THESE IN FOR DEV MODE
-// var env = require('node-env-file');
-// env(__dirname + '/../config/.env');
+var env = require('node-env-file');
+env(__dirname + '/../config/.env');
 
 exports.updateUserCharities = function(req, res) {
   var userEmail = req.body.email;

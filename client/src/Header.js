@@ -72,7 +72,7 @@ class Header extends Component {
     this.setState({ showSignupModal: false, validationError: false });
   }
   openSignup() {
-    this.setState({invalidPassword: false});
+    this.setState({ invalidPassword: false });
     this.setState({ showSignupModal: true });
   }
   closeLogout() {

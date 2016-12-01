@@ -161,7 +161,6 @@ exports.getCharityInfoFromDB = function (req, res) {
 
 
 //===================CUSTOM CAUSES=====================
-
 // app.post('/api/customCause/add', 
 exports.addCustomCause = function(req, res) {
   Charities.createCharity(req.body, function(err, result) {
@@ -173,7 +172,6 @@ exports.addCustomCause = function(req, res) {
     }
   })
 };
-
 
 // app.post('/api/customCause/search', 
 exports.searchCustomCause = function(req, res) {

@@ -78,7 +78,7 @@ class CustomCauseProfilePage extends Component {
             </Col>
             <h3>{this.state.charity.name}</h3>
             <div className="charityType">{this.state.charity.mission_statement}</div>
-            <h3> ${this.state.charity.total_donated * 100 / this.state.charity.dollar_goal ? Math.floor(this.state.charity.total_donated * 100 / this.state.charity.dollar_goal) : 0}% Funded!</h3>
+            <h3> {this.state.charity.total_donated * 100 / this.state.charity.dollar_goal ? Math.floor(this.state.charity.total_donated * 100 / this.state.charity.dollar_goal) : 0}% Funded!</h3>
             <h3> Fundraising Goal: ${this.state.charity.dollar_goal}</h3>
             <h3> Total AddUp+ Donations to Date: ${this.state.charity.total_donated}</h3>
           </Row>

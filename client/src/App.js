@@ -13,12 +13,13 @@ import Header from './Header';
 
 class App extends Component {
   constructor(props) {
-    super(props)
+    super(props);
+
     this.state = {
       data: [],
       totalDonated: 0,
       charityPieChartData: []
-    }
+    };
   }
 
   componentWillMount() {
@@ -33,17 +34,17 @@ class App extends Component {
         daysData[dayString] = daysData[dayString] + elt.amount || elt.amount;
         totalDonated += elt.amount;
       });
-      totalDonated = Math.floor(totalDonated*100) / 100;
+      totalDonated = Math.floor(totalDonated * 100) / 100;
       this.setState({totalDonated: totalDonated});
       var data = [];
       for (var key in daysData) {
-        if(key) {
+        if (key) {
           data.push({name: key, 'Amount Donated': daysData[key]});
         }
       }
-      data.sort(function(a,b) {
-        var bNum = Number(''+b.name.split('/')[1] + b.name.split('/')[0]);
-        var aNum = Number(''+a.name.split('/')[1] + a.name.split('/')[0]);
+      data.sort(function(a, b) {
+        var bNum = Number('' + b.name.split('/')[1] + b.name.split('/')[0]);
+        var aNum = Number('' + a.name.split('/')[1] + a.name.split('/')[0]);
         return (aNum - bNum);
       });
       this.setState({data: data});

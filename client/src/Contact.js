@@ -2,13 +2,6 @@ import React, { Component } from 'react';
 import Header from './Header';
 
 class Contact extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-
-    }
-  }
-
   render () {
     return (
       <Header>
@@ -20,7 +13,7 @@ class Contact extends Component {
           </div>
         </div>
       </Header>
-    )
+    );
   }
 }
 

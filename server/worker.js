@@ -21,64 +21,6 @@ var secret = process.env.PLAID_SECRET;
 var plaidClient = new plaid.Client(client_id, secret, plaid.environments.tartan);
 // var plaidClient = new plaid.Client(client_id, secret, plaid.environments.production);
 
-// This function will be called whenever we want to check if a user has made new transactions
-var processDailyTransactions = function() {
-  Users.getUserFields('', function(err, users) {
-    users.forEach(user => {
-      //If the user has linked a bank account through plaid
-      if (user.plaid_access_token && user.plaid_public_token) {
-        axios.post(server + '/api/plaid/transactions', {
-            'access_token': user.plaid_access_token
-          })
-          .then(resp => {
-            var transactions = resp.data.transactions;
-            var newTransactions = findRecentTransactions(user, transactions);
-            //if there are new transactions, add up the round ups, charge the user, and distribute to charities
-            if (newTransactions.length > 0) {
-              var amtToCharge = newTransactions.reduce((totalAmt, trans) => totalAmt + roundUpTransaction(trans), 0);
-
-              // Add any pending balances the user has
-              amtToCharge += user.pending_balance;
-
-              //if user's monthly limit would be exceeded by this amount, only charge amt up to monthly_limit
-              var limitWouldExceed = false;
-              if ((user.monthly_total + amtToCharge) > user.monthly_limit) {
-                amtToCharge = user.monthly_limit - user.monthly_total;
-                limitWouldExceed = true;
-              }
-
-              // If the amount < 0.50, we can't charge it yet, will save with other updates
-              var amtToSave = 0;
-              if (amtToCharge < 0.50) {
-                amtToSave = amtToCharge;
-                amtToCharge = 0;
-              }
-
-              charge(user, Math.floor(amtToCharge * 100) / 100);
-
-              var newTotal = user.monthly_total + amtToCharge;
-
-              if (limitWouldExceed) {
-                Users.updateUser(user.email, {
-                  last_transaction_id: newTransactions[0]._id,
-                  monthly_total: newTotal,
-                  pending_balance: 0
-                }, () => {});
-              } else { // Otherwise, save it back to db
-                Users.updateUser(user.email, {
-                  last_transaction_id: newTransactions[0]._id,
-                  monthly_total: newTotal,
-                  pending_balance: amtToSave
-                }, () => {});
-              }
-            }
-          })
-          .catch(err => console.log('error pinging localhost:', err));
-      }
-    });
-  });
-};
-
 // Return new transactions since last transaction checked
 var findRecentTransactions = function(user, transactions) {
   //filter transactions for correct account and whether they are already an even dollar amount and positive
@@ -105,13 +47,31 @@ var roundUpTransaction = function(transaction) {
   return 1 - (transaction.amount % 1).toFixed(2);
 };
 
+//check if limit has been reached for custom charity
+var distributeDonation = function(user, amount) {
+  UsersCharities.getUserCharityFields(user.email, null, (err, charities) => {
+    if (charities) {
+      charities.forEach(userCharity => {
+        var charity_id = userCharity.id_charities;
+        var amountForCharity = (amount * userCharity.percentage).toFixed(2);
+        Transactions.insert(user.id, charity_id, amountForCharity, () => {});
+        Charities.updateBalance(charity_id, {total_donated: amountForCharity, balance_owed: amountForCharity}, () => {
+          if (userCharity.type === 'custom' && userCharity.total_donated >= userCharity.dollar_goal) {
+            UsersCharities.updatePercentage(user.email, userCharity.name, 0, () => {});
+          }
+        });
+      });
+    }
+  });
+};
+
 var charge = function(user, amount) {
   plaidClient.exchangeToken(user.plaid_public_token, user.plaid_account_id, function(err, exchangeTokenRes) {
     var stripe_token = exchangeTokenRes.stripe_bank_account_token;
     var chargeAmount = amount * 100; // Note: The stripe charge takes an integer representing the number of cents (100 = $1.00)
     var charge = stripe.charges.create({
       amount: chargeAmount,
-      currency: "usd",
+      currency: 'usd',
       source: stripe_token
     }, function(err, charge) {
       if (err && err.type === 'StripeCardError') {
@@ -128,24 +88,63 @@ var charge = function(user, amount) {
   });
 };
 
-//check if limit has been reached for custom charity
-var distributeDonation = function(user, amount) {
-  UsersCharities.getUserCharityFields(user.email, null, (err, charities) => {
-    if (charities) {
-      charities.forEach(userCharity => {
-        var charity_id = userCharity.id_charities;
-        var amountForCharity = (amount * userCharity.percentage).toFixed(2);
-        Transactions.insert(user.id, charity_id, amountForCharity, () => {});
-        Charities.updateBalance(charity_id, {total_donated: amountForCharity, balance_owed: amountForCharity}, () => {
-          if (userCharity.type === 'custom' && userCharity.total_donated >= userCharity.dollar_goal) {
-            UsersCharities.updatePercentage(user.email, userCharity.name, 0, function(response) {
-            });
-          };
-        });
-      });
-    }
+// This function will be called whenever we want to check if a user has made new transactions
+var processDailyTransactions = function() {
+  Users.getUserFields('', function(err, users) {
+    users.forEach(user => {
+      //If the user has linked a bank account through plaid
+      if (user.plaid_access_token && user.plaid_public_token) { 
+        axios.post(server + '/api/plaid/transactions', {
+          'access_token': user.plaid_access_token
+        })
+        .then(resp => {
+          var transactions = resp.data.transactions;
+          var newTransactions = findRecentTransactions(user, transactions);
+          //if there are new transactions, add up the round ups, charge the user, and distribute to charities
+          if (newTransactions.length > 0) {
+            var amtToCharge = newTransactions.reduce((totalAmt, trans) => totalAmt + roundUpTransaction(trans), 0);
+
+            // Add any pending balances the user has
+            amtToCharge += user.pending_balance;
+
+            //if user's monthly limit would be exceeded by this amount, only charge amt up to monthly_limit
+            var limitWouldExceed = false;
+            if ((user.monthly_total + amtToCharge) > user.monthly_limit) {
+              amtToCharge = user.monthly_limit - user.monthly_total;
+              limitWouldExceed = true;
+            }
+
+            // If the amount < 0.50, we can't charge it yet, will save with other updates
+            var amtToSave = 0;
+            if (amtToCharge < 0.50) {
+              amtToSave = amtToCharge;
+              amtToCharge = 0;
+            }
+
+            charge(user, Math.floor(amtToCharge * 100) / 100);
+
+            var newTotal = user.monthly_total + amtToCharge;
+
+            if (limitWouldExceed) {
+              Users.updateUser(user.email, {
+                last_transaction_id: newTransactions[0]._id,
+                monthly_total: newTotal,
+                pending_balance: 0
+              }, () => {});
+            } else { // Otherwise, save it back to db
+              Users.updateUser(user.email, {
+                last_transaction_id: newTransactions[0]._id,
+                monthly_total: newTotal,
+                pending_balance: amtToSave
+              }, () => {});
+            }
+          }
+        })
+        .catch(err => console.log('error pinging localhost:', err));
+      }
+    });
   });
-}
+};
 
 module.exports = {
   processDailyTransactions: processDailyTransactions,

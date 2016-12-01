@@ -19,7 +19,7 @@ class CustomCauseProfilePage extends Component {
       donations: [],
       showCauseModal: false,
       userSession: {},
-    }
+    };
   }
 
   componentWillMount () {
@@ -41,12 +41,12 @@ class CustomCauseProfilePage extends Component {
       this.setState({donations: res.data});
     })
     .catch((err) => {
-      console.log(err)
-    })
+      console.log(err);
+    });
   }
 
   openCause () {
-    this.setState({ showCauseModal: true})
+    this.setState({ showCauseModal: true});
   }
 
   getCharityInfo () {
@@ -55,15 +55,15 @@ class CustomCauseProfilePage extends Component {
       type: 'custom'
     })
     .then((res) => {
-      this.setState({charity: res.data})
+      this.setState({charity: res.data});
     })
     .catch((err) => {
-      console.log(err)
-    })
+      console.log(err);
+    });
   }
 
   closeCause () {
-    this.setState({ showCauseModal: false})
+    this.setState({ showCauseModal: false});
   }
 
   render() {

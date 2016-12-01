@@ -7,11 +7,11 @@ class UserCharityCard extends Component {
       return 'No Donations On File';
     }
     var options = {
-      month: "short",
-      year: "numeric",
-      day: "numeric"
+      month: 'short',
+      year: 'numeric',
+      day: 'numeric'
     };
-    return 'since ' + date.toLocaleDateString("en-us", options)
+    return 'since ' + date.toLocaleDateString('en-us', options);
   }
   
   render() {
@@ -19,7 +19,7 @@ class UserCharityCard extends Component {
       <a href={'/' + this.props.charity.type + '/' + (this.props.charity.ein || this.props.charity.id)}>
         <div className='userCharity'>
           <div className='percentInfo'>
-            {this.props.charity.percentage*100} %
+            {this.props.charity.percentage * 100} %
           </div>
           <div className='charityInfo'>
             <div className='title'>{this.props.charity.name}</div>

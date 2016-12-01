@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Button, FormControl } from 'react-bootstrap';
-// import Promise from 'react-promise'
 
 class CharityModalEntry extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       style: 'primary',
       remove: false,
@@ -12,17 +12,18 @@ class CharityModalEntry extends Component {
       name: this.props.charity.name,
       totalDonated: this.props.charity.total_donated,
       percentage: this.props.charity.percentage,
-    }
-    this.prepForRemove = this.prepForRemove.bind(this)
-    this.handleChange = this.handleChange.bind(this)
+    };
+    
+    this.prepForRemove = this.prepForRemove.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
   componentWillMount () {
-    this.props.updateTotal.call(null, this.state.percentage)
+    this.props.updateTotal.call(null, this.state.percentage);
   }
 
   prepForRemove () {
-    var e = {target: {value: 0}}
-    this.state.style === 'primary' ? this.setState({ style: 'danger' }) : this.setState({ style: 'primary' })
+    var e = {target: {value: 0}};
+    this.state.style === 'primary' ? this.setState({ style: 'danger' }) : this.setState({ style: 'primary' });
     this.setState({ remove: !this.state.remove }, () => this.handleChange(e));
   }
 
@@ -42,7 +43,7 @@ class CharityModalEntry extends Component {
         <td>${this.props.charity.user_donation_total || 0}</td>
         <td>
           <FormControl componentClass="select" onChange={this.handleChange} disabled={this.state.remove}>
-            <option value={this.state.percentage}>{(this.state.percentage*100) + '%'}</option>
+            <option value={this.state.percentage}>{(this.state.percentage * 100) + '%'}</option>
             <option value="1">100%</option>
             <option value="0.9">90%</option>
             <option value="0.8">80%</option>
@@ -61,7 +62,7 @@ class CharityModalEntry extends Component {
 
     );
   }
-};
+}
 
 export default CharityModalEntry;
  

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Navbar, FormGroup, FormControl, Button, DropdownButton, MenuItem } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import axios from 'axios';
-import $ from "jquery";
+import $ from 'jquery';
 import { browserHistory } from 'react-router';
 
 import server from '../../server/config/config';
@@ -50,18 +50,8 @@ class SearchPage extends Component {
     this.setState(obj);
   }
 
-
-  onSearchInput (type, e) {
-    var stateChange = {};
-    stateChange[type] = e.target.value;
-    this.setState(stateChange);
-  }
-
-  handleSelect (evt,evtKey) {
-    // what am I suppose to write in there to get the value?
-    console.log('EVENT', evt);
-
-    if(evt[1].split('').length > 25) {
+  handleSelect (evt, evtKey) {
+    if (evt[1].split('').length > 25) {
       evt[1] = evt[1].substring(0, 25) + '...';
     }
     this.setState({category: evt[0], categoryName: evt[1]});
@@ -88,8 +78,9 @@ class SearchPage extends Component {
           queryStr += options[i] + '=0';
         } else if (options[i] === 'state') {
           queryStr += options[i] + '=' + this.state[options[i]].toUpperCase();
+        } else {
+          queryStr += options[i] + '=' + this.state[options[i]];
         }
-        else queryStr += options[i] + '=' + this.state[options[i]];
       }
     }
     browserHistory.push('/search#' + queryStr);
@@ -100,10 +91,10 @@ class SearchPage extends Component {
     if (document.location.hash) {
       this.setState({isLoading: true});
       var searchTerms = {
-          eligible: 1,
-          type: this.state.type,
-          private: 'false'
-        };
+        eligible: 1,
+        type: this.state.type,
+        private: 'false'
+      };
 
       var searchFields = document.location.hash.slice(1).split('&');
       searchFields.forEach(pair => {
@@ -118,15 +109,13 @@ class SearchPage extends Component {
           searchResults: res.data,
           isLoading: false
         }, function() {
-          this.state.searchResults.map((charity, i) => {
-            <CharitySearchResult key={i} info={charity} />
-          })
-          this.setState({initialPage:(Number(document.location.hash.split('=')[document.location.hash.split('=').length-1])) / 20});
-        })
+          this.state.searchResults.map((charity, i) => <CharitySearchResult key={i} info={charity} />);
+          this.setState({initialPage: (Number(document.location.hash.split('=')[document.location.hash.split('=').length - 1])) / 20});
+        });
       })
       .catch((err) => {
         console.log(err);
-      })
+      });
     }
   }
   //this function is called by ReactPaginate component
@@ -134,7 +123,7 @@ class SearchPage extends Component {
     if (!this.state.firstLoad) {
       var pageDifference = (data.selected - this.state.lastPage);
       var resultDifference = pageDifference * 20;
-      this.setState({start: parseInt(this.state.start) + resultDifference, lastPage: this.state.lastPage + pageDifference},
+      this.setState({start: parseInt(this.state.start, 10) + resultDifference, lastPage: this.state.lastPage + pageDifference},
         function() {
           this.navigateBySearchTerms();
         }
@@ -143,8 +132,6 @@ class SearchPage extends Component {
       this.setState({firstLoad: false});
     }
   }
-
-
 
   render() {
     return (
@@ -162,32 +149,32 @@ class SearchPage extends Component {
                     onChange={this.onSearchInput.bind(this, 'searchTerm')}
                   />
                   <DropdownButton bsStyle={'default'} title={this.state.categoryName || 'Category'} id={'categoryDropdown'} onSelect={this.handleSelect.bind(this)}>
-                    <MenuItem eventKey={["", 'Category']}>Category</MenuItem>
-                    <MenuItem eventKey={["A", 'Arts, Culture and Humanities']}>Arts, Culture and Humanities</MenuItem>
-                    <MenuItem eventKey={["B", 'Educational Institutions and Related Activities']}>Educational Institutions and Related Activities</MenuItem>
-                    <MenuItem eventKey={["C", 'Environmental Quality, Protection and Beautification']}>Environmental Quality, Protection and Beautification</MenuItem>
-                    <MenuItem eventKey={["D", 'Animal-Related']}>Animal-Related</MenuItem>
-                    <MenuItem eventKey={["E", 'Health - General and Rehabilitative']}>Health - General and Rehabilitative</MenuItem>
-                    <MenuItem eventKey={["F", 'Mental Health, Crisis Intervention']}>Mental Health, Crisis Intervention</MenuItem>
-                    <MenuItem eventKey={["G", 'Diseases, Disorders, Medical Disciplines']}>Diseases, Disorders, Medical Disciplines</MenuItem>
-                    <MenuItem eventKey={["H", 'Medical Research']}>Medical Research</MenuItem>
-                    <MenuItem eventKey={["I", 'Crime, Legal-Related']}>Crime, Legal-Related</MenuItem>
-                    <MenuItem eventKey={["J", 'Employment, Job-Related']}>Employment, Job-Related</MenuItem>
-                    <MenuItem eventKey={["K", 'Food, Agriculture and Nutrition']}>Food, Agriculture and Nutrition</MenuItem>
-                    <MenuItem eventKey={["L", 'Housing, Shelter']}>Housing, Shelter</MenuItem>
-                    <MenuItem eventKey={["M", 'Public Safety, Disaster Preparedness and Relief']}>Public Safety, Disaster Preparedness and Relief</MenuItem>
-                    <MenuItem eventKey={["N", 'Recreation, Sports, Leisure, Athletics']}>Recreation, Sports, Leisure, Athletics</MenuItem>
-                    <MenuItem eventKey={["O", 'Youth Development']}>Youth Development</MenuItem>
-                    <MenuItem eventKey={["P", 'Human Services - Multipurpose and Other']}>Human Services - Multipurpose and Other</MenuItem>
-                    <MenuItem eventKey={["Q", 'International, Foreign Affairs and National Security']}>International, Foreign Affairs and National Security</MenuItem>
-                    <MenuItem eventKey={["R", 'Civil Rights, Social Action, Advocacy']}>Civil Rights, Social Action, Advocacy</MenuItem>
-                    <MenuItem eventKey={["S", 'Community Improvement, Capacity Building']}>Community Improvement, Capacity Building</MenuItem>
-                    <MenuItem eventKey={["T", 'Philanthropy, Voluntarism and Grantmaking Foundations']}>Philanthropy, Voluntarism and Grantmaking Foundations</MenuItem>
-                    <MenuItem eventKey={["U", 'Science and Technology Research Institutes, Services']}>Science and Technology Research Institutes, Services</MenuItem>
-                    <MenuItem eventKey={["V", 'Social Science Research Institutes, Services']}>Social Science Research Institutes, Services</MenuItem>
-                    <MenuItem eventKey={["W", 'Public, Society Benefit - Multipurpose and Other']}>Public, Society Benefit - Multipurpose and Other</MenuItem>
-                    <MenuItem eventKey={["X", 'Religion-Related, Spiritual Development']}>Religion-Related, Spiritual Development</MenuItem>
-                    <MenuItem eventKey={["Y", 'Mutual/Membership Benefit Organizations, Other']}>Mutual/Membership Benefit Organizations, Other</MenuItem>
+                    <MenuItem eventKey={['', 'Category']}>Category</MenuItem>
+                    <MenuItem eventKey={['A', 'Arts, Culture and Humanities']}>Arts, Culture and Humanities</MenuItem>
+                    <MenuItem eventKey={['B', 'Educational Institutions and Related Activities']}>Educational Institutions and Related Activities</MenuItem>
+                    <MenuItem eventKey={['C', 'Environmental Quality, Protection and Beautification']}>Environmental Quality, Protection and Beautification</MenuItem>
+                    <MenuItem eventKey={['D', 'Animal-Related']}>Animal-Related</MenuItem>
+                    <MenuItem eventKey={['E', 'Health - General and Rehabilitative']}>Health - General and Rehabilitative</MenuItem>
+                    <MenuItem eventKey={['F', 'Mental Health, Crisis Intervention']}>Mental Health, Crisis Intervention</MenuItem>
+                    <MenuItem eventKey={['G', 'Diseases, Disorders, Medical Disciplines']}>Diseases, Disorders, Medical Disciplines</MenuItem>
+                    <MenuItem eventKey={['H', 'Medical Research']}>Medical Research</MenuItem>
+                    <MenuItem eventKey={['I', 'Crime, Legal-Related']}>Crime, Legal-Related</MenuItem>
+                    <MenuItem eventKey={['J', 'Employment, Job-Related']}>Employment, Job-Related</MenuItem>
+                    <MenuItem eventKey={['K', 'Food, Agriculture and Nutrition']}>Food, Agriculture and Nutrition</MenuItem>
+                    <MenuItem eventKey={['L', 'Housing, Shelter']}>Housing, Shelter</MenuItem>
+                    <MenuItem eventKey={['M', 'Public Safety, Disaster Preparedness and Relief']}>Public Safety, Disaster Preparedness and Relief</MenuItem>
+                    <MenuItem eventKey={['N', 'Recreation, Sports, Leisure, Athletics']}>Recreation, Sports, Leisure, Athletics</MenuItem>
+                    <MenuItem eventKey={['O', 'Youth Development']}>Youth Development</MenuItem>
+                    <MenuItem eventKey={['P', 'Human Services - Multipurpose and Other']}>Human Services - Multipurpose and Other</MenuItem>
+                    <MenuItem eventKey={['Q', 'International, Foreign Affairs and National Security']}>International, Foreign Affairs and National Security</MenuItem>
+                    <MenuItem eventKey={['R', 'Civil Rights, Social Action, Advocacy']}>Civil Rights, Social Action, Advocacy</MenuItem>
+                    <MenuItem eventKey={['S', 'Community Improvement, Capacity Building']}>Community Improvement, Capacity Building</MenuItem>
+                    <MenuItem eventKey={['T', 'Philanthropy, Voluntarism and Grantmaking Foundations']}>Philanthropy, Voluntarism and Grantmaking Foundations</MenuItem>
+                    <MenuItem eventKey={['U', 'Science and Technology Research Institutes, Services']}>Science and Technology Research Institutes, Services</MenuItem>
+                    <MenuItem eventKey={['V', 'Social Science Research Institutes, Services']}>Social Science Research Institutes, Services</MenuItem>
+                    <MenuItem eventKey={['W', 'Public, Society Benefit - Multipurpose and Other']}>Public, Society Benefit - Multipurpose and Other</MenuItem>
+                    <MenuItem eventKey={['X', 'Religion-Related, Spiritual Development']}>Religion-Related, Spiritual Development</MenuItem>
+                    <MenuItem eventKey={['Y', 'Mutual/Membership Benefit Organizations, Other']}>Mutual/Membership Benefit Organizations, Other</MenuItem>
                   </DropdownButton>
                   <FormControl
                     type="text"
@@ -230,10 +217,10 @@ class SearchPage extends Component {
           </div>
           <div className="pagination">
             {(this.state.searchResults.length !== 0) ?
-              <ReactPaginate previousLabel={"previous"}
-                 nextLabel={"next"}
-                 breakLabel={<a href="">...</a>}
-                 breakClassName={"break-me"}
+              <ReactPaginate previousLabel={'previous'}
+                 nextLabel={'next'}
+                 breakLabel={<a href=''>...</a>}
+                 breakClassName={'break-me'}
                  marginPagesDisplayed={2}
                  pageRangeDisplayed={5}
                  clickCallback={this.pageSelect.bind(this)}

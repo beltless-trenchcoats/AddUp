@@ -16,11 +16,12 @@ const FieldGroup = ({ id, label, ...props }) => {
       <FormControl {...props} />
     </FormGroup>
   );
-}
+};
 
 class Header extends Component {
   constructor(props) {
-    super(props)
+    super(props);
+
     this.state = {
       showLoginModal: false,
       showSignupModal: false,
@@ -33,23 +34,24 @@ class Header extends Component {
       firstname: '',
       lastname: '',
       invalidPassword: false
-    }
-    this.closeLogin = this.closeLogin.bind(this)
-    this.openLogin = this.openLogin.bind(this)
-    this.closeSignup = this.closeSignup.bind(this)
-    this.openSignup = this.openSignup.bind(this)
-    this.closeLogout = this.closeLogout.bind(this)
-    this.openLogout = this.openLogout.bind(this)
-    this.toggleModal = this.toggleModal.bind(this)
-    this.logoutUser = this.logoutUser.bind(this)
-    this.signupUser = this.signupUser.bind(this)
-    this.loginUser = this.loginUser.bind(this)
-    this.logoutUser = this.logoutUser.bind(this)
-    this.onPassword1Change = this.onPassword1Change.bind(this)
-    this.onPassword2Change = this.onPassword2Change.bind(this)
-    this.onEmailChange = this.onEmailChange.bind(this)
-    this.onFirstnameChange = this.onFirstnameChange.bind(this)
-    this.onLastnameChange = this.onLastnameChange.bind(this)
+    };
+
+    this.closeLogin = this.closeLogin.bind(this);
+    this.openLogin = this.openLogin.bind(this);
+    this.closeSignup = this.closeSignup.bind(this);
+    this.openSignup = this.openSignup.bind(this);
+    this.closeLogout = this.closeLogout.bind(this);
+    this.openLogout = this.openLogout.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
+    this.logoutUser = this.logoutUser.bind(this);
+    this.signupUser = this.signupUser.bind(this);
+    this.loginUser = this.loginUser.bind(this);
+    this.logoutUser = this.logoutUser.bind(this);
+    this.onPassword1Change = this.onPassword1Change.bind(this);
+    this.onPassword2Change = this.onPassword2Change.bind(this);
+    this.onEmailChange = this.onEmailChange.bind(this);
+    this.onFirstnameChange = this.onFirstnameChange.bind(this);
+    this.onLastnameChange = this.onLastnameChange.bind(this);
   }
 
   componentWillMount() {
@@ -86,14 +88,14 @@ class Header extends Component {
     this.setState({
       showSignupModal: !this.state.showSignupModal,
       showLoginModal: !this.state.showLoginModal
-    })
+    });
   }
 
   signupUser (e) {
     e.preventDefault();
     if (!this.validatePassword(this.state.password1)) {
       this.setState({invalidPassword: true});
-    } else if(this.state.password1 === this.state.password2) {
+    } else if (this.state.password1 === this.state.password2) {
       axios.post(server + '/api/session/signup', {
         email: this.state.email,
         password: this.state.password1,
@@ -102,9 +104,9 @@ class Header extends Component {
       })
       .then((res) => {
         if (res.data) {
-          document.cookie = "email=" + res.data.email;
-          document.cookie = "firstname=" + res.data.first_name;
-          document.cookie = "lastname=" + res.data.last_name;
+          document.cookie = 'email=' + res.data.email;
+          document.cookie = 'firstname=' + res.data.first_name;
+          document.cookie = 'lastname=' + res.data.last_name;
           this.setState({
             loggedIn: true
           });
@@ -119,14 +121,13 @@ class Header extends Component {
       .catch((err) => {
         console.log(err);
       });
-    }
-    else {
+    } else {
       this.setState({ validationError: true});
     }
   }
 
   validatePassword(password) {
-    return (password.search(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!#%*?&])[A-Za-z\d$@$!#%*?&]{8,}/i) !== -1)
+    return (password.search(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!#%*?&])[A-Za-z\d$@$!#%*?&]{8,}/i) !== -1);
   }
 
   loginUser (e) {
@@ -143,9 +144,9 @@ class Header extends Component {
           lastname: res.data.last_name,
           loggedIn: true
         });
-        document.cookie = "email=" + res.data.email;
-        document.cookie = "firstname=" + res.data.first_name;
-        document.cookie = "lastname=" + res.data.last_name;
+        document.cookie = 'email=' + res.data.email;
+        document.cookie = 'firstname=' + res.data.first_name;
+        document.cookie = 'lastname=' + res.data.last_name;
         this.closeLogin();
         browserHistory.push('/user');
       } else {
@@ -180,19 +181,19 @@ class Header extends Component {
   }
 
   onPassword2Change (e) {
-    this.setState({password2: e.target.value})
+    this.setState({password2: e.target.value});
   }
 
   onEmailChange (e) {
-    this.setState({email: e.target.value})
+    this.setState({email: e.target.value});
   }
 
   onFirstnameChange (e) {
-    this.setState({firstname: e.target.value})
+    this.setState({firstname: e.target.value});
   }
 
   onLastnameChange (e) {
-    this.setState({lastname: e.target.value})
+    this.setState({lastname: e.target.value});
   }
 
   render() {

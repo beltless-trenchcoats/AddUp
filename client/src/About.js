@@ -3,12 +3,6 @@ import { Link } from 'react-router';
 import Header from './Header';
 
 class About extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-
-    }
-  }
 
   render () {
     return (
@@ -27,7 +21,7 @@ class About extends Component {
           </div>
         </div>
       </Header>
-    )
+    );
   }
 }
 

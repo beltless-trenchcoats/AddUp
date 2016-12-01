@@ -10,14 +10,14 @@ describe('Database Controller Functions', function() {
       // runs after all tests in this block
       // console.log('deleting now');
       db.query({
-          text: "DELETE FROM users \
-            WHERE email = 'databasetests@gmail.com';"
-        }, 
-        function(err, results) {
-          if (err) {
-            console.log(err);
-          }
-        });
+        text: "DELETE FROM users \
+          WHERE email = 'databasetests@gmail.com';"
+      }, 
+      function(err, results) {
+        if (err) {
+          console.log(err);
+        }
+      });
     });
 
     it('should add a user to the database and encrypt password', function(done) {
@@ -25,20 +25,20 @@ describe('Database Controller Functions', function() {
       .then(function(response) {
         expect(response).to.equal(true);
         db.query({
-            text: "SELECT * FROM users \
-              WHERE email = 'databasetests@gmail.com';"
-          }, 
-          function(err, results) {
-            if (err) {
-              console.log(err);
-            } else {
-              expect(results.rowCount).to.equal(1);
-              expect(results.rows[0].password).to.not.equal('test123#');
-              expect(results.rows[0].first_name).to.equal('Helga');
-              expect(results.rows[0].last_name).to.equal('McHelgerson');
-              done();
-            }
-          });
+          text: "SELECT * FROM users \
+            WHERE email = 'databasetests@gmail.com';"
+        }, 
+        function(err, results) {
+          if (err) {
+            console.log(err);
+          } else {
+            expect(results.rowCount).to.equal(1);
+            expect(results.rows[0].password).to.not.equal('test123#');
+            expect(results.rows[0].first_name).to.equal('Helga');
+            expect(results.rows[0].last_name).to.equal('McHelgerson');
+            done();
+          }
+        });
       });
 
     });
@@ -57,22 +57,22 @@ describe('Database Controller Functions', function() {
       Users.updateUser('databasetests@gmail.com', {plaid_access_token: null, password: 'newpasswordyesyesyes', pending_balance: 8}, function(result) {
         expect(result).to.equal('success');
         db.query({
-            text: "SELECT * FROM users \
-              WHERE email = 'databasetests@gmail.com';"
-          }, 
-          function(err, results) {
-            if (err) {
-              console.log(err);
-            } else {
-              expect(results.rowCount).to.equal(1);
-              expect(results.rows[0].plaid_access_token).to.equal(null);
-              expect(results.rows[0].pending_balance).to.equal(8);
-              Users.loginUser('databasetests@gmail.com', 'newpasswordyesyesyes', function(success) {
-                expect(success).to.equal(true);
-                done();
-              });
-            }
-          });
+          text: "SELECT * FROM users \
+            WHERE email = 'databasetests@gmail.com';"
+        }, 
+        function(err, results) {
+          if (err) {
+            console.log(err);
+          } else {
+            expect(results.rowCount).to.equal(1);
+            expect(results.rows[0].plaid_access_token).to.equal(null);
+            expect(results.rows[0].pending_balance).to.equal(8);
+            Users.loginUser('databasetests@gmail.com', 'newpasswordyesyesyes', function(success) {
+              expect(success).to.equal(true);
+              done();
+            });
+          }
+        });
       });
     });
 
@@ -84,7 +84,7 @@ describe('Database Controller Functions', function() {
           } else {
             var filteredData = data.filter(function(element) {
               return (element.email === 'databasetests@gmail.com');
-            })
+            });
             expect(filteredData.length).to.equal(1);
             done();
           }

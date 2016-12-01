@@ -4,10 +4,6 @@ import React, { Component } from 'react';
 
 
 class Donation extends Component {
-  constructor(props) {
-    super(props)
-    console.log('props', props);
-  }
 
   convertToReadableDate(date_time) {
     var date = new Date(date_time);

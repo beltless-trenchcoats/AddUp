@@ -16,37 +16,37 @@ var port = process.env.PORT || 8080;
 
 app.use(parser.json(), function(req, res, next) {
   //allow cross origin requests from client, and Plaid API
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   next();
 });
 
 app.use('/', express.static(__dirname + '/../client/build'));
 
 app.get('/charity/*', function(req, res) {
-    res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+  res.sendFile(path.join(__dirname + '/../client/build/index.html'));
 });
 app.get('/custom/*', function(req, res) {
-    res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+  res.sendFile(path.join(__dirname + '/../client/build/index.html'));
 });
 app.get('/search*', function(req, res) {
-    res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+  res.sendFile(path.join(__dirname + '/../client/build/index.html'));
 });
 app.get('/user', function(req, res) {
-    res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+  res.sendFile(path.join(__dirname + '/../client/build/index.html'));
 });
 app.get('/about', function(req, res) {
-    res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+  res.sendFile(path.join(__dirname + '/../client/build/index.html'));
 });
 app.get('/contact', function(req, res) {
-    res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+  res.sendFile(path.join(__dirname + '/../client/build/index.html'));
 });
 app.get('/profile/*', function(req, res) {
-    res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+  res.sendFile(path.join(__dirname + '/../client/build/index.html'));
 });
 app.get('/myCause/edit/*', function(req, res) {
-    res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+  res.sendFile(path.join(__dirname + '/../client/build/index.html'));
 });
 
 //===================USER AUTH=====================
@@ -74,7 +74,7 @@ app.get('/sign-s3', userHandler.getS3Url);
 
 
 //===================EXISTING CHARITIES=====================
-app.post('/api/charity',charityHandler.getCharityInfo);
+app.post('/api/charity', charityHandler.getCharityInfo);
 app.post('/api/charity/savedInfo', charityHandler.getCharityInfoFromDB);
 app.post('/api/charities/search', charityHandler.charitySearch);
 app.get('/api/gmaps', charityHandler.gmaps);
@@ -89,7 +89,7 @@ app.post('/charityInfo', charityHandler.getCharityInfo);
 
 
 app.get('/*', function(req, res) {
-    res.sendFile(path.join(__dirname + '/../client/build/404.html'));
+  res.sendFile(path.join(__dirname + '/../client/build/404.html'));
 });
 
 app.listen(port, function() {

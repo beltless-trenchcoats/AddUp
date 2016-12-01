@@ -21,13 +21,23 @@ class CharityProfilePage extends Component {
       basicCharityInfo: {},
       showModal: false,
       selected: false, //TODO: Add flag to change button depending on if charity is already selected
-      invalidCharity: false
+      invalidCharity: false,
+      gmapsKey: ''
     }
     this.openModal = this.openModal.bind(this)
     this.closeModal = this.closeModal.bind(this)
   }
 
   componentWillMount () {
+    axios.get(server + '/api/gmaps')
+    .then((res) => {
+      this.setState({
+        gmapsKey: res.data
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
     axios.post(server + '/api/charity', {
       charityId: this.state.charityId,
       type: this.props.params.type
@@ -74,6 +84,7 @@ class CharityProfilePage extends Component {
     .catch((err) => {
       console.log(err)
     });
+
   }
 
   openModal() {
@@ -122,16 +133,21 @@ class CharityProfilePage extends Component {
               }
               <div className="charityActivities">
                 {
-                  this.state.charity.activity1 ? this.state.charity.activity1 + ',' : null
+                  this.state.charity.activity1 ? this.state.charity.activity1 : null
                 }
                 {
-                  this.state.charity.activity2 ? this.state.charity.activity2 + ',' : null
+                  this.state.charity.activity2 ?  ', ' + this.state.charity.activity2 : null
                 }
-                {this.state.charity.activity3}
+                { this.state.charity.activity3 ? ',' + this.state.charity.activity3 : null }
               </div>
               {
+                this.state.charity.url ?
+                  <div className="charityType">{this.state.charity.url}</div>
+                : null
+              }
+              {
                 this.props.params.type==='custom' ?
-                  <h3> ${
+                  <h3> {
                     this.state.charity.total_donated * 100 / this.state.charity.dollar_goal ?
                       Math.floor(this.state.charity.total_donated * 100 / this.state.charity.dollar_goal)
                       : 0}% Funded!</h3>
@@ -171,13 +187,13 @@ class CharityProfilePage extends Component {
                 <div className="address">{this.state.charity.city}, {this.state.charity.state} {this.state.charity.zipCode}</div>
                 <div className="address">{this.state.charity.country}</div>
                 <div className="map">
-                  {this.props.params.type==='custom' ? null : <Gmaps
+                  {this.props.params.type==='custom' || !(this.state.gmapsKey) ? null : <Gmaps
                     width={'300px'}
                     height={'300px'}
                     lat={this.state.charity.latitude}
                     lng={this.state.charity.longitude}
                     zoom={12}
-                    params={{v: '3.exp', key: process.env.GMAPS_KEY}}
+                    params={{v: '3.exp', key: this.state.gmapsKey}}
                     onMapCreated={this.onMapCreated}>
                     <Marker
                       lat={this.state.charity.latitude}

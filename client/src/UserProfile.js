@@ -53,8 +53,7 @@ class UserProfile extends Component {
       bankInfo: {},
       charities: [],
       customCauses: [],
-      showEditCharitiesModal: false,
-      showRemoveAccountModal: false
+      showEditCharitiesModal: false
     }
     this.setCustomCauses = this.setCustomCauses.bind(this);
     this.setSession = this.setSession.bind(this);
@@ -62,12 +61,10 @@ class UserProfile extends Component {
     this.newLimit = this.newLimit.bind(this);
     this.setMonthlyLimit = this.setMontlyLimit.bind(this);
     this.scrollDown = this.scrollDown.bind(this);
-    this.closeEditCharitiesModal = this.closeEditCharitiesModal.bind(this);
     this.updateCharities = this.updateCharities.bind(this);
     this.openEditCharitiesModal = this.openEditCharitiesModal.bind(this)
+    this.closeEditCharitiesModal = this.closeEditCharitiesModal.bind(this);
     this.downloadTransactions = this.downloadTransactions.bind(this);
-    this.openRemoveAccountModal = this.openRemoveAccountModal.bind(this);
-    this.closeRemoveAccountModal = this.closeRemoveAccountModal.bind(this);
     this.deleteAccount = this.deleteAccount.bind(this);
     this.fixPlaidButtonStyling = this.fixPlaidButtonStyling.bind(this);
   }
@@ -286,30 +283,20 @@ class UserProfile extends Component {
     this.setState({ showEditCharitiesModal: false });
   }
 
-  openRemoveAccountModal () {
-    this.setState({showRemoveAccountModal: true});
-  }
-
-  closeRemoveAccountModal () {
-    this.setState({showRemoveAccountModal: false});
-  }
-
   deleteAccount() {
     axios.post(server + '/api/plaid/delete', {
       email: this.state.userInfo.email
     })
     .then((res) => {
-      console.log('delete account', res)
       this.setState({ 
         bankInfo: {},
         hasLinkAccount: false
-      })
+      });
+      $('#step1').addClass('incomplete');
     })
     .catch((err)=> {
       console.log(err);
     })
-    this.closeRemoveAccountModal();
-
   }
 
   scrollDown() {
@@ -373,23 +360,22 @@ class UserProfile extends Component {
               <div className='profileOptions'>
                 <Col md={4} xs={4}>
                   <div className='step'>Step 1</div>
-                {
-                  !this.state.hasLinkAccount ?
-                    <div id='step1' className='stepBox shadowbox'>
-                      <form id="some-id"></form>
-                      <text className='profileHeader'> </text>
-                      <div className='linkText'>Link a bank account</div>
-                      <PlaidLinkComponent fixStylingFunc={this.fixPlaidButtonStyling} successFunc={this.displayLinkAccount}/>
-                    </div>
-                  :
-                    <div id='step1' className="stepBox shadowbox">
-                      <div className='linked'>&#10004;</div>
-                      <div className='stepText'>{this.state.bankInfo.bank_name}</div>
-                      <text className='account'>Account ending in: {this.state.bankInfo.bank_digits}</text>
-                      <Button className='removeBankButton' onClick={this.openRemoveAccountModal}>Remove Account</Button>
-                    </div>
-                }
-                
+                  {
+                    !this.state.hasLinkAccount ?
+                      <div id='step1' className='stepBox shadowbox'>
+                        <form id="some-id"></form>
+                        <text className='profileHeader'> </text>
+                        <div className='linkText'>Link a bank account</div>
+                        <PlaidLinkComponent fixStylingFunc={this.fixPlaidButtonStyling} successFunc={this.displayLinkAccount}/>
+                      </div>
+                    :
+                      <div id='step1' className="stepBox shadowbox">
+                        <div className='linked'>&#10004;</div>
+                        <div className='stepText'>{this.state.bankInfo.bank_name}</div>
+                        <text className='account'>Account ending in: {this.state.bankInfo.bank_digits}</text>
+                        <RemoveAccountModal currentUser={this.state.userInfo} deleteAccount={this.deleteAccount} />
+                      </div>
+                  }
                 </Col>
                 <Col md={4} xs={4}>
                   <div className='step'>Step 2</div>
@@ -516,14 +502,6 @@ class UserProfile extends Component {
           currentCharity={{}}
           updateProfile={this.updateCharities}
         />
-
-        <RemoveAccountModal 
-          show={this.state.showRemoveAccountModal}
-          onHide={this.closeRemoveAccountModal}
-          currentUser={this.state.userInfo}
-          deleteAccount={this.deleteAccount}
-        />
-
 
         <div className="donationGraph">
           <AreaChart width={1000} height={400} data={transactionChartData} syncId="anyId"

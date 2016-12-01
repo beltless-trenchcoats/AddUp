@@ -41,6 +41,7 @@ class AddCauseModal extends Component {
   onFieldChange(type, e) {
     var fields = this.state.addCustomCauseFields;
     if (typeof e.target.value === 'string') {
+      // eslint-disable-next-line 
       fields[type] = e.target.value.replace("'", "");
     } else {
       fields[type] = e.target.value;

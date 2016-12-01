@@ -13,6 +13,7 @@ import CharitySearchResult from './CharitySearchResult';
 class SearchPage extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       isLoading: false,
       searchTerm: '',
@@ -24,10 +25,11 @@ class SearchPage extends Component {
       categoryName: '',
       type: 'Charity',
       searchResults: [],
-      lastPage: (Number(document.location.hash.split('=')[document.location.hash.split('=').length-1])) / 20,
-      firstLoad: (((Number(document.location.hash.split('=')[document.location.hash.split('=').length-1])) / 20) > 0),
-      initialPage: (Number(document.location.hash.split('=')[document.location.hash.split('=').length-1])) / 20
-    }
+      lastPage: (Number(document.location.hash.split('=')[document.location.hash.split('=').length - 1])) / 20,
+      firstLoad: (((Number(document.location.hash.split('=')[document.location.hash.split('=').length - 1])) / 20) > 0),
+      initialPage: (Number(document.location.hash.split('=')[document.location.hash.split('=').length - 1])) / 20
+    };
+
     this.getResults = this.getResults.bind(this);
     this.onSearchInput = this.onSearchInput.bind(this);
     this.navigateBySearchTerms = this.navigateBySearchTerms.bind(this);
@@ -224,9 +226,9 @@ class SearchPage extends Component {
                  marginPagesDisplayed={2}
                  pageRangeDisplayed={5}
                  clickCallback={this.pageSelect.bind(this)}
-                 containerClassName={"pagination"}
-                 subContainerClassName={"pages pagination"}
-                 activeClassName={"active"}
+                 containerClassName={'pagination'}
+                 subContainerClassName={'pages pagination'}
+                 activeClassName={'active'}
                  initialSelected={this.state.initialPage}
                  />
               : null

@@ -44,8 +44,10 @@ class CharityModal extends Component {
         } else {
           //test if current charity is already linked to user
           if (this.props.currentCharity.type === 'custom') {
+            // eslint-disable-next-line 
             (((usersCharities.filter((charity) => charity.id === this.props.currentCharity.id)).length > 0) ? null : usersCharities.push(this.props.currentCharity));
           } else {
+            // eslint-disable-next-line 
             (((usersCharities.filter((charity) => charity.ein === this.props.currentCharity.ein)).length > 0) ? null : usersCharities.push(this.props.currentCharity));
           }
         }
@@ -62,6 +64,7 @@ class CharityModal extends Component {
   }
 
   updateTotal (percentage) {
+    // eslint-disable-next-line 
     var newTotal = (this.state.donationTotal += percentage);
     newTotal = Math.round(newTotal * 100) / 100;
     this.setState( { donationTotal: newTotal} );

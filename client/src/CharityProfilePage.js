@@ -29,10 +29,8 @@ class CharityProfilePage extends Component {
   }
 
   componentWillMount () {
-    console.log('server', server);
     axios.get(server + '/api/gmaps')
     .then((res) => {
-      console.log('maps key', res.data);
       this.setState({
         gmapsKey: res.data
       });
@@ -87,10 +85,6 @@ class CharityProfilePage extends Component {
       console.log(err)
     });
 
-  }
-
-  componentDidMount() {
-    console.log('maps key', this.state.gmapsKey);
   }
 
   openModal() {

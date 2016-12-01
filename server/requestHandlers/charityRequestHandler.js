@@ -1,13 +1,8 @@
 var request = require('request');
 
-var Transactions = require('./db/controllers/transactions');
-var Charities = require('./db/controllers/charities');
-var helper = require('./helpers');
-
-//COMMENT THESE IN FOR DEV MODE
-// var env = require('node-env-file');
-// env(__dirname + '/config/.env');
-
+var Transactions = require('../db/controllers/transactions');
+var Charities = require('../db/controllers/charities');
+var helper = require('../helpers');
 
 //Sample request body (body can take category, searchTerm, category, city, state, zipCode)
 // {
@@ -15,9 +10,7 @@ var helper = require('./helpers');
 //   "city": "Santa Rosa",
 //   "state": "CA"
 // }
-
-//app.post('/api/charities/search',
-charitySearch = function(req, res) {
+exports.charitySearch = function(req, res) {
   if (req.body.type === 'Custom Cause') {
     var keyWordMap = {
       searchTerm: 'name',
@@ -72,59 +65,44 @@ charitySearch = function(req, res) {
 };
 
 //charityId in request is EIN
-//app.post('/api/charity', 
-getCharityInfo = function (req, res) {
-  if (req.body.type === 'charity') {
-    var options = {
-      method: 'post',
-      body: {charityId: req.body.charityId},
-      json: true,
-      url: 'http://data.orghunter.com/v1/charitypremium?user_key=' + process.env.ORGHUNTER_KEY + '&ein=' + req.body.charityId
-    };
-    request(options, function (err, result, body) {
-      if (err) {
-        console.log(err);
-        res.send(err);
-      } else {
-        Charities.getCharityFields({ein: req.body.charityId}, function(err, result) {
-          if (err) {
-            console.log(err);
-          } else {
-            var toSend = body.data;
-            toSend.total_donated = result[0] ? result[0].total_donated : 0;
-            res.send(JSON.stringify(toSend));
-          }
-        });
-      }
-    });
-  } else {
-    Charities.getCharityFields({id: req.body.charityId}, function(err, result) {
-      if (err) {
-        console.log(err);
-      } else {
-        var toSend = result[0];
-        toSend.category = helper.convertCategoryToString(toSend.category);
-        res.send(toSend);
-      }
-    });
-  }
-};
+// exports.getCharityInfo = function (req, res) {
+//   if (req.body.type === 'charity') {
+//     var options = {
+//       method: 'post',
+//       body: {charityId: req.body.charityId},
+//       json: true,
+//       url: 'http://data.orghunter.com/v1/charitypremium?user_key=' + process.env.ORGHUNTER_KEY + '&ein=' + req.body.charityId
+//     };
+//     request(options, function (err, result, body) {
+//       if (err) {
+//         console.log(err);
+//         res.send(err);
+//       } else {
+//         Charities.getCharityFields({ein: req.body.charityId}, function(err, result) {
+//           if (err) {
+//             console.log(err);
+//           } else {
+//             var toSend = body.data;
+//             toSend.total_donated = result[0] ? result[0].total_donated : 0;
+//             res.send(JSON.stringify(toSend));
+//           }
+//         });
+//       }
+//     });
+//   } else {
+//     Charities.getCharityFields({id: req.body.charityId}, function(err, result) {
+//       if (err) {
+//         console.log(err);
+//       } else {
+//         var toSend = result[0];
+//         toSend.category = helper.convertCategoryToString(toSend.category);
+//         res.send(toSend);
+//       }
+//     });
+//   }
+// };
 
-//app.post('/api/charity/savedInfo', 
-
-getCharityInfoFromDB = function (req, res) {
-  Charities.getCharityFields({ein: req.body.ein}, function (err, data) {
-    if (err) {
-      res.send(err)
-    } else {
-      res.send(data[0])
-    }
-  })
-}
-
-app.post('/charityInfo', 
-
-getCharityInfo = function (req, res) {
+exports.getCharityInfo = function (req, res) {
   if (req.body.type === 'charity') {
     var options = {
       method: 'post',
@@ -165,13 +143,27 @@ getCharityInfo = function (req, res) {
       }
     });
   }
-});
+};
+
+//app.post('/api/charity/savedInfo', 
+
+exports.getCharityInfoFromDB = function (req, res) {
+  Charities.getCharityFields({ein: req.body.ein}, function (err, data) {
+    if (err) {
+      res.send(err)
+    } else {
+      res.send(data[0])
+    }
+  })
+}
+
+
 
 
 //===================CUSTOM CAUSES=====================
 
 // app.post('/api/customCause/add', 
-addCustomCause = function(req, res) {
+exports.addCustomCause = function(req, res) {
   Charities.createCharity(req.body, function(err, result) {
     if (err) {
       console.log(err);
@@ -184,7 +176,7 @@ addCustomCause = function(req, res) {
 
 
 // app.post('/api/customCause/search', 
-searchCustomCause = function(req, res) {
+exports.searchCustomCause = function(req, res) {
   Charities.searchCustomCauses(req.body, function(err, result) {
     if (err) {
       console.log(err);
@@ -196,7 +188,7 @@ searchCustomCause = function(req, res) {
 };
 
 // app.post('/api/customCause/transactions', 
-getCustomCauseTransactions = function(req, res) {
+exports.getCustomCauseTransactions = function(req, res) {
   Transactions.getTransactionsForCharity(req.body.charityID, function(err, response) {
     if (err) {
       res.send(err);
@@ -207,7 +199,7 @@ getCustomCauseTransactions = function(req, res) {
 };
 
 // app.post('/api/charity/update', 
-updateCustomCause = function(req, res) {
+exports.updateCustomCause = function(req, res) {
   Charities.updateCharity(req.body.charityID, req.body.updateFields, function(result) {
     res.send(result);
   });

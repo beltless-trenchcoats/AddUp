@@ -59,7 +59,7 @@ class UserProfile extends Component {
     this.setSession = this.setSession.bind(this);
     this.displayLinkAccount = this.displayLinkAccount.bind(this);
     this.newLimit = this.newLimit.bind(this);
-    this.setMonthlyLimit = this.setMontlyLimit.bind(this);
+    this.setMonthlyLimit = this.setMonthlyLimit.bind(this);
     this.scrollDown = this.scrollDown.bind(this);
     this.updateCharities = this.updateCharities.bind(this);
     this.openEditCharitiesModal = this.openEditCharitiesModal.bind(this)
@@ -257,7 +257,7 @@ class UserProfile extends Component {
     this.setState({newMonthlyLimit: e.target.value});
   }
 
-  setMontlyLimit(e) {
+  setMonthlyLimit(e) {
     e.preventDefault();
     if (this.state.newMonthlyLimit > 0) {
       $('#limitInput').removeClass('invalidLimit');
@@ -385,7 +385,7 @@ class UserProfile extends Component {
                     }
                     <div className='stepText'>Set A Monthly Limit</div>
                     <text className='limit'>$ <FormControl id='limitInput' placeholder='e.g. 50' onChange={this.newLimit}></FormControl></text>
-                    <Button onClick={this.setMontlyLimit}>Save</Button>
+                    <Button onClick={this.setMonthlyLimit}>Save</Button>
                   </div>  
                 </Col>
                 <Col md={4} xs={4}>

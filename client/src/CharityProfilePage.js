@@ -147,7 +147,7 @@ class CharityProfilePage extends Component {
               }
               {
                 this.props.params.type==='custom' ?
-                  <h3> ${
+                  <h3> {
                     this.state.charity.total_donated * 100 / this.state.charity.dollar_goal ?
                       Math.floor(this.state.charity.total_donated * 100 / this.state.charity.dollar_goal)
                       : 0}% Funded!</h3>

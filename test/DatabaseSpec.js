@@ -17,7 +17,6 @@ describe('Database Controller Functions', function() {
           if (err) {
             console.log(err);
           }
-          done();
         });
     });
 

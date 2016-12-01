@@ -336,6 +336,10 @@ app.get('/api/transactions/all', function(req, res) {
 
 //charityId in request is EIN
 app.post('/api/charity', function (req, res) {
+  if (!Number.isInteger(Number(req.body.charityId))) {
+    res.send('Not Found');
+    return;
+  }
   if (req.body.type === 'charity') {
     var options = {
       method: 'post',
@@ -348,6 +352,10 @@ app.post('/api/charity', function (req, res) {
         console.log(err);
         res.send(err);
       } else {
+        if (result.body.code && result.body.code === 404) {
+          res.send('Not Found');
+          return;
+        }
         Charities.getCharityFields({ein: req.body.charityId}, function(err, result) {
           if (err) {
             console.log(err);

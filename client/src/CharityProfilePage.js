@@ -135,8 +135,9 @@ class CharityProfilePage extends Component {
                 this.state.charity.id_owner ? <div className="charityAuthor">Created by: {<a href={"/profile/" + this.state.charityAuthor.id}> {this.state.authorName}</a>}</div> 
                 : null 
               }
-
-              <div className="category">{this.state.charity.nteeType}</div>
+              {
+                this.state.charity.nteeType !== 'Not Provided' ? <div className="category">{this.state.charity.nteeType}</div> : null
+              }
               {
                 this.state.charity.url ?
                   <div className="charityType">{this.state.charity.url}</div>
@@ -189,14 +190,14 @@ class CharityProfilePage extends Component {
               <Col md={6} mdPull={6} className="charityLocation">
                 <div className="map">
                   {
-                    this.props.params.type==='custom' ? null : 
+                    this.props.params.type==='custom' || !(this.state.gmapsKey) ? null : 
                     <Gmaps
                       width={'300px'}
                       height={'300px'}
                       lat={this.state.charity.latitude}
                       lng={this.state.charity.longitude}
                       zoom={12}
-                      params={{v: '3.exp', key: process.env.GMAPS_KEY}}
+                      params={{v: '3.exp', key: this.state.gmapsKey}}
                       onMapCreated={this.onMapCreated}>
                       <Marker
                         lat={this.state.charity.latitude}

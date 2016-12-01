@@ -42,7 +42,7 @@ npm install
 bower install
 ```
 
-
+### Setting Up Dev Mode
 ![Screenshot](https://github.com/MythlinMasterdo/thesis/blob/master/client/assets/images/dev-gif2.gif)
 ### Roadmap
 

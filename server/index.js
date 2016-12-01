@@ -6,10 +6,10 @@ var userHandler = require('./requestHandlers/userRequestHandler');
 var charityHandler = require('./requestHandlers/charityRequestHandler');
 var transactionRequestHandler = require('./requestHandlers/transactionRequestHandler');
 var authRequestHandler = require('./requestHandlers/authRequestHandler');
+var helpers = require('./helpers');
 
-//COMMENT THESE IN FOR DEV MODE
-var env = require('node-env-file');
-env(__dirname + '/config/.env');
+//edit helper function to set to dev mode or production mode
+helpers.mode();
 
 var app = express();
 var port = process.env.PORT || 8080;
@@ -84,6 +84,7 @@ app.post('/api/customCause/add', charityHandler.addCustomCause);
 app.post('/api/customCause/search', charityHandler.searchCustomCause);
 app.post('/api/customCause/transactions', charityHandler.getCustomCauseTransactions);
 app.post('/api/charity/update', charityHandler.updateCustomCause);
+app.post('/charityInfo', charityHandler.getCharityInfo);
 
 
 

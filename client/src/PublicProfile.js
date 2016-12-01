@@ -65,7 +65,7 @@ class PublicProfile extends Component {
             <Col xs={7} md={7}>
               {<div className='welcome'>{this.state.profileInfo.first_name} {this.state.lastInitial}.</div>}
             </Col>
-            <Col xs={3} md={3}>
+            <Col xs={3} md={3} className="profilePhoto">
               <div className="profilePhotoImage">
                 {this.state.profileInfo.photo_url ? <img src={this.state.profileInfo.photo_url} alt="Profile" className="image"/> : <FaUser className="image"/>}
               </div>

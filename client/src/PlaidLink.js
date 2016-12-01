@@ -34,6 +34,10 @@ class PlaidLinkComponent extends Component {
       this.props.successFunc(this.state.plaidData.institution.name, resp.data);
     });
   }
+  
+  componentDidMount() {
+    this.props.fixStylingFunc();
+  }
 
   render() {
     return (

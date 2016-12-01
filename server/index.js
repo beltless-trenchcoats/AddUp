@@ -360,7 +360,23 @@ app.post('/api/charity', function (req, res) {
           } else {
             var toSend = body.data;
             toSend.total_donated = result[0] ? result[0].total_donated : 0;
-            res.send(JSON.stringify(toSend));
+            var options = {
+              method: 'post',
+              body: {ein: req.body.charityId},
+              json: true,
+              url: 'http://data.orghunter.com/v1/charitysearch?user_key=' + process.env.ORGHUNTER_KEY
+            };
+            request(options, function (err, result, body) {
+              if (err) {
+                console.log(err);
+                res.send(err);
+              } else {
+                console.log('second request', body.data[0].missionStatement, body.data[0].url);
+                toSend.mission_statement = body.data[0].missionStatement;
+                toSend.url = body.data[0].url;
+                res.send(JSON.stringify(toSend));
+              }
+            });
           }
         });
       }
@@ -610,6 +626,10 @@ app.get('/sign-s3', (req, res) => {
     res.write(JSON.stringify(returnData));
     res.end();
   });
+});
+
+app.get('/api/gmaps', function(req, res) {
+  res.send(process.env.GMAPS_KEY);
 });
 
 app.get('/*', function(req, res) {

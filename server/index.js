@@ -22,8 +22,8 @@ var server = require('./config/config');
 var path = require('path');
 
 //COMMENT THESE IN FOR DEV MODE
-// var env = require('node-env-file');
-// env(__dirname + '/config/.env');
+var env = require('node-env-file');
+env(__dirname + '/config/.env');
 
 var app = express();
 var port = process.env.PORT || 8080;
@@ -32,6 +32,7 @@ app.use(parser.json(), function(req, res, next) {
   //allow cross origin requests from client, and Plaid API
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   next();
 });
 
@@ -230,13 +231,10 @@ app.post('/api/session/signup', function(req, res) {
     });
 });
 
-app.delete('/api/plaid/delete', function(res, req) {
-  Users.updateFields(req.body.email, {plaid_public_token: null}, function(resp, err) {
-    if(err) {
-      res.send('error deleting', err);
-    } else {
-      res.sendStatus(201);
-    }
+app.post('/api/plaid/delete', function(req, res) {
+  console.log('PLAID DELETE!!!', req.body.email)
+  Users.updateUser(req.body.email, {plaid_access_token: null, bank_name: null, bank_digits: null}, function(result) {
+    res.send(result)
   });
 });
 

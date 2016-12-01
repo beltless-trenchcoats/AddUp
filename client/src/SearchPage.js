@@ -134,7 +134,6 @@ class SearchPage extends Component {
     if (!this.state.firstLoad) {
       var pageDifference = (data.selected - this.state.lastPage);
       var resultDifference = pageDifference * 20;
-      console.log('data selected', data.selected, 'last page', this.state.lastPage, 'result diff', resultDifference, 'start', parseInt(this.state.start) );
       this.setState({start: parseInt(this.state.start) + resultDifference, lastPage: this.state.lastPage + pageDifference},
         function() {
           this.navigateBySearchTerms();

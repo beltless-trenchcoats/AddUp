@@ -7,32 +7,40 @@ import axios from 'axios';
 class RemoveAccountModal extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      showRemoveAccountModal: false
-      
+      showRemoveAccountModal: false      
     };
-    this.close = this.close.bind(this);
+
+    this.openRemoveAccountModal = this.openRemoveAccountModal.bind(this);
+    this.closeRemoveAccountModal = this.closeRemoveAccountModal.bind(this);
   }
 
-  close() {
-    this.props.onHide();
+  openRemoveAccountModal () {
+    this.setState({showRemoveAccountModal: true});
+  }
+
+  closeRemoveAccountModal () {
+    this.setState({showRemoveAccountModal: false});
   }
 
   render() {
-    {console.log('currentUSer', this.props.currentUser.email)}
     return (
-        <Modal show={this.props.show} onHide={this.close}>
-          <Modal.Header closeButton>
-            <Modal.Title>Remove Your Linked Account</Modal.Title>
-          </Modal.Header>
+    <div>
+      <Button className='removeBankButton' onClick={this.openRemoveAccountModal}>Remove Account</Button>
+      <Modal show={this.state.showRemoveAccountModal} onHide={this.closeRemoveAccountModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Remove Your Linked Account</Modal.Title>
+        </Modal.Header>
 
-          <Modal.Body>Are you sure you want to remove this account from AddUp++? </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={this.props.deleteAccount}>Remove Account</Button>
-            <Button bsStyle="primary" onClick={this.close}>Cancel</Button>
+        <Modal.Body>Are you sure you want to remove this account from AddUp++? </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={this.props.deleteAccount}>Remove Account</Button>
+          <Button bsStyle="primary" onClick={this.closeRemoveAccountModal}>Cancel</Button>
 
-          </Modal.Footer>
-        </Modal>
+        </Modal.Footer>
+      </Modal>
+    </div>
     );
   }
 };

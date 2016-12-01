@@ -23,7 +23,6 @@ class RemoveAccountModal extends Component {
   }
 
   render() {
-    {console.log(this.props)}
     return (
         <Modal classNam show={this.props.show} onHide={this.close}>
           <Modal.Header closeButton>
@@ -33,7 +32,7 @@ class RemoveAccountModal extends Component {
           <Modal.Body>Are you sure you want to remove this account from AddUp++? </Modal.Body>
           <Modal.Footer>
             <Button onClick={this.deleteAccount}>Remove Account</Button>
-            <Button onClick={this.close}>Cancel</Button>
+            <Button bsStyle="primary" onClick={this.close}>Cancel</Button>
 
           </Modal.Footer>
         </Modal>

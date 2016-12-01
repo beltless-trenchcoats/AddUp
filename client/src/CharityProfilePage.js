@@ -20,7 +20,8 @@ class CharityProfilePage extends Component {
       authorName: '',
       basicCharityInfo: {},
       showModal: false,
-      selected: false //TODO: Add flag to change button depending on if charity is already selected
+      selected: false, //TODO: Add flag to change button depending on if charity is already selected
+      invalidCharity: false
     }
     this.openModal = this.openModal.bind(this)
     this.closeModal = this.closeModal.bind(this)
@@ -32,24 +33,28 @@ class CharityProfilePage extends Component {
       type: this.props.params.type
     })
     .then((res) => {
-      res.data.name = res.data.name.split(' ').map(word => _.capitalize(word)).join(' ');
-      this.setState({
-        charity: res.data,
-        basicCharityInfo: {
-          name: res.data.name,
-          ein: res.data.ein,
-          city: res.data.city,
-          state: res.data.state,
-          zip: res.data.zipCode || res.data.zip,
-          donation_url: res.data.donationUrl || res.data.donation_url,
-          mission_statement: res.data.missionStatement || res.data.mission_statement,
-          id: res.data.id,
-          type: res.data.type || 'charity'
-        }
-      })
+      if (res.data === 'Not Found') {
+        this.setState({invalidCharity: true});
+      } else {
+        res.data.name = res.data.name.split(' ').map(word => _.capitalize(word)).join(' ');
+        this.setState({
+          charity: res.data,
+          basicCharityInfo: {
+            name: res.data.name,
+            ein: res.data.ein,
+            city: res.data.city,
+            state: res.data.state,
+            zip: res.data.zipCode || res.data.zip,
+            donation_url: res.data.donationUrl || res.data.donation_url,
+            mission_statement: res.data.missionStatement || res.data.mission_statement,
+            id: res.data.id,
+            type: res.data.type || 'charity'
+          }
+        });
+      }
     })
     .then(() => {
-      if (this.state.charity.id_owner) {
+      if (!this.state.invalidCharity && this.state.charity.id_owner) {
         axios.post(server + '/api/user/info', {
           idOrEmail: (this.state.charity.id_owner).toString()
         })
@@ -92,6 +97,11 @@ class CharityProfilePage extends Component {
 
   render() {
     return (
+    <div>
+      {
+        this.state.invalidCharity ? 
+        <h1>404 Not Found</h1>
+        :
       <Header>
         <div className="charityProfilePage">
           <button className='backButton' onClick={browserHistory.goBack}>&#x2190; Back To Search Results</button>
@@ -191,6 +201,8 @@ class CharityProfilePage extends Component {
         }
 
       </Header>
+      }
+      </div>
     );
   }
 }

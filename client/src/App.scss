@@ -624,17 +624,21 @@ label, .label {
   }
 
   .charityName {
-    font-size: 38px;
+    font-size: 40px;
     font-weight: 400;
-    margin: 10px 0;
+    margin: 10px 0 40px 0;
   }
 
-  .charityAuthor, .category {
-    font-size: 20px;
+  .category {
+    font-size: 18px;
+  }
+
+  .charityAuthor{
+    font-size: 24px;
   }
 
   .mission {
-    margin: 20px 0;
+    margin: 10px 0 20px 0;
     font-style: italic;
     font-size: 20px;
   }
@@ -642,6 +646,14 @@ label, .label {
   .donationsToDate {
     font-size: 24px;
     font-weight: 400;
+  }
+
+  .percentFunded {
+    font-size: 32px;
+  }
+
+  .goal {
+    font-size: 24px;
   }
 
   .map {

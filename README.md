@@ -43,7 +43,7 @@ bower install
 ```
 
 ### Setting Up Dev Mode
-![Screenshot](https://github.com/MythlinMasterdo/thesis/blob/master/client/assets/images/dev-gif2.gif)
+![Screenshot](https://github.com/beltless-trenchcoats/addUp/blob/master/client/assets/images/dev-gif2.gif)
 ### Roadmap
 
 View the project roadmap [here](LINK_TO_PROJECT_ISSUES)

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 
-// import axios from 'axios';
+import server from '../../server/config/config';
+import axios from 'axios';
 
 class RemoveAccountModal extends Component {
   constructor(props) {
@@ -10,12 +11,7 @@ class RemoveAccountModal extends Component {
       showRemoveAccountModal: false
       
     };
-    this.deleteAccount = this.deleteAccount.bind(this);
     this.close = this.close.bind(this);
-  }
-
-  deleteAccount() {
-
   }
 
   close() {
@@ -23,15 +19,16 @@ class RemoveAccountModal extends Component {
   }
 
   render() {
+    {console.log('currentUSer', this.props.currentUser.email)}
     return (
-        <Modal classNam show={this.props.show} onHide={this.close}>
+        <Modal show={this.props.show} onHide={this.close}>
           <Modal.Header closeButton>
             <Modal.Title>Remove Your Linked Account</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>Are you sure you want to remove this account from AddUp++? </Modal.Body>
           <Modal.Footer>
-            <Button onClick={this.deleteAccount}>Remove Account</Button>
+            <Button onClick={this.props.deleteAccount}>Remove Account</Button>
             <Button bsStyle="primary" onClick={this.close}>Cancel</Button>
 
           </Modal.Footer>

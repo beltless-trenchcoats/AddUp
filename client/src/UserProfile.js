@@ -68,6 +68,7 @@ class UserProfile extends Component {
     this.downloadTransactions = this.downloadTransactions.bind(this);
     this.openRemoveAccountModal = this.openRemoveAccountModal.bind(this);
     this.closeRemoveAccountModal = this.closeRemoveAccountModal.bind(this);
+    this.deleteAccount = this.deleteAccount.bind(this);
   }
 
   componentWillMount() {
@@ -289,12 +290,29 @@ class UserProfile extends Component {
   }
 
   openRemoveAccountModal () {
-    console.log('OPEN!')
     this.setState({showRemoveAccountModal: true});
   }
 
   closeRemoveAccountModal () {
     this.setState({showRemoveAccountModal: false});
+  }
+
+  deleteAccount() {
+    axios.post(server + '/api/plaid/delete', {
+      email: this.state.userInfo.email
+    })
+    .then((res) => {
+      console.log('delete account', res)
+      this.setState({ 
+        bankInfo: {},
+        hasLinkAccount: false
+      })
+    })
+    .catch((err)=> {
+      console.log(err);
+    })
+    this.closeRemoveAccountModal();
+
   }
 
   scrollDown() {
@@ -499,6 +517,7 @@ class UserProfile extends Component {
           show={this.state.showRemoveAccountModal}
           onHide={this.closeRemoveAccountModal}
           currentUser={this.state.userInfo}
+          deleteAccount={this.deleteAccount}
         />
 
 

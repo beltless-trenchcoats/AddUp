@@ -5,10 +5,10 @@ var Charities = require('../db/controllers/charities');
 
 var aws = require('aws-sdk');
 var S3_BUCKET = process.env.S3_BUCKET || 'addupp-profile-photos';
+var helpers = require('../helpers');
 
-//COMMENT THESE IN FOR DEV MODE
-var env = require('node-env-file');
-env(__dirname + '/../config/.env');
+//edit helper function to set to dev mode or production mode
+helpers.mode();
 
 exports.updateUserCharities = function(req, res) {
   var userEmail = req.body.email;
@@ -112,6 +112,7 @@ exports.updateUserInfo = function(req, res) {
 }
 
 exports.getS3Url = (req, res) => {
+  console.log('this is running access key id', process.env.AWS_ACCESS_KEY_ID, 'secret', process.env.AWS_SECRET_ACCESS_KEY);
   var s3 = new aws.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY});

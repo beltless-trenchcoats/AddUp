@@ -3,10 +3,10 @@ var Users = require('../db/controllers/users');
 var axios = require('axios');
 var bcrypt = require('bcrypt');
 var server = require('../config/config');
+var helpers = require('../helpers');
 
-//COMMENT THESE IN FOR DEV MODE
-var env = require('node-env-file');
-env(__dirname + '/../config/.env');
+//edit helper function to set to dev mode or production mode
+helpers.mode();
 
 var plaid = require('plaid');
 //get Plaid transactions for signed up user

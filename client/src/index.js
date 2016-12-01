@@ -31,7 +31,7 @@ function isAuth (nextState, replace) {
 }
 
 function secureConnection() {
-//COMMENT OUT FOR DEVELOPMENT
+//CHANGE HTTP TO HTTPS FOR DEVELOPMENT
 	if(window.location.protocol === 'http:') {
 		window.location.protocol = 'https:';
 	}

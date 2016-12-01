@@ -55,6 +55,13 @@ app.get('/about', function(req, res) {
 app.get('/contact', function(req, res) {
     res.sendFile(path.join(__dirname + '/../client/build/index.html'));
 });
+app.get('/profile/*', function(req, res) {
+    res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+});
+app.get('/myCause/edit/*', function(req, res) {
+    res.sendFile(path.join(__dirname + '/../client/build/index.html'));
+});
+
 
 
 //accurate interval timer +- 1ms
@@ -596,6 +603,10 @@ app.get('/sign-s3', (req, res) => {
     res.write(JSON.stringify(returnData));
     res.end();
   });
+});
+
+app.get('/*', function(req, res) {
+    res.sendFile(path.join(__dirname + '/../client/build/404.html'));
 });
 
 

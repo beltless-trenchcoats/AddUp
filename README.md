@@ -43,7 +43,7 @@ bower install
 ```
 
 
-![Screenshot](https://giant.gfycat.com/MilkyOnlyAyeaye.webm?raw=true)
+![Screenshot](https://github.com/MythlinMasterdo/thesis/blob/master/client/assets/images/dev-gif2.gif)
 ### Roadmap
 
 View the project roadmap [here](LINK_TO_PROJECT_ISSUES)

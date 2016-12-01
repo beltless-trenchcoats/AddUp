@@ -127,7 +127,8 @@ var weeklyCausePayout = function() {
 }
 
 //pay out once per week
-setInterval(weeklyCausePayout, 604800000);
+setInterval(weeklyCausePayout, 60000);
+// setInterval(weeklyCausePayout, 604800000);
 
 //create your new user with Plaid
 var client_id = process.env.PLAID_CLIENT_ID;

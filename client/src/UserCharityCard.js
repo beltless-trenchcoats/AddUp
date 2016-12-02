@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+//This line allows us to use underscore-style variable names
+/* eslint-disable camelcase */
+
 class UserCharityCard extends Component {
   convertToReadableDate(date_time) {
     var date = new Date(date_time);

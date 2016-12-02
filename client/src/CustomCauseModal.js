@@ -6,6 +6,9 @@ import server from '../../server/config/config';
 
 import categoryHelper from '../../server/helpers';
 
+//This line allows us to use underscore-style variable names
+/* eslint-disable camelcase */
+
 const FieldGroup = ({ id, label, ...props }) => {
   return (
     <FormGroup controlId={id}>

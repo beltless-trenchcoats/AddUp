@@ -18,10 +18,6 @@ AddUp++ aggregates charitable donations through automatic micro-payments by roun
 1. [Team](#team)
 1. [Contributing](#contributing)
 
-## Usage
-
-> Some usage instructions
-
 ## Requirements
 
 - Node 0.10.x

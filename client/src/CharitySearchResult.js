@@ -23,8 +23,8 @@ class CharitySearchResult extends Component {
     return (
      <div>
       <Panel className='charityCard' header={<Link to={{pathname: '/' + this.state.type + '/' + this.state.charityId, state: { searched: true }}}>{this.props.info.charityName}</Link>} bsStyle='info'>
-        <p className='category'>{this.props.info.category}</p>
-        <p className='missionStatement'><span className='missionStatementTitle'>Mission Statement: </span>{this.props.info.missionStatement}</p>
+        { this.props.info.category === 'Not Provided' || this.props.info.category === 'Unknown' ? null : <p className='category'>{this.props.info.category}</p> }
+        { this.props.info.missionStatement ? <p className='missionStatement'><span className='missionStatementTitle'>Mission Statement: </span>{this.props.info.missionStatement}</p> : null }
         <p className='location'>{this.props.info.city}, {this.props.info.state}</p>
         <p className='website'>{this.props.info.website}</p>
         <Link to={{pathname: '/' + this.state.type + '/' + this.state.charityId, state: { searched: true }}}><Button bsStyle='primary'>Learn More and Donate</Button></Link>

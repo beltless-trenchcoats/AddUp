@@ -1,6 +1,6 @@
 # Project Name
 
-> Pithy project description
+AddUp++ aggregates charitable donations through automatic micro-payments by rounding up each credit or debit transaction to the next dollar and sending the change to a charity of your choice. Discover and select from any IRS-recognized charitable organization or user-generated crowd-funding initiative. Alleviate any financial concerns by setting monthly donation limits.
 
 ## Team
 
@@ -25,10 +25,8 @@
 ## Requirements
 
 - Node 0.10.x
-- Redis 2.6.x
-- Postgresql 9.1.x
-- etc
-- etc
+- D3.js
+- Postgresql
 
 ## Development
 
@@ -37,17 +35,16 @@
 From within the root directory:
 
 ```sh
-sudo npm install -g bower
 npm install
-bower install
 ```
 
+From within /client:
+
+```sh
+npm install
+```
 ### Setting Up Dev Mode
 ![Screenshot](https://github.com/beltless-trenchcoats/addUp/blob/master/client/assets/images/dev-gif2.gif)
-### Roadmap
-
-View the project roadmap [here](LINK_TO_PROJECT_ISSUES)
-
 
 ## Contributing
 

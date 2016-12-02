@@ -25,6 +25,7 @@ import RemoveAccountModal from './RemoveAccountModal';
 /* eslint-disable camelcase */
 
 let transactionChartData = [];
+//colors and radian are used to build the pie chart
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FEB4D5', '#FBFF28'];
 
 const RADIAN = Math.PI / 180;
@@ -38,7 +39,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
     </text>
   );
 };
-
+//charityPieChartData contains the info to display in the PieChart
 let charityPieChartData = [];
 
 class UserProfile extends Component {
@@ -75,7 +76,7 @@ class UserProfile extends Component {
   }
 
   componentWillMount() {
-
+    //initiate cookies and set userSession to cookieSession
     var cookies = helpers.parseCookie(document.cookie);
     var cookieSession = {
       email: cookies.email || '',
@@ -87,12 +88,13 @@ class UserProfile extends Component {
     });
 
     var email = cookies.email;
-
+    //make a post to server to get user info
     axios.post(server + '/api/user/info', {
       'idOrEmail': email
     })
     .then(res => {
       console.log('userInfo', res.data);
+      //set user info to different states
       this.setState({
         userInfo: res.data,
         bankInfo: {
@@ -101,37 +103,44 @@ class UserProfile extends Component {
         },
         monthlyLimit: res.data.monthly_limit || '--'
       });
+      //checks if user has a monthlyLimit
       if (this.state.monthlyLimit && this.state.monthlyLimit !== '--') {
         this.setState({monthlyLimitSet: true});
         $('#step2').removeClass('incomplete');
       } else {
         $('#step2').addClass('incomplete');
       }
+      //if there is a bank name, set it
       if (this.state.bankInfo.bank_name) {
         this.setState({hasLinkAccount: true});
         $('#step1').removeClass('incomplete');
       } else {
         $('#step1').addClass('incomplete');
       }
+      //update userSession state with new info
       var userSession = this.state.userSession;
       userSession.id = res.data.id;
       this.setState({userSession: userSession});
+      //check to see if the user has their own custom causes
       axios.post(server + '/api/charities/search', {
         'id_owner': res.data.id,
         'type': 'Custom Cause'
       })
       .then(response => {
         if (response.data) {
+          //if there is a custom cause set customCauses state
           this.setState({customCauses: response.data});
         }
       });
     });
-
+    //check for user transactions
     axios.post(server + '/api/user/transactions', {
       'email': email
     })
     .then(res => {
+      //set transactions state to result
       this.setState({transactions: res.data});
+      //months are set as object for lineChart
       var months = [];
       var January = {'date': 'January', 'Donated': 0 };
       var February = {'date': 'February', 'Donated': 0 };
@@ -146,6 +155,7 @@ class UserProfile extends Component {
       var November = {'date': 'November', 'Donated': 0 };
       var December = {'date': 'December', 'Donated': 0 };
       for (var i = 0; i < 1; i++) {
+        //loop through res.data and add each transaction to correct month
         res.data.forEach( transaction => {
           var newDate = transaction.date_time.split('T');
           var newMonth = newDate[0].split('-');
@@ -175,6 +185,7 @@ class UserProfile extends Component {
             December['Donated'] += transaction.amount;
           }
         });
+        //floor objects so there is no JS rounding errors
         January['Donated'] = Math.floor(January['Donated'] * 100) / 100;
         February['Donated'] = Math.floor(February['Donated'] * 100) / 100;
         March['Donated'] = Math.floor(March['Donated'] * 100) / 100;
@@ -187,26 +198,29 @@ class UserProfile extends Component {
         October['Donated'] = Math.floor(October['Donated'] * 100) / 100;
         November['Donated'] = Math.floor(November['Donated'] * 100) / 100;
         December['Donated'] = Math.floor(December['Donated'] * 100) / 100;
-
+        //push each object into months array for lineChart
         months.push(January, February, March, April, May, June, July, August,
         September, October, November, December);
       }
+      //loop over months and push date/donation totals from month to transactionChartData
       for (var j = 0; j < months.length; j++) {
         transactionChartData.push({ 'Date': months[j].date, 'Donated': months[j].Donated });
       }
     });
-
+    //make a post to check for user charities that they contribute to
     axios.post(server + '/api/user/charities/info', {
       'email': email
     })
     .then(res => {
       this.setState({charities: res.data});
+      //if they have charities set the charitiesSelected state
       if (this.state.charities.length) {
         this.setState({charitiesSelected: true});
         $('#step3').removeClass('incomplete');
       } else {
         $('#step3').addClass('incomplete');
       }
+      //push charities into charityPieChartData for pieChart
       res.data.forEach( charity => {
         if (charity.percentage > 0) {
           charityPieChartData.push({'name': charity.name, 'value': charity.percentage});
@@ -217,19 +231,19 @@ class UserProfile extends Component {
   }
 
   componentDidMount() {
-
+    //check for linked bank accounts for styling
     if (!this.state.hasLinkAccount) {
       $('#step1').addClass('incomplete');
     } else {
       $('#step1').removeClass('incomplete');
     }
-
+    //check for monthly limit for styling
     if (!this.state.monthlyLimitSet) {
       $('#step2').addClass('incomplete');
     } else {
       $('#step2').removeClass('incomplete');
     }
-
+    //check for charities for styling
     if (!this.state.charitiesSelected) {
       $('#step3').addClass('incomplete');
     } else {
@@ -257,11 +271,11 @@ class UserProfile extends Component {
       }
     });
   }
-
+  //setting new monthlyLimit state
   newLimit(e) {
     this.setState({newMonthlyLimit: e.target.value});
   }
-
+  //set monthlyLimit
   setMonthlyLimit(e) {
     e.preventDefault();
     if (this.state.newMonthlyLimit > 0) {
@@ -280,14 +294,14 @@ class UserProfile extends Component {
       $('#limitInput').addClass('invalidLimit');
     }
   }
-
+  //modal for editing charities
   openEditCharitiesModal() {
     this.setState({ showEditCharitiesModal: true });
   }
   closeEditCharitiesModal() {
     this.setState({ showEditCharitiesModal: false });
   }
-
+  //delete bank account
   deleteAccount() {
     axios.post(server + '/api/plaid/delete', {
       email: this.state.userInfo.email
@@ -309,15 +323,15 @@ class UserProfile extends Component {
       scrollTop: $('#charities').offset().top
     }, 'slow');
   }
-
+  //set customCauses state
   setCustomCauses(causes) {
     this.setState({customCauses: causes});
   }
-
+  //set userSession
   setSession(session) {
     this.setState({ userSession: session});
   }
-
+  //download a receipt for past transactions
   downloadTransactions () {
     let transactionTableData = [['Date', 'Amount', 'Recipient Charity']];
     this.state.transactions.forEach(transaction => transactionTableData.push('\n' + [new Date(transaction.date_time).toLocaleDateString(), transaction.amount, transaction.name]));

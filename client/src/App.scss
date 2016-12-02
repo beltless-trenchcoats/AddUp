@@ -589,6 +589,10 @@ label, .label {
     .panel-title {
       color: white;
     }
+
+    .panel-title:hover {
+      color: black;
+    }
   }
 
   .pagination {

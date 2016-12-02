@@ -112,7 +112,6 @@ exports.updateUserInfo = function(req, res) {
 }
 
 exports.getS3Url = (req, res) => {
-  console.log('this is running access key id', process.env.AWS_ACCESS_KEY_ID, 'secret', process.env.AWS_SECRET_ACCESS_KEY);
   var s3 = new aws.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY});

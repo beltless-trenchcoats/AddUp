@@ -146,30 +146,6 @@ exports.getUsersCharityDonationsInfo = function(email, callback) {
 // exports.insert('test@gmail.com', 13, 0, function(result) {
 //   console.log(result);
 // });
-// exports.insert('test@gmail.com', 12, 0, function(result) {
-//   console.log(result);
-// });
-// exports.insert('test@gmail.com', 11, 0, function(result) {
-//   console.log(result);
-// });
-// exports.insert('test@gmail.com', 2, 0, function(result) {
-//   console.log(result);
-// });
-// exports.insert('test@gmail.com', 3, 0, function(result) {
-//   console.log(result);
-// });
-// exports.insert('test@gmail.com', 4, 0, function(result) {
-//   console.log(result);
-// });
-// exports.insert('test@gmail.com', 5, 0, function(result) {
-//   console.log(result);
-// });
-// exports.insert('test@gmail.com', 8, 0, function(result) {
-//   console.log(result);
-// });
-// exports.insert('test@gmail.com', 9, 0, function(result) {
-//   console.log(result);
-// });
 
 // exports.remove('kk@gmail.com', 5, function(result) {
 //   console.log(result);
@@ -188,10 +164,3 @@ exports.getUsersCharityDonationsInfo = function(email, callback) {
 //     charities.forEach(charity => console.log(charity));
 //   }
 // });
-
-// -- CREATE TABLE usersCharities (
-// --   id BIGSERIAL   PRIMARY KEY,
-// --   percentage REAL NULL DEFAULT NULL,
-// --   id_users BIGSERIAL     references users(id),
-// --   id_charities BIGSERIAL     references charities(id)
-// -- );

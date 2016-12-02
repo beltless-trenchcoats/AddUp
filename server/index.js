@@ -16,7 +16,7 @@ helpers.mode();
 //calls plaid interval function on worker file
 intervalWorker.callWorker.run();
 //calls paypal payout
-setInterval(intervalWorker.weeklyCausePayout, 890000);
+setInterval(intervalWorker.weeklyCausePayout, 910000);
 
 var app = express();
 var port = process.env.PORT || 8080;

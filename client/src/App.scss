@@ -36,20 +36,22 @@ label, .label {
   content: '';
   background: url("../public/road.jpg");
   background-size: cover;
+  overflow: hidden;
   opacity: 0.8;
-  top: 0;
+  top: -50px;
   left: 0;
-  bottom: 0;
+  bottom: 23vh;
   right: 0;
   position: absolute;
   z-index: -1;
 }
 
 .App {
+  z-index: 0;
   text-align: center;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: $dark-grey;
-  height: 100vh;
+  height: 80vh;
   padding:20px;
 }
 
@@ -122,26 +124,124 @@ label, .label {
 
 /*************** HOMEPAGE BODY ***************/
 
+.siteTitle {
+  background-color: rgba(255, 255, 255, 0);
+  font-size: 100px;
+  fontweight: 800;
+  color: white;
+  margin: 175px 0 20px 0;
+  height: 200px;
+  padding-left: 30px;
+  text-align: left;
+}
+
+.tagline {
+  text-align: center;
+  font-size: 32px;
+  color: white;
+  letter-spacing: 2px;
+  margin-bottom: 75px;
+}
+
 .description {
   height: 400px;
 }
 
 .infoSections {
   font-size: 16px;
+  height: 50vh;
   letter-spacing: 0.3px;
-  margin-top: 50px;
+  margin: 20px;
+
+  .infoIcon {
+    height: 100px;
+    margin-bottom: 50px;
+  }
+
+  .infoColumn {
+    text-align: center;
+    padding: 0 50px;
+
+    .title {
+      font-size: 34px;
+      font-weight: 300;
+      margin-bottom: 25px;
+    }
+
+    p {
+      font-size: 18px;
+    }
+  }
 }
 
-.jumbotron {
-  top: 19%;
-  background: white;
-  opacity: 0.9;
-  word-wrap: break-word;
-  width: 48%;
-  padding: 5px;
-  font-size: 12px;
-  position: absolute;
-  margin-left: 50px;
+.contributionTitle {
+  text-align: center;
+  font-size: 60px;
+  margin: 150px 0 20px 0;
+}
+
+.impactSection {
+  padding: 40px;
+  text-align: center;
+  font-weight: 300;
+  font-size: 16px;
+  width: 100vw;
+  letter-spacing: 0.3px;
+  margin-bottom: 100px;
+
+  .impactColumn {
+
+    .impact {
+      clear: both;
+      padding: 10px 30px;
+      margin-top: 60px;
+      background-color: $light-grey;
+      height: 280px;
+      width: 800px;
+    }
+
+    .impact:nth-child(2) {
+      float: right;
+      margin-bottom: 90px;
+    }
+
+    .title {
+      float: left;
+      text-align: left;
+      margin: 10px 0 40px 0;
+      font-size: 36px;
+      line-height: normal;
+      margin-top: 15px;
+    }
+
+    p {
+      float: right;
+      text-align: right;
+      font-size: 30px;
+      line-height: 60px;
+    }
+  }
+
+  .emTime {
+    color: $profile-blue;
+    font-weight: bold;
+    font-size: 50px;
+  }
+
+  .emCharity {
+    color: $error-red;
+    font-weight: bold;
+  }
+
+  .emFact {
+    font-size: 36px;
+    font-weight: 400;
+  }
+}
+
+.graph {
+  margin: 150px 0 50px 0 ;
+  height: 100vh;
 }
 
 .findButton {
@@ -153,25 +253,10 @@ label, .label {
   margin: 5px;
 }
 
-.panel {
-  border: none;
-  border-radius: 0px;
-  margin: 0 10px;
-}
-
-.panel-heading {
-  background-color: $homepage-blue !important;
-  border: none;
-  font-size: 18px;
-  border-radius: 0;
-}
-
-.graph {
-  height: 800px;
-}
-
 .chartLabel {
   text-align: center;
+  font-size: 50px;
+
 }
 
 /*************** USER PROFILE PAGE ***************/
@@ -760,55 +845,4 @@ label, .label {
 .donationGraph {
   position: relative;
   left: -4%;
-}
-
-
-/************ Icons **************/
-
-.creditCardHand {
-  position: absolute;
-  left: 15%;
-  height: 17%;
-}
-
-.heartHandShake {
-  position: absolute;
-  height: 12%;
-  left: 45.5%;
-}
-
-.coinStack {
-  position: absolute;
-  height: 15%;
-  left: 70%;
-}
-
-
-/************* Contributions **********/
-.impactSection {
-  position: relative;
-  text-align: center;
-  top: 18%;
-  font-weight: 300;
-  font-size: 16px;
-  letter-spacing: 0.3px;
-}
-
-.emphasis {
-  color: red;
-  font-weight: bold;
-}
-
-.contributionTitle {
-  text-align: center;
-  font-size: 36px;
-  font-weight: bold;
-}
-
-.impactColumn {
-    margin-bottom: 5%;
-}
-
-.impactPanel {
-  box-shadow: 10px 10px 8px -10px rgba(0,0,0,0.4);
 }

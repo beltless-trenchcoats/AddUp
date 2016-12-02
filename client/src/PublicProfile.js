@@ -62,7 +62,8 @@ class PublicProfile extends Component {
         <Row className='lessPadding'>
           <div className="userProfile">
             <Col xs={7} md={7}>
-              {<div className='welcome'>{this.state.profileInfo.first_name} {this.state.lastInitial}.</div>}
+              <div className='username'>{this.state.profileInfo.first_name} {this.state.lastInitial}.</div>
+              <div className='profileDescription'>I'm the coolest person ever and I really love cats and my cat needs a home.</div>
             </Col>
             <Col xs={3} md={3} className="profilePhoto">
               <div className="profilePhotoImage">

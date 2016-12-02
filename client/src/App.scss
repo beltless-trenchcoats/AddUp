@@ -635,6 +635,19 @@ label, .label {
   top: 55px;
   position: relative;
 
+  .userProfile {
+    padding-left: 100px;
+
+    .username {
+      margin: 50px 0 20px 0;
+      font-size: 48px;
+    }
+
+    .profileDescription {
+      font-size: 24px;
+    }
+  }
+
   .userCharitiesContainer h1 {
     width: 100%;
     text-align: center;
@@ -684,6 +697,19 @@ label, .label {
     position: relative;
     left: 26%;
   }
+}
+
+.panel {
+  border: none;
+  border-radius: 0px;
+  margin: 0 10px;
+}
+
+.panel-heading {
+  background-color: $homepage-blue !important;
+  border: none;
+  font-size: 18px;
+  border-radius: 0;
 }
 
 /*************** CHARITY PROFILE PAGE ***************/

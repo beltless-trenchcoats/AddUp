@@ -99,15 +99,15 @@ class App extends Component {
           <div className='impactColumn'>
             <div className='impact'>
               <p className='title'>In <span className='emTime'>one month</span> your change can...</p>
-              <p>Protect <span className='emFact'>12 people</span> from <span className='emFact'>Malaria</span> for three to four years, by giving to the <span className='emCharity'>Against Malaria Foundation</span>.</p>
+              <p>Protect <span className='emFact'>12 people</span> from <span className='emFact'>Malaria</span> for three to four years, by giving to the <a href={'/charity/203069841'}><span className='emCharity'>Against Malaria Foundation</span></a>.</p>
             </div>
             <div className='impact'>
               <p className='title'>In <span className='emTime'>six months</span> your change can...</p>
-              <p>Provide <span className='emFact'>safe water</span> to <span className='emFact'>142 community members</span> for one year with <span className='emCharity'>Evidence Action</span>.</p>
+              <p>Provide <span className='emFact'>safe water</span> to <span className='emFact'>142 community members</span> for one year with <a href={'/charity/900874591'}><span className='emCharity'>Evidence Action</span></a>.</p>
             </div>
             <div className='impact'>
               <p className='title'>In <span className='emTime'>one year</span> your change can...</p>
-              <p>Provide <span className='emFact'>school meal programs</span> to <span className='emFact'>5 children</span> for one year with <span className='emCharity'>Oxfam</span>.</p>
+              <p>Provide <span className='emFact'>school meal programs</span> to <span className='emFact'>5 children</span> for one year with <a href={'/charity/237069110'}><span className='emCharity'>Oxfam</span></a>.</p>
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@ exports.mode = function() {
 //COMMENT THESE IN FOR DEV MODE
   // var env = require('node-env-file');
   // env(__dirname + '/config/.env');      
-}
+};
 
 exports.convertCategoryToString = function(categoryCode) {
   var categoryMap = {

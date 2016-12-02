@@ -7,5 +7,5 @@ dist/
 .DS_Store
 
 .env
-
+/server/config/API_KEYS.js
 .sass-cache/

@@ -44,9 +44,7 @@ weeklyCausePayout = function() {
         if (entry.paypalemail && entry.balance_owed > 0) {
           paypalInput.push({email: entry.paypalemail, value: entry.balance_owed});
           //set balance owed back to 0
-          Charities.updateCharity(entry.id, {balance_owed: 0}, function(response) {
-            continue;
-          });
+          Charities.updateCharity(entry.id, {balance_owed: 0}, () => {});
         }
       });
       if (paypalInput.length > 0) {

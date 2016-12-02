@@ -686,6 +686,19 @@ label, .label {
   }
 }
 
+.panel {
+  border: none;
+  border-radius: 0px;
+  margin: 0 10px;
+}
+
+.panel-heading {
+  background-color: $homepage-blue !important;
+  border: none;
+  font-size: 18px;
+  border-radius: 0;
+}
+
 /*************** CHARITY PROFILE PAGE ***************/
 
 .charityProfilePage {

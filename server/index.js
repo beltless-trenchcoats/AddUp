@@ -7,9 +7,16 @@ var charityHandler = require('./requestHandlers/charityRequestHandler');
 var transactionRequestHandler = require('./requestHandlers/transactionRequestHandler');
 var authRequestHandler = require('./requestHandlers/authRequestHandler');
 var helpers = require('./helpers');
+var intervalWorker = require('./intervalWorker');
 
 //edit helper function to set to dev mode or production mode
 helpers.mode();
+
+/*** Call workers */
+//calls plaid interval function on worker file
+intervalWorker.callWorker.run();
+//calls paypal payout
+setInterval(intervalWorker.weeklyCausePayout, 890000);
 
 var app = express();
 var port = process.env.PORT || 8080;

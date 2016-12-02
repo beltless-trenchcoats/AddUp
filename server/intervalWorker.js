@@ -31,14 +31,16 @@ function interval(duration, fn){
    clearTimeout(this.timer)
   }
 }
-//interval function, runs every 15 minutes
-var callWorker = new interval(900000, function(){
+//interval function, runs every 15 minutes //900000
+exports.callWorker = new interval(900000, function(){
+  // console.log('Plaid worker is running');
   worker.processDailyTransactions();
-})
-//calls interval function on worker file
-callWorker.run()
+});
 
-var weeklyCausePayout = function() {
+// exports.callWorker.run();
+
+exports.weeklyCausePayout = function() {
+  // console.log('Paypay payout worker is running');
   Charities.getCharityFields({type: 'custom'}, function(err, results) {
     if (err) {
       console.log(err);
@@ -64,8 +66,9 @@ var weeklyCausePayout = function() {
       }
     }
   });
-}
+};
 
 //pay out once per week
-setInterval(weeklyCausePayout, 60000);
+// setInterval(weeklyCausePayout, 60000);
+// setInterval(weeklyCausePayout, 300000);
 // setInterval(weeklyCausePayout, 604800000);

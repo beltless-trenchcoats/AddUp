@@ -589,10 +589,6 @@ label, .label {
     .panel-title {
       color: white;
     }
-
-    .panel-title:hover {
-      color: black;
-    }
   }
 
   .pagination {
@@ -638,6 +634,10 @@ label, .label {
 
   .category {
     font-size: 18px;
+  }
+
+  .charityTitle {
+    color: white;
   }
 
   .charityAuthor{

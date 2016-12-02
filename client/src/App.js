@@ -24,25 +24,31 @@ class App extends Component {
   }
 
   componentWillMount() {
+    //gets all user transactions
     axios.get(server + '/api/transactions/all')
     .then((res) => {
       var transactions = res.data;
       var daysData = {};
       var totalDonated = 0;
+      //loops over each transaction and adds a date to them
       transactions.forEach(function(elt) {
         var day = new Date(elt.date_time);
         var dayString = day.getMonth() + 1 + '/' + day.getFullYear();
         daysData[dayString] = daysData[dayString] + elt.amount || elt.amount;
         totalDonated += elt.amount;
       });
+      //floor the total donated from all users
       totalDonated = Math.floor(totalDonated * 100) / 100;
+      //set state of totalDonated
       this.setState({totalDonated: totalDonated});
       var data = [];
+      //for each key in daysData push the name and amount to data
       for (var key in daysData) {
         if (key) {
           data.push({name: key, 'Amount Donated': daysData[key]});
         }
       }
+      //sort data
       data.sort(function(a, b) {
         var bNum = Number('' + b.name.split('/')[1] + b.name.split('/')[0]);
         var aNum = Number('' + a.name.split('/')[1] + a.name.split('/')[0]);

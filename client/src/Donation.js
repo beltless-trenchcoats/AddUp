@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-// import { Col, Row, Grid, Table } from 'react-bootstrap';
-// import axios from 'axios';
-
+//This line allows us to use underscore-style variable names
+/* eslint-disable camelcase */
 
 class Donation extends Component {
 

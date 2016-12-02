@@ -21,6 +21,9 @@ import CustomCauseBanner from './CustomCauseBanner';
 import UserCharityCard from './UserCharityCard';
 import RemoveAccountModal from './RemoveAccountModal';
 
+//This line allows us to use underscore-style variable names
+/* eslint-disable camelcase */
+
 let transactionChartData = [];
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FEB4D5', '#FBFF28'];
 

@@ -10,6 +10,9 @@ import server from '../../server/config/config';
 import Header from './Header';
 import CharityModal from './CharityModal';
 
+//This line allows us to use underscore-style variable names
+/* eslint-disable camelcase */
+
 class CharityProfilePage extends Component {
   constructor(props) {
     super(props);

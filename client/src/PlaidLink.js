@@ -4,6 +4,9 @@ import axios from 'axios';
 import server from '../../server/config/config';
 import helpers from '../helpers';
 
+//This line allows us to use underscore-style variable names
+/* eslint-disable camelcase */
+
 class PlaidLinkComponent extends Component {
   constructor(props, context) {
     super(props, context);

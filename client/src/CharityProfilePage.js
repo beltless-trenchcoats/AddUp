@@ -140,7 +140,7 @@ class CharityProfilePage extends Component {
                 : null 
               }
               {
-                this.state.charity.nteeType !== 'Not Provided' ? <div className='category'>{this.state.charity.nteeType}</div> : null
+                this.state.charity.nteeType !== 'Not Provided'  && this.state.charity.nteeType !== 'Unknown' ? <div className='category'>{this.state.charity.nteeType}</div> : null
               }
               {
                 this.state.charity.url ?

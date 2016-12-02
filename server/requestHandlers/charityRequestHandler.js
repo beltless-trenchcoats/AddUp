@@ -124,14 +124,29 @@ exports.getCharityInfo = function (req, res) {
           } else {
             var toSend = body.data;
             toSend.total_donated = result[0] ? result[0].total_donated : 0;
-            res.send(JSON.stringify(toSend));
+            var options = {
+              method: 'post',
+              body: {ein: req.body.charityId},
+              json: true,
+              url: 'http://data.orghunter.com/v1/charitysearch?user_key=' + process.env.ORGHUNTER_KEY
+            };
+            request(options, function (err, result, body) {
+              if (err) {
+                console.log(err);
+                res.send(err);
+              } else {
+                console.log('second request', body.data[0].missionStatement, body.data[0].url);
+                toSend.mission_statement = body.data[0].missionStatement;
+                toSend.url = body.data[0].url;
+                res.send(JSON.stringify(toSend));
+              }
+            });
           }
         });
       }
     });   
   } else {
-    if (req.body.charityId) { var filterFields = {id: req.body.charityId}; }
-    else { var filterFields = null; }
+    if (req.body.charityId) { var filterFields = {id: req.body.charityId}; } else { var filterFields = null; }
     Charities.getCharityFields(filterFields, function(err, result) {
       if (err) {
         console.log(err);

@@ -12,6 +12,7 @@ import Contact from './Contact';
 import CustomCauseProfilePage from './CustomCauseProfile';
 import helpers from '../helpers';
 
+//checks for cookies to see if a user is loggedIn
 var loggedIn = function() {
   var cookies = helpers.parseCookie(document.cookie);
   if (cookies.email !== undefined) {
@@ -21,6 +22,7 @@ var loggedIn = function() {
   }
 };
 
+//if user has a http connection then redirect to https
 var secureConnection = function() {
 //CHANGE HTTP TO HTTPS FOR DEVELOPMENT
   if (window.location.protocol === 'http:') {
@@ -28,6 +30,7 @@ var secureConnection = function() {
   }
 };
 
+//if a user is not logged in redirect them to homepage
 var isAuth = function(nextState, replace) {
   secureConnection();
   if (!loggedIn()) {
@@ -37,6 +40,7 @@ var isAuth = function(nextState, replace) {
   }
 };
 
+//onEnter is calling above functions and waits for result before loading the page
 ReactDOM.render (
 	<Router history={browserHistory}>
 		<Route path="/" component={App} onEnter={secureConnection}/>

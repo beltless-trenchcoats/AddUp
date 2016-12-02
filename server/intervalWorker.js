@@ -35,7 +35,6 @@ function interval(duration, fn){
 // exports.callWorker.run();
 
 weeklyCausePayout = function() {
-  // console.log('Paypal payout worker is running');
   Charities.getCharityFields({type: 'custom'}, function(err, results) {
     if (err) {
       console.log(err);
@@ -46,7 +45,7 @@ weeklyCausePayout = function() {
           paypalInput.push({email: entry.paypalemail, value: entry.balance_owed});
           //set balance owed back to 0
           Charities.updateCharity(entry.id, {balance_owed: 0}, function(response) {
-            // console.log(response);
+            continue;
           });
         }
       });
@@ -54,8 +53,6 @@ weeklyCausePayout = function() {
         paypalHelpers.payoutCauses(paypalInput, function(err, result) {
           if (err) {
             console.log(err);
-          } else {
-            // console.log(JSON.stringify(result));
           }
         });
       }
@@ -69,5 +66,4 @@ exports.callWorker = new interval(900000, function() {
   worker.processDailyTransactions();
   //calls paypal payout
   setTimeout(weeklyCausePayout, 10000);
-
 });

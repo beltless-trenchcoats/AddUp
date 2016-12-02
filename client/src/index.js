@@ -23,7 +23,7 @@ var loggedIn = function() {
 
 var secureConnection = function() {
 //CHANGE HTTP TO HTTPS FOR DEVELOPMENT
-  if (window.location.protocol === 'http:') {
+  if (window.location.protocol === 'https:') {
     window.location.protocol = 'https:';
   }
 };

@@ -66,12 +66,15 @@ class SearchPage extends Component {
   search() {
     this.navigateBySearchTerms(true);
   }
-
+  //gets results from orgHunter API
   navigateBySearchTerms() {
+    //possible search options
     var options = ['searchTerm', 'city', 'state', 'zipCode', 'category', 'type', 'start'];
     var queryStr = '';
     for (var i = 0; i < options.length; i++) {
+      //if the option was filled in then continue
       if (this.state[options[i]] !== '') {
+        //if there is multiple queries then continue
         if (queryStr !== '') {
           queryStr += '&';
         }
@@ -104,13 +107,15 @@ class SearchPage extends Component {
         searchTerms[keyVal[0]] = keyVal[1];
         this.setStateWithObj(keyVal[0], keyVal[1]);
       });
-
+      //make post to server which makes post to orghunter or db for custom causes
       axios.post(server + '/api/charities/search', searchTerms)
       .then((res) => {
+        //setState to to results of the server
         this.setState({
           searchResults: res.data,
           isLoading: false
         }, function() {
+          //map over each result and create a card
           this.state.searchResults.map((charity, i) => <CharitySearchResult key={i} info={charity} />);
           this.setState({initialPage: (Number(document.location.hash.split('=')[document.location.hash.split('=').length - 1])) / 20});
         });
@@ -123,8 +128,11 @@ class SearchPage extends Component {
   //this function is called by ReactPaginate component
   pageSelect = (data) => {
     if (!this.state.firstLoad) {
+      //sets difference in page selection
       var pageDifference = (data.selected - this.state.lastPage);
+      //calculates number api call jumps to make by 20
       var resultDifference = pageDifference * 20;
+      //sets start to new numbers
       this.setState({start: parseInt(this.state.start, 10) + resultDifference, lastPage: this.state.lastPage + pageDifference},
         function() {
           this.navigateBySearchTerms();

@@ -635,6 +635,19 @@ label, .label {
   top: 55px;
   position: relative;
 
+  .userProfile {
+    padding-left: 100px;
+
+    .username {
+      margin: 50px 0 20px 0;
+      font-size: 48px;
+    }
+
+    .profileDescription {
+      font-size: 24px;
+    }
+  }
+
   .userCharitiesContainer h1 {
     width: 100%;
     text-align: center;

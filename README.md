@@ -1,4 +1,4 @@
-# Project Name
+# AddUp++
 
 AddUp++ aggregates charitable donations through automatic micro-payments by rounding up each credit or debit transaction to the next dollar and sending the change to a charity of your choice. Discover and select from any IRS-recognized charitable organization or user-generated crowd-funding initiative. Alleviate any financial concerns by setting monthly donation limits.
 

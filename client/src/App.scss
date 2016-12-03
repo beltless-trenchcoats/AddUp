@@ -198,6 +198,14 @@ label, .label {
       background-color: $light-grey;
       height: 280px;
       width: 800px;
+
+      a:hover {
+        text-decoration: none;
+      }
+
+      a:hover span{
+        color: $profile-blue;
+      }
     }
 
     .impact:nth-child(2) {

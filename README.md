@@ -10,7 +10,7 @@ AddUp++ aggregates charitable donations through automatic micro-payments by roun
 
   - __Product Owner__: Charlotte Willens
   - __Scrum Master__: Karina Kinaman
-  - __Development Team Members__: Miles Smith, Tim Garibaldi
+  - __Development Team Members__: Miles Smith, Tim Garibaldi, Charlotte Willens, Karina Kinaman
 
 ## Table of Contents
 

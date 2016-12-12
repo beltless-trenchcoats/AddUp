@@ -2,9 +2,9 @@
 
 AddUp++ aggregates charitable donations through automatic micro-payments by rounding up each credit or debit transaction to the next dollar and sending the change to a charity of your choice. Discover and select from any IRS-recognized charitable organization or user-generated crowd-funding initiative. Alleviate any financial concerns by setting monthly donation limits.
 
-![screenshot1](/screenshot_home.png?raw=true "Screenshot - Home")
-![screenshot2](/screenshot_profile.png?raw=true "Screenshot - Profile")
-![screenshot3](/screenshot_graph.png?raw=true "Screenshot - Graph")
+![screenshot1](/screenshots/screenshot_home.png?raw=true "Screenshot - Home")
+![screenshot2](/screenshots/screenshot_profile.png?raw=true "Screenshot - Profile")
+![screenshot3](/screenshots/screenshot_graph.png?raw=true "Screenshot - Graph")
 
 ## Team
 
@@ -44,7 +44,7 @@ From within /client:
 npm install
 ```
 ### Setting Up Dev Mode
-![Screenshot](https://github.com/beltless-trenchcoats/addUp/blob/master/client/assets/images/dev-gif2.gif)
+![Screenshot](/screenshots/dev-gif2.gif)
 
 ## Contributing
 
